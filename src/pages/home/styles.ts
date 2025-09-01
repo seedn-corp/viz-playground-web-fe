@@ -1,8 +1,8 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const homeCss = {
   container: css({
-    width: '100%',
-    paddingTop: 40,
+    width: "100%",
+    paddingTop: 60,
   }),
 };

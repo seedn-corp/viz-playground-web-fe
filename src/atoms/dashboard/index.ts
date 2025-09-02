@@ -1,9 +1,8 @@
-// src/store/dashboard.ts
 import type { Layout, Layouts } from "react-grid-layout";
 import { atomWithStorage } from "jotai/utils";
 
-/** 타입 */
-export type WidgetType = "note" | "chart";
+export type WidgetType = "excel" | "chart";
+
 export interface Widget {
   id: string;
   type: WidgetType;
@@ -36,7 +35,7 @@ export const EMPTY_LAYOUTS: Layouts = {
 };
 
 const DEFAULT_SIZE: Record<WidgetType, Pick<Layout, "w" | "h">> = {
-  note: { w: 4, h: 6 },
+  excel: { w: 6, h: 8 },
   chart: { w: 6, h: 8 },
 };
 

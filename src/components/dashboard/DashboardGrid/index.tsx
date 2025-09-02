@@ -4,7 +4,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { css } from "@emotion/react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Flex } from "@basiln/utils";
+import { Flex, If, Spacing } from "@basiln/utils";
 import { Button, Text } from "@basiln/design-system";
 
 import {
@@ -13,8 +13,8 @@ import {
   BREAKPOINTS,
   COLS,
   nextLayoutsAfterRemove,
-} from "@/store/dashboard";
-import { WidgetRegistry } from "@/components/widgets/Registry";
+} from "@/atoms/dashboard";
+import { WidgetSlot } from "@/components/widgets/WidgetSlot";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -64,14 +64,17 @@ export const DashboardGrid = () => {
       >
         {widgets.map((w) => (
           <div key={w.id}>
-            {WidgetRegistry[w.type]({
-              onRemove: () => handleRemove(w.id),
-            })}
+            <WidgetSlot
+              type={w.type}
+              props={w.props}
+              onRemove={() => handleRemove(w.id)}
+            />
           </div>
         ))}
       </ResponsiveGridLayout>
 
-      {widgets.length === 0 && (
+      <If condition={widgets.length === 0}>
+        <Spacing size={200} />
         <Flex direction="column" gap={15}>
           <Text size="sub-regular" color="gray_060">
             위젯을 추가해주세요
@@ -88,7 +91,7 @@ export const DashboardGrid = () => {
             + 첫 번째 위젯 추가하기
           </Button>
         </Flex>
-      )}
+      </If>
     </div>
   );
 };

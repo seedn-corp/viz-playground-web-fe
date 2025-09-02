@@ -3,29 +3,30 @@ import LineChart from './LineChart';
 import BarChart from './BarChart';
 import AreaChart from './AreaChart';
 import PieChart from './PieChart';
-import type { ChartType } from '@/pages/chart/types';
+
+import type { ChartAreaProps, ChartProps } from './types';
 
 const ChartArea = ({
   chartData,
   chartType,
-}: {
-  chartData: Record<string, string>[];
-  chartType: ChartType;
-}) => {
+  xAxisKey,
+  yAxisKeys,
+}: ChartAreaProps) => {
+  const chartProps: ChartProps = { chartData, xAxisKey, yAxisKeys };
   return (
     <div>
       <Choose>
         <Choose.When condition={chartType === 'line'}>
-          <LineChart chartData={chartData} />
+          <LineChart {...chartProps} />
         </Choose.When>
         <Choose.When condition={chartType === 'bar'}>
-          <BarChart chartData={chartData} />
+          <BarChart {...chartProps} />
         </Choose.When>
         <Choose.When condition={chartType === 'area'}>
-          <AreaChart chartData={chartData} />
+          <AreaChart {...chartProps} />
         </Choose.When>
         <Choose.When condition={chartType === 'pie'}>
-          <PieChart chartData={chartData} valueKey="temperature" />
+          <PieChart {...chartProps} />
         </Choose.When>
       </Choose>
     </div>

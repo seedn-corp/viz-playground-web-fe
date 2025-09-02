@@ -8,21 +8,21 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import type { ChartProps } from '../types';
 
-const BarChart = ({ chartData }: { chartData: Record<string, string>[] }) => {
-  // x축 선택
-  // y축 선택 (여러개)
+const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   return (
     <div>
       <ResponsiveContainer width="100%" height={150}>
         <RechartsBarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
+          <XAxis dataKey={xAxisKey} />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar type="monotone" dataKey="temperature" stroke="#8884d8" />
-          <Bar type="monotone" dataKey="humidity" stroke="#82ca9d" />
+          {yAxisKeys.map((item) => (
+            <Bar key={item} type="monotone" dataKey={item} stroke="#8884d8" />
+          ))}
         </RechartsBarChart>
       </ResponsiveContainer>
     </div>

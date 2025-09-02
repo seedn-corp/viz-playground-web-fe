@@ -8,8 +8,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import type { ChartProps } from '../types';
 
-const AreaChart = ({ chartData }: { chartData: Record<string, string>[] }) => {
+const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   // x축 선택
   // y축 선택 (여러개)
   return (
@@ -17,12 +18,13 @@ const AreaChart = ({ chartData }: { chartData: Record<string, string>[] }) => {
       <ResponsiveContainer width="100%" height={150}>
         <RechartsAreaChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
+          <XAxis dataKey={xAxisKey} />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Area type="monotone" dataKey="temperature" stroke="#8884d8" />
-          <Area type="monotone" dataKey="humidity" stroke="#82ca9d" />
+          {yAxisKeys.map((item) => (
+            <Area key={item} type="monotone" dataKey={item} stroke="#8884d8" />
+          ))}
         </RechartsAreaChart>
       </ResponsiveContainer>
     </div>

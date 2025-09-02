@@ -6,19 +6,14 @@ import {
   Legend,
   PieChart as RechartsPieChart,
 } from 'recharts';
+import type { ChartProps } from '../types';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-const PieChart = ({
-  chartData,
-  valueKey,
-}: {
-  chartData: Record<string, string>[];
-  valueKey: string;
-}) => {
+const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const pieChartData = chartData.map((data) => ({
-    name: data.timestamp,
-    value: Number(data[valueKey]),
+    name: data[xAxisKey],
+    value: Number(data[yAxisKeys[0]]),
   }));
 
   return (

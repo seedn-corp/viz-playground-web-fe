@@ -1,13 +1,17 @@
-import { theme } from '@basiln/design-system';
-import { css } from '@emotion/react';
+import { theme } from "@basiln/design-system";
+import { css } from "@emotion/react";
 
 export const headerCss = {
   container: css({
-    position: 'fixed',
+    position: "fixed",
     top: 0,
-    width: '100%',
+    width: "100%",
     minHeight: 40,
-    padding: '0 20px',
+    padding: "10px 20px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottom: `1px solid ${theme.colors.gray_050}`,
     backgroundColor: theme.colors.white,
   }),
 };

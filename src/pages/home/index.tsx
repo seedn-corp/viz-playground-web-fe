@@ -1,34 +1,29 @@
-import { Flex, Grid } from '@basiln/utils';
-import { Header } from '@/components/common/Header';
-import { homeCss } from '@/pages/home/styles';
+import { useState } from "react";
+import { Header } from "@/components/common/Header";
+import { homeCss } from "@/pages/home/styles";
+import { DashboardGrid } from "@/components/dashboard/DashboardGrid";
+import { WidgetAddDialog } from "@/components/common/WidgetAddDialog";
 
 export const Home = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleAddWidget = (widgetType: "chart" | "table") => {
+    console.log("위젯 추가:", widgetType);
+    // TODO: 실제 위젯 추가 로직 구현
+  };
+
   return (
-    <Flex>
-      <Header />
+    <div>
+      <Header onOpenDialog={() => setIsDialogOpen(true)} />
+      <div css={homeCss.container}>
+        <DashboardGrid onOpenDialog={() => setIsDialogOpen(true)} />
+      </div>
 
-      <Grid
-        columns={['1fr', '1fr']}
-        rows={['1fr', '1fr']}
-        gap={10}
-        css={homeCss.container}
-      >
-        <Grid.Item gridRow="1" gridColumn="1">
-          <div>chart 1</div>
-        </Grid.Item>
-
-        <Grid.Item gridRow="1" gridColumn="2">
-          <div>chart 2</div>
-        </Grid.Item>
-
-        <Grid.Item gridRow="2" gridColumn="1">
-          <div>chart 3</div>
-        </Grid.Item>
-
-        <Grid.Item gridRow="2" gridColumn="2">
-          <div>chart 4</div>
-        </Grid.Item>
-      </Grid>
-    </Flex>
+      <WidgetAddDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        onAddWidget={handleAddWidget}
+      />
+    </div>
   );
 };

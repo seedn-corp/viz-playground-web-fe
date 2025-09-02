@@ -71,6 +71,7 @@ const Chart = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={addWidget}
+          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey}
         >
           <Text color="white">저장하기</Text>
         </Button>

@@ -5,11 +5,13 @@ import ChartArea from '@/components/chart/ChartArea';
 import type { ChartType } from './types';
 import SideBar from '@/components/chart/SideBar';
 import { chartPageCss } from './styles';
-import { Link } from 'react-router';
-import { Text } from '@basiln/design-system';
-import { ArrowLeftIcon } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
+import { Button, Text } from '@basiln/design-system';
+import { ArrowLeftIcon, Upload } from 'lucide-react';
 
 const Chart = () => {
+  const navigate = useNavigate();
+
   const [chartName, setChartName] = useState('새 차트');
   const [chartType, setChartType] = useState<ChartType>('line');
   const [chartData, setChartData] = useState<Record<string, string>[]>();
@@ -21,7 +23,6 @@ const Chart = () => {
     () => (chartData ? Object.keys(chartData?.[0]) : []),
     [chartData]
   );
-  console.log(JSON.stringify(chartData));
 
   useEffect(() => {
     if (chartDataKeys.length > 0) {
@@ -36,33 +37,46 @@ const Chart = () => {
     }
   }, [chartType]);
 
+  const addWidget = () => {
+    console.log({
+      chartName,
+      chartType,
+      chartData,
+      xAxisKey,
+      yAxisKeys,
+    });
+    navigate('/');
+  };
+
   return (
     <div css={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* 헤더 */}
       <Flex justify="start" css={chartPageCss.header}>
-        <Link
-          to=".."
-          css={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '4px 8px',
-            borderRadius: 4,
-            ':hover': {
-              backgroundColor: '#f5f5f5',
-            },
-          }}
-        >
+        <Link to=".." css={chartPageCss.backLinkButton}>
           <ArrowLeftIcon css={{ width: 14 }} />
           <Text>돌아가기</Text>
         </Link>
 
-        <Spacing direction="horizontal" size={24} />
+        <Spacing direction="horizontal" size={14} />
 
-        <Text size="title-medium">차트 만들기</Text>
+        <Text size="title-small">차트 만들기</Text>
+
+        <Spacing direction="horizontal" size="auto" css={{ flex: 1 }} />
+
+        <Button
+          display="inline"
+          gutter="20px"
+          radius="small"
+          css={{ height: 36 }}
+          onClick={addWidget}
+        >
+          <Text color="white">저장하기</Text>
+        </Button>
       </Flex>
 
       <Flex css={{ width: '100%', flex: 1 }}>
-        <div css={{ width: 220, height: '100%', padding: '20px 16px' }}>
+        {/* 사이드 메뉴 */}
+        <div css={{ width: 240, height: '100%', padding: '20px 16px' }}>
           <SideBar
             {...{
               chartData,
@@ -80,18 +94,32 @@ const Chart = () => {
           />
         </div>
 
-        <Separator css={{ height: '100%' }} />
+        <Separator css={{ height: '100%' }} color="gray_050" />
 
-        <div css={{ flex: 1 }}>
-          {chartData && (
+        {/* 차트 영역 */}
+        {chartData ? (
+          <Flex direction="column" css={chartPageCss.chartContainer}>
+            <Text
+              size="body-large"
+              css={{ position: 'absolute', top: 20, left: 20 }}
+            >
+              미리보기
+            </Text>
             <ChartArea
               chartData={chartData}
               chartType={chartType}
               xAxisKey={xAxisKey}
               yAxisKeys={yAxisKeys}
             />
-          )}
-        </div>
+          </Flex>
+        ) : (
+          <Flex direction="column" css={chartPageCss.placeholderContainer}>
+            <Upload css={{ width: 36, height: 36, opacity: 0.5 }} />
+            <Text size="body-medium" color="gray_080">
+              차트 미리보기를 위해 <br /> CSV 파일을 업로드하세요
+            </Text>
+          </Flex>
+        )}
       </Flex>
     </div>
   );

@@ -39,7 +39,7 @@ const YAxisMultipleSelect = ({
       </Popover.Trigger>
       <Popover.Content
         sideOffset={4}
-        css={[selectCss.content, { width: 220 - 32 }]}
+        css={[selectCss.content, { width: 240 - 32 }]}
       >
         {items.map((item) => {
           const isChecked = name.includes(item);

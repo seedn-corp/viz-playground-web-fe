@@ -8,6 +8,8 @@ import Select from '../Select';
 import { parseCsvFileToJson } from '@/pages/chart/utils';
 import type { SideBarProps } from './types';
 import { sideBarCss } from './styles';
+import { Download, Upload } from 'lucide-react';
+import Separator from '../Separator';
 
 const SideBar = (props: SideBarProps) => {
   const {
@@ -36,8 +38,14 @@ const SideBar = (props: SideBarProps) => {
     <>
       <Flex align="start" direction="column">
         <Text>데이터 업로드</Text>
-        <button css={{ position: 'relative' }}>
-          <Text>CSV 업로드</Text>
+        <Spacing size={8} />
+        <button css={sideBarCss.fileUploadButton}>
+          <Upload css={[sideBarCss.uploadIcon, { marginBottom: 8 }]} />
+          <Text>데이터 파일 업로드</Text>
+          <Text size="caption-regular" color="gray_080">
+            CSV 파일 지원
+          </Text>
+
           <input
             css={sideBarCss.fileInput}
             type="file"
@@ -45,17 +53,31 @@ const SideBar = (props: SideBarProps) => {
             onChange={uploadFile}
           />
         </button>
+        <Spacing size={6} />
+        <button css={sideBarCss.sampleDownloadButton} onClick={() => {}}>
+          <Download css={{ width: 14, height: 14 }} />
+          <Text>샘플 데이터 다운로드</Text>
+        </button>
       </Flex>
 
       <Spacing size={20} />
 
       <If condition={!!chartData}>
+        <Separator
+          orientation="horizontal"
+          css={{ width: '100%' }}
+          color="gray_050"
+        />
+
+        <Spacing size={20} />
+
         <Flex align="start" direction="column">
           <Text>차트 제목</Text>
           <input
             css={[selectCss.trigger, { width: '100%' }]}
             value={chartName}
             onChange={(e) => setChartName(e.target.value)}
+            placeholder="차트 제목을 입력하세요."
           />
         </Flex>
 

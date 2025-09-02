@@ -25,30 +25,25 @@ const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   );
 
   return (
-    <div style={{ width: '100%', height: 300 }}>
-      <ResponsiveContainer>
-        <RechartsPieChart>
-          <Pie
-            data={pieChartData}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            outerRadius={100}
-            fill="#8884d8"
-            label
-          >
-            {chartData.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </RechartsPieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={300}>
+      <RechartsPieChart>
+        <Pie
+          data={pieChartData}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          outerRadius={100}
+          fill="#8884d8"
+          label
+        >
+          {chartData.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </RechartsPieChart>
+    </ResponsiveContainer>
   );
 };
 

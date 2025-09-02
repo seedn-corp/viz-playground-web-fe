@@ -132,7 +132,11 @@ const SideBar = (props: SideBarProps) => {
               </Select.Trigger>
               <Select.Content>
                 {chartDataKeys.map((key) => (
-                  <Select.Item key={key} value={key}>
+                  <Select.Item
+                    key={key}
+                    value={key}
+                    disabled={key === xAxisKey}
+                  >
                     {key}
                   </Select.Item>
                 ))}
@@ -146,6 +150,7 @@ const SideBar = (props: SideBarProps) => {
               name={yAxisKeys}
               onChange={setYAxisKeys}
               items={chartDataKeys}
+              disabledItem={xAxisKey}
             />
           </Flex>
         )}

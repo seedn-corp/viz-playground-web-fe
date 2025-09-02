@@ -38,6 +38,12 @@ const Chart = () => {
     }
   }, [chartType]);
 
+  useEffect(() => {
+    if (yAxisKeys.includes(xAxisKey)) {
+      setYAxisKeys((prev) => prev.filter((key) => key !== xAxisKey));
+    }
+  }, [xAxisKey, yAxisKeys]);
+
   const addWidget = () => {
     console.log({
       chartName,

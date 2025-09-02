@@ -5,16 +5,14 @@ import { useTheme } from '@emotion/react';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import Popover from '@/components/chart/Popover';
 import { selectCss } from '@/components/chart/Select/styles';
+import type { YAxisMultipleSelectProps } from './types';
 
 const YAxisMultipleSelect = ({
   name,
   onChange,
   items,
-}: {
-  name: string[];
-  onChange: (name: string[]) => void;
-  items: string[];
-}) => {
+  disabledItem,
+}: YAxisMultipleSelectProps) => {
   const theme = useTheme();
 
   const onToggleItem = (item: string) => {
@@ -49,6 +47,7 @@ const YAxisMultipleSelect = ({
               value={item}
               autoClose={false}
               onClick={() => onToggleItem(item)}
+              disabled={item === disabledItem}
               css={{
                 justifyContent: 'space-between',
                 color: isChecked ? theme.colors.seedn_key : theme.colors.black,

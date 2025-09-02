@@ -63,6 +63,7 @@ export const selectCss = {
       },
     }),
   disabledItem: css({
+    cursor: 'not-allowed',
     '&:hover': {
       backgroundColor: 'transparent',
       fontWeight: 400,

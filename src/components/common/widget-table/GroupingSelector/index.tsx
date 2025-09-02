@@ -1,5 +1,7 @@
 import type { GroupingSelectorProps } from './types';
 import { groupingSelectorCss } from './styles';
+import { Button, Text } from '@basiln/design-system';
+import { X } from 'lucide-react';
 
 export const GroupingSelector = (props: GroupingSelectorProps) => {
   const {
@@ -9,11 +11,11 @@ export const GroupingSelector = (props: GroupingSelectorProps) => {
     onClearGrouping,
   } = props;
 
-  console.log({ selectedColumns, groupingColumns });
-
   return (
     <div css={groupingSelectorCss.container}>
-      <h4 css={groupingSelectorCss.title}>계층별 그룹핑 설정:</h4>
+      <Text as="p" css={{ marginBottom: '6px' }}>
+        계층별 그룹핑 설정
+      </Text>
 
       <div css={groupingSelectorCss.levelContainer}>
         {[0, 1, 2, 3].map((level) => {
@@ -29,17 +31,17 @@ export const GroupingSelector = (props: GroupingSelectorProps) => {
                 groupingSelectorCss.levelBox,
                 {
                   border: `1px solid ${
-                    groupingColumns[level - 1] ? borderColor : '#e5e7eb'
+                    groupingColumns[level] ? borderColor : '#e5e7eb'
                   }`,
-                  background: groupingColumns[level - 1] ? bgColor : '#f3f4f6',
-                  opacity: groupingColumns[level - 1] ? 1 : 0.5,
+                  background: groupingColumns[level] ? bgColor : '#f3f4f6',
+                  opacity: groupingColumns[level] ? 1 : 0.5,
                 },
               ]}
             >
               <div css={groupingSelectorCss.levelSelectContainer}>
-                <span css={[groupingSelectorCss.label, { color }]}>
-                  {level + 1}단계{level === 0 ? ' (최상위)' : ''}:
-                </span>
+                <Text css={[groupingSelectorCss.label, { color }]}>
+                  {level + 1}단계
+                </Text>
 
                 <select
                   value={groupingColumns[level] || ''}
@@ -47,14 +49,10 @@ export const GroupingSelector = (props: GroupingSelectorProps) => {
                   disabled={disabled}
                   css={[
                     groupingSelectorCss.select,
-                    {
-                      border: `1px solid ${borderColor}`,
-                      background: disabled ? '#f3f4f6' : '#fff',
-                      color: disabled ? '#9ca3af' : '#374151',
-                    },
+                    { color: disabled ? '#9ca3af' : '#374151' },
                   ]}
                 >
-                  <option value="">선택 안함</option>
+                  <option value="">선택 안 함</option>
 
                   {selectedColumns
                     .filter(
@@ -71,22 +69,25 @@ export const GroupingSelector = (props: GroupingSelectorProps) => {
               </div>
 
               {groupingColumns[level] && (
-                <button
+                <Button
+                  display="inline"
+                  variant="ghost"
+                  size="tiny"
+                  radius="full"
                   onClick={() => onUpdateGrouping(level, '')}
                   css={[
-                    groupingSelectorCss.removeBtn,
                     {
                       color,
                       background: bgColor,
                       ':hover': {
-                        color: '#1e293b',
+                        color: '#313132',
                         background: borderColor,
                       },
                     },
                   ]}
                 >
-                  제거
-                </button>
+                  <X size="14px" />
+                </Button>
               )}
             </div>
           );
@@ -94,9 +95,16 @@ export const GroupingSelector = (props: GroupingSelectorProps) => {
       </div>
 
       <div css={groupingSelectorCss.bottom}>
-        <button onClick={onClearGrouping} css={groupingSelectorCss.clearBtn}>
-          모든 그룹핑 제거
-        </button>
+        <Button
+          size="regular-1"
+          display="inline"
+          radius="small"
+          variant="stroke"
+          onClick={onClearGrouping}
+          gutter="10px"
+        >
+          전체 해제
+        </Button>
       </div>
     </div>
   );

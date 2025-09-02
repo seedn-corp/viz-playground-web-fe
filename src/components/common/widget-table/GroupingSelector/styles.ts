@@ -1,28 +1,18 @@
 import { css } from '@emotion/react';
 
 export const groupingSelectorCss = {
-  container: css({
-    border: '1px solid #e5e7eb',
-    borderRadius: '0.375rem',
-    padding: '1rem',
-  }),
-
-  title: css({
-    fontSize: '1rem',
-    fontWeight: '500',
-    color: '#374151',
-  }),
+  container: css({}),
 
   levelContainer: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
+    gap: '5px',
   }),
 
   levelSelectContainer: css({
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem',
+    gap: '5px',
     flex: 1,
   }),
 
@@ -56,54 +46,27 @@ export const groupingSelectorCss = {
   levelBox: css({
     display: 'flex',
     alignItems: 'center',
-    gap: '1rem',
-    padding: '0.75rem',
-    borderRadius: '0.5rem',
+    padding: '6px 10px',
+    borderRadius: '6px',
     transition: 'all 0.2s',
   }),
 
   label: css({
-    fontSize: '0.875rem',
-    fontWeight: 500,
     whiteSpace: 'nowrap',
   }),
 
   select: css({
     flex: 1,
-    padding: '0.25rem 0.75rem',
-    borderRadius: '0.375rem',
-    fontSize: '0.875rem',
+    backgroundColor: 'transparent',
+    border: 'none',
+    fontSize: '12px',
     outline: 'none',
     transition: 'all 0.2s',
   }),
 
-  removeBtn: css({
-    fontSize: '0.875rem',
-    padding: '0.25rem 0.5rem',
-    borderRadius: '0.375rem',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  }),
-
   bottom: css({
-    marginTop: '1rem',
+    marginTop: '10px',
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: '0.5rem',
-  }),
-
-  clearBtn: css({
-    padding: '0.25rem 0.75rem',
-    fontSize: '0.875rem',
-    background: '#f3f4f6',
-    color: '#374151',
-    borderRadius: '0.375rem',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    ':hover': {
-      background: '#e5e7eb',
-    },
+    justifyContent: 'flex-end',
   }),
 };

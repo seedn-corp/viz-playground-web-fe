@@ -1,42 +1,30 @@
 import type { TableControlsProps } from './types';
-import { tableControlsCss } from './styles';
+import { Text } from '@basiln/design-system';
+import { Spacing } from '@basiln/utils';
 
 export const TableControls = (props: TableControlsProps) => {
-  const {
-    fileName,
-    rowCount,
-    colCount,
-    searchTerm,
-    onSearch,
-    onReset,
-    groupingColumns,
-  } = props;
+  const { fileName, rowCount, colCount, groupingColumns } = props;
 
   return (
-    <div css={tableControlsCss.container}>
-      <span>{fileName}</span>
-      <span>
-        ({rowCount}개 행, {colCount}개 컬럼)
-      </span>
+    <div>
+      <Text as="p" color="gray_080">
+        파일 이름: {fileName}
+      </Text>
 
-      {groupingColumns.length > 0 && (
-        <span>그룹핑: {groupingColumns.join(' → ')}</span>
-      )}
+      <Spacing size={8} />
 
-      <div>
-        <div>
-          <input
-            type="text"
-            placeholder="데이터 검색..."
-            value={searchTerm}
-            onChange={(e) => onSearch(e.target.value)}
-          />
-        </div>
+      <Text as="p" color="gray_080">
+        행 수: {rowCount}개
+      </Text>
+      <Text as="p" color="gray_080">
+        열 수: {colCount}개
+      </Text>
 
-        <button onClick={onReset} css={tableControlsCss.resetButton}>
-          초기화
-        </button>
-      </div>
+      {/* {groupingColumns.length > 0 && (
+        <Text as="p" color="gray_080">
+          그룹핑: {groupingColumns.join(' → ')}
+        </Text>
+      )} */}
     </div>
   );
 };

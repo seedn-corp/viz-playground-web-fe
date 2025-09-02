@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { DataRow, Group } from './types';
-import { Filter, RefreshCw, Settings, Plus, Minus } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Papa from 'papaparse';
 import { groupBy } from 'es-toolkit';
 import {
@@ -12,6 +12,10 @@ import {
   NestedTable,
   Pagination,
 } from '@/components/common/widget-table';
+import { Grid, Spacing } from '@basiln/utils';
+import { Button, Text } from '@basiln/design-system';
+import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
+import { ViewModeSelector } from '@/components/common/widget-table/ViewModeSelector';
 
 export const WidgetTablePage = () => {
   const [headers, setHeaders] = useState<string[]>([]);
@@ -24,7 +28,7 @@ export const WidgetTablePage = () => {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(10);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [sortConfig, setSortConfig] = useState<{
     key: string | null;
     direction: 'asc' | 'desc';
@@ -32,14 +36,12 @@ export const WidgetTablePage = () => {
 
   // 컬럼 선택 관련 상태
   const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
-  const [showColumnSelector, setShowColumnSelector] = useState<boolean>(false);
 
   // 중첩 구조 관련 상태
   const [groupingColumns, setGroupingColumns] = useState<string[]>([]);
-  const [showGroupingSelector, setShowGroupingSelector] =
-    useState<boolean>(false);
+
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  const [viewMode, setViewMode] = useState<'table' | 'nested'>('table'); // 'table' or 'nested'
+  const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
 
   const handleFileUpload = useCallback(
     (
@@ -207,11 +209,11 @@ export const WidgetTablePage = () => {
   // 정렬
   const sortedData = useMemo(() => {
     if (!sortConfig.key)
-      return viewMode === 'nested'
+      return viewMode === 'group'
         ? (nestedData as Group[])
         : (searchFilteredData as DataRow[]);
 
-    if (viewMode === 'nested') {
+    if (viewMode === 'group') {
       return [...(nestedData as Group[])].sort((a: Group, b: Group) => {
         const aVal = a.groupKey;
         const bVal = b.groupKey;
@@ -237,7 +239,7 @@ export const WidgetTablePage = () => {
 
   // 페이지네이션
   const totalItems =
-    viewMode === 'nested'
+    viewMode === 'group'
       ? (sortedData as Group[]).reduce(
           (acc: number, group: Group) =>
             acc + (group.isGroup ? group.items.length : 1),
@@ -248,7 +250,7 @@ export const WidgetTablePage = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
 
   const paginatedData = useMemo(() => {
-    if (viewMode === 'nested') {
+    if (viewMode === 'group') {
       return sortedData as Group[]; // 중첩 뷰에서는 전체 그룹 표시
     }
     return (sortedData as DataRow[]).slice(
@@ -342,168 +344,164 @@ export const WidgetTablePage = () => {
     });
   };
 
-  const resetData = () => {
-    setCsvData([]);
-    setHeaders([]);
-    setFileName('');
-    setError('');
-    setSearchTerm('');
-    setCurrentPage(1);
-    setSortConfig({ key: null, direction: 'asc' });
-    setSelectedColumns([]);
-    setGroupingColumns([]);
-    setExpandedGroups(new Set());
-    setViewMode('table');
-  };
+  // const resetData = () => {
+  //   setCsvData([]);
+  //   setHeaders([]);
+  //   setFileName('');
+  //   setError('');
+  //   setSearchTerm('');
+  //   setCurrentPage(1);
+  //   setSortConfig({ key: null, direction: 'asc' });
+  //   setSelectedColumns([]);
+  //   setGroupingColumns([]);
+  //   setExpandedGroups(new Set());
+  //   setViewMode('table');
+  // };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* 헤더 */}
-        <div className="text-center mb-8">테이블 만들기</div>
-        {/* 파일 업로드 영역 컴포넌트 */}
-        <FileUploadArea
-          onFileUpload={handleFileUpload}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-        />
+    <>
+      <header css={widgetTablePageHeaderCss.self}>
+        <div css={widgetTablePageHeaderCss.buttonContainer}>
+          <Button
+            display="inline"
+            gutter="10px"
+            leftAddon={<ArrowLeft size={14} />}
+            radius="small"
+            variant="ghost"
+          >
+            <Text color="black" size="btn-medium">
+              돌아가기
+            </Text>
+          </Button>
 
-        {/* 로딩 상태 */}
-        {loading && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div className="flex items-center justify-center">
-              <RefreshCw className="animate-spin h-6 w-6 text-blue-500 mr-2" />
-              <span>파일을 처리하고 있습니다...</span>
-            </div>
-          </div>
-        )}
+          <Text size="body-large">테이블 만들기</Text>
+        </div>
+        <Button display="inline" gutter="20px" radius="small">
+          저장
+        </Button>
+      </header>
 
-        {/* 에러 메시지 */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-            <p className="text-red-800">{error}</p>
-          </div>
-        )}
+      <Grid columns="260px 1fr" css={widgetTableCss.container}>
+        <Grid.Item css={widgetTableCss.left}>
+          <label htmlFor="file-name" css={widgetTableCss.tableNameContainer}>
+            <Text css={widgetTableCss.fieldTitle}>테이블 제목</Text>
 
-        {/* 컬럼/그룹핑 선택 패널 컴포넌트 */}
-        {headers.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
-                <Settings className="h-5 w-5" />
-                데이터 설정
-              </h3>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setShowColumnSelector(!showColumnSelector)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  <Filter className="h-4 w-4" />
-                  컬럼 선택
-                </button>
-                <button
-                  onClick={() => setShowGroupingSelector(!showGroupingSelector)}
-                  className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
-                >
-                  <Settings className="h-4 w-4" />
-                  그룹핑 설정
-                </button>
-                <button
-                  onClick={() =>
-                    setViewMode(viewMode === 'table' ? 'nested' : 'table')
-                  }
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    viewMode === 'nested'
-                      ? 'bg-green-500 text-white hover:bg-green-600'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {viewMode === 'nested' ? '중첩 뷰' : '테이블 뷰'}
-                </button>
-                {viewMode === 'nested' && groupingColumns.length > 0 && (
-                  <>
-                    <button
-                      onClick={expandAllGroups}
-                      className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-                    >
-                      <Plus className="h-4 w-4" />
-                      모두 펼치기
-                    </button>
-                    <button
-                      onClick={collapseAllGroups}
-                      className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                    >
-                      <Minus className="h-4 w-4" />
-                      모두 접기
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-            {showColumnSelector && (
-              <ColumnSelector
-                headers={headers}
-                selectedColumns={selectedColumns}
-                onToggleColumn={toggleColumnSelection}
-                onSelectAll={() => setSelectedColumns([...headers])}
-                onClearAll={() => setSelectedColumns([])}
-              />
-            )}
-            {showGroupingSelector && selectedColumns.length > 0 && (
-              <GroupingSelector
-                selectedColumns={selectedColumns}
-                groupingColumns={groupingColumns}
-                onUpdateGrouping={updateGroupingLevel}
-                onClearGrouping={() => setGroupingColumns([])}
-              />
-            )}
-          </div>
-        )}
-
-        {/* 데이터가 있을 때의 컨트롤 및 테이블 */}
-        {csvData.length > 0 && selectedColumns.length > 0 && (
-          <>
-            <TableControls
-              fileName={fileName}
-              rowCount={csvData.length}
-              colCount={selectedColumns.length}
-              searchTerm={searchTerm}
-              onSearch={(term) => {
-                setSearchTerm(term);
-                setCurrentPage(1);
-              }}
-              onReset={resetData}
-              groupingColumns={groupingColumns}
+            <input
+              id="file-name"
+              css={widgetTableCss.tableNameInput}
+              placeholder="새 테이블"
             />
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                {viewMode === 'table' ? (
-                  <DataTable
-                    selectedColumns={selectedColumns}
-                    paginatedData={paginatedData as DataRow[]}
-                    sortConfig={sortConfig}
-                    onSort={handleSort}
-                  />
-                ) : (
-                  <NestedTable
-                    sortedData={sortedData as Group[]}
-                    selectedColumns={selectedColumns}
-                    expandedGroups={expandedGroups}
-                    onToggleGroup={toggleGroupExpansion}
-                  />
-                )}
-              </div>
-              {viewMode === 'table' && totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                />
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+          </label>
+
+          <Spacing size={20} />
+
+          <Text as="p" css={widgetTableCss.fieldTitle}>
+            데이터 업로드
+          </Text>
+
+          <FileUploadArea
+            onFileUpload={handleFileUpload}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            isLoading={loading}
+          />
+          {error && (
+            <Text
+              size="caption-regular"
+              color="승인오류"
+              css={{ position: 'absolute', marginTop: '2px' }}
+            >
+              {error}
+            </Text>
+          )}
+
+          <Spacing size={20} />
+
+          <div css={widgetTableCss.separator} />
+
+          <Spacing size={20} />
+
+          <Text as="p" css={widgetTableCss.fieldTitle}>
+            테이블 정보
+          </Text>
+
+          <TableControls
+            fileName={fileName}
+            rowCount={csvData.length}
+            colCount={selectedColumns.length}
+            groupingColumns={groupingColumns}
+          />
+
+          <Spacing size={8} />
+
+          <ColumnSelector
+            headers={headers}
+            selectedColumns={selectedColumns}
+            onToggleColumn={toggleColumnSelection}
+            onSelectAll={() => setSelectedColumns([...headers])}
+            onClearAll={() => setSelectedColumns([])}
+          />
+
+          <Spacing size={20} />
+
+          {selectedColumns.length > 0 && (
+            <GroupingSelector
+              selectedColumns={selectedColumns}
+              groupingColumns={groupingColumns}
+              onUpdateGrouping={updateGroupingLevel}
+              onClearGrouping={() => setGroupingColumns([])}
+            />
+          )}
+        </Grid.Item>
+
+        <Grid.Item css={widgetTableCss.right}>
+          <div css={widgetTableCss.previewContainer}>
+            {csvData.length > 0 && (
+              <ViewModeSelector
+                type={viewMode}
+                onTypeChange={setViewMode}
+                itemsPerPage={itemsPerPage}
+                onItemsPerPageChange={setItemsPerPage}
+                onCurrentPageChange={setCurrentPage}
+                onExpandAllGroups={expandAllGroups}
+                onCollapseAllGroups={collapseAllGroups}
+              />
+            )}
+
+            {csvData.length > 0 && selectedColumns.length > 0 && (
+              <>
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    {viewMode === 'table' ? (
+                      <DataTable
+                        selectedColumns={selectedColumns}
+                        paginatedData={paginatedData as DataRow[]}
+                        sortConfig={sortConfig}
+                        onSort={handleSort}
+                      />
+                    ) : (
+                      <NestedTable
+                        sortedData={sortedData as Group[]}
+                        selectedColumns={selectedColumns}
+                        expandedGroups={expandedGroups}
+                        onToggleGroup={toggleGroupExpansion}
+                      />
+                    )}
+                  </div>
+
+                  {viewMode === 'table' && totalPages > 1 && (
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                    />
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </Grid.Item>
+      </Grid>
+    </>
   );
 };

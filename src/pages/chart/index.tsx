@@ -8,6 +8,7 @@ import { chartPageCss } from './styles';
 import { Link, useNavigate } from 'react-router';
 import { Button, Text } from '@basiln/design-system';
 import { ArrowLeftIcon, Upload } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const Chart = () => {
       xAxisKey,
       yAxisKeys,
     });
+    toast.success('위젯이 추가되었습니다.');
     navigate('/');
   };
 

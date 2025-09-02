@@ -1,126 +1,71 @@
-// styles.ts
-import { css } from '@emotion/react';
+import { hexToRgba } from '@basiln/utils';
+import { css, type Theme } from '@emotion/react';
 
 export const selectCss = {
-  trigger: css({
-    border: '1px solid var(--input)',
-    background: 'var(--input-background)',
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '0.5rem',
-    borderRadius: '0.375rem',
-    padding: '0.5rem 0.75rem',
-    fontSize: '0.875rem',
+  trigger: (theme: Theme) =>
+    css({
+      backgroundColor: theme.colors.gray_020,
+      border: `1px solid ${theme.colors.gray_050}`,
+      borderRadius: 5,
+      width: '100%',
+      height: 34,
+      textAlign: 'start',
+      padding: '0 14px',
+      display: 'flex',
+      alignItems: 'center',
+      ...theme.fonts['body-medium'],
+      svg: {
+        color: theme.colors.gray_080,
+      },
+    }),
+  value: css({
+    flex: 1,
+    lineHeight: '1',
     whiteSpace: 'nowrap',
-    transition: 'color 0.2s, box-shadow 0.2s',
-    outline: 'none',
-    "&[data-size='default']": {
-      height: '2.25rem',
-    },
-    "&[data-size='sm']": {
-      height: '2rem',
-    },
-    '&[disabled]': {
-      cursor: 'not-allowed',
-      opacity: 0.5,
-    },
-    svg: {
-      pointerEvents: 'none',
-      flexShrink: 0,
-      width: '1rem',
-      height: '1rem',
-      opacity: 0.5,
-    },
-    '&:focus-visible': {
-      borderColor: 'var(--ring)',
-      boxShadow: '0 0 0 3px var(--ring)50',
-    },
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
   }),
-
-  content: css({
-    background: 'var(--popover)',
-    color: 'var(--popover-foreground)',
-    borderRadius: '0.375rem',
-    border: '1px solid var(--border)',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-    maxHeight: 'var(--radix-select-content-available-height)',
-    minWidth: '8rem',
-    overflowX: 'hidden',
-    overflowY: 'auto',
-    position: 'relative',
-    zIndex: 50,
-    "&[data-side='bottom']": { transform: 'translateY(0.25rem)' },
-    "&[data-side='top']": { transform: 'translateY(-0.25rem)' },
-  }),
-
-  viewport: css({
-    padding: '0.25rem',
-    height: 'var(--radix-select-trigger-height)',
-    width: '100%',
-    minWidth: 'var(--radix-select-trigger-width)',
-  }),
-
-  label: css({
-    padding: '0.375rem 0.5rem',
-    fontSize: '0.75rem',
-    color: 'var(--muted-foreground)',
-  }),
-
-  item: css({
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    width: '100%',
-    padding: '0.375rem 0.5rem',
-    borderRadius: '0.25rem',
-    fontSize: '0.875rem',
-    userSelect: 'none',
-    cursor: 'pointer',
-    '&:focus': {
-      background: 'var(--accent)',
-      color: 'var(--accent-foreground)',
+  content: (theme: Theme) =>
+    css({
+      padding: 5,
+      borderRadius: 4,
+      backgroundColor: theme.colors.white,
+      display: 'flex',
+      flexDirection: 'column',
+      boxShadow: '0px 4px 20px 0px #0000001A',
+      overflowY: 'auto',
+      border: `1px solid ${theme.colors.gray_050}`,
+      zIndex: 10,
+      // minWidth: 'max-content',
+      width: '100%',
+    }),
+  item: (theme: Theme) =>
+    css({
+      maxWidth: '100%',
+      minHeight: 30,
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 6px',
+      fontWeight: 400,
+      fontSize: 12,
+      borderRadius: 3,
+      cursor: 'pointer',
+      outline: 'none',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      '&:hover': {
+        backgroundColor: hexToRgba({ hex: theme.colors.seedn_key, alpha: 0.1 }),
+      },
+      '&[data-selected="true"]': {
+        fontWeight: 500,
+        color: theme.colors.seedn_key,
+      },
+    }),
+  disabledItem: css({
+    '&:hover': {
+      backgroundColor: 'transparent',
+      fontWeight: 400,
     },
-    '&[data-disabled]': {
-      pointerEvents: 'none',
-      opacity: 0.5,
-    },
-    svg: {
-      flexShrink: 0,
-      width: '1rem',
-      height: '1rem',
-    },
-  }),
-
-  itemIndicator: css({
-    position: 'absolute',
-    right: '0.5rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '0.875rem',
-    height: '0.875rem',
-  }),
-
-  separator: css({
-    background: 'var(--border)',
-    height: '1px',
-    margin: '0.25rem 0',
-    pointerEvents: 'none',
-  }),
-
-  scrollButton: css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '0.25rem',
-    cursor: 'default',
-  }),
-
-  icon: css({
-    width: '1rem',
-    height: '1rem',
   }),
 };

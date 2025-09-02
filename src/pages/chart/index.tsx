@@ -38,6 +38,12 @@ const Chart = () => {
     }
   }, [chartType]);
 
+  useEffect(() => {
+    if (yAxisKeys.includes(xAxisKey)) {
+      setYAxisKeys((prev) => prev.filter((key) => key !== xAxisKey));
+    }
+  }, [xAxisKey, yAxisKeys]);
+
   const addWidget = () => {
     console.log({
       chartName,
@@ -71,6 +77,7 @@ const Chart = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={addWidget}
+          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey}
         >
           <Text color="white">저장하기</Text>
         </Button>

@@ -47,7 +47,11 @@ const PopoverItem = forwardRef<
       </button>
     </Primitive.Close>
   ) : (
-    <button ref={ref} css={selectCss.item} {...restProps}>
+    <button
+      ref={ref}
+      css={[selectCss.item, restProps.disabled && selectCss.disabledItem]}
+      {...restProps}
+    >
       {children}
     </button>
   );

@@ -9,7 +9,9 @@ import {
   YAxis,
 } from 'recharts';
 import type { ChartProps } from '../types';
-import { aggregateChartData } from '../utils';
+import { aggregateChartData } from '../../../chart/ChartArea/utils';
+import { COLORS, LEGEND_STYLE } from '../utils';
+import { CustomTooltip } from '../CustomTooltip';
 
 const LineChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
@@ -17,12 +19,17 @@ const LineChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
     <ResponsiveContainer width="100%" height={300}>
       <RechartsLineChart data={aggregatedData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xAxisKey} />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        {yAxisKeys.map((item) => (
-          <Line key={item} type="monotone" dataKey={item} stroke="#8884d8" />
+        <XAxis dataKey={xAxisKey} tick={{ fill: '#666', fontSize: 12 }} />
+        <YAxis tick={{ fill: '#666', fontSize: 12 }} />
+        <Tooltip content={<CustomTooltip />} />
+        <Legend {...LEGEND_STYLE} />
+        {yAxisKeys.map((item, index) => (
+          <Line
+            key={item}
+            type="monotone"
+            dataKey={item}
+            stroke={COLORS[index % COLORS.length]}
+          />
         ))}
       </RechartsLineChart>
     </ResponsiveContainer>

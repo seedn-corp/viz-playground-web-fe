@@ -7,6 +7,8 @@ import {
   PieChart as RechartsPieChart,
 } from 'recharts';
 import type { ChartProps } from '../types';
+import { LEGEND_STYLE } from '../utils';
+import { CustomTooltip } from '../CustomTooltip';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -34,14 +36,14 @@ const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
           labelLine={false}
           outerRadius={100}
           fill="#8884d8"
-          label
+          label={{ fill: '#333', fontSize: 12, fontWeight: 500 }}
         >
           {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
-        <Legend />
+        <Tooltip content={<CustomTooltip />} />
+        <Legend {...LEGEND_STYLE} />
       </RechartsPieChart>
     </ResponsiveContainer>
   );

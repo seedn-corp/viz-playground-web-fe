@@ -6,9 +6,3 @@ export type ChartAreaProps = {
   xAxisKey: string;
   yAxisKeys: string[];
 };
-
-export type ChartProps = {
-  chartData: Record<string, string>[];
-  xAxisKey: string;
-  yAxisKeys: string[];
-};

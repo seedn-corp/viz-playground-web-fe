@@ -32,3 +32,7 @@ export async function parseCsvFileToJson(
     reader.readAsText(file);
   });
 }
+
+export const isCSV = (file: File) => {
+  return file.name.endsWith('.csv');
+};

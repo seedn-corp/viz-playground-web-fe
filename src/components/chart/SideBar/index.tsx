@@ -5,11 +5,13 @@ import { Text } from '@basiln/design-system';
 import { selectCss } from '../Select/styles';
 import YAxisMultipleSelect from '../YAxisMultipleSelect';
 import Select from '../Select';
-import { parseCsvFileToJson } from '@/pages/chart/utils';
+
 import type { SideBarProps } from './types';
 import { sideBarCss } from './styles';
-import { Download, Upload } from 'lucide-react';
+import { Download } from 'lucide-react';
 import Separator from '../Separator';
+
+import FileUploader from '../FileUploader';
 
 const SideBar = (props: SideBarProps) => {
   const {
@@ -26,34 +28,16 @@ const SideBar = (props: SideBarProps) => {
     setChartType,
   } = props;
 
-  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const data = await parseCsvFileToJson(file);
-      setChartData(data);
-    }
-  };
-
   return (
     <>
       <Flex align="start" direction="column">
         <Text>데이터 업로드</Text>
         <Spacing size={8} />
-        <button css={sideBarCss.fileUploadButton}>
-          <Upload css={[sideBarCss.uploadIcon, { marginBottom: 8 }]} />
-          <Text>데이터 파일 업로드</Text>
-          <Text size="caption-regular" color="gray_080">
-            CSV 파일 지원
-          </Text>
 
-          <input
-            css={sideBarCss.fileInput}
-            type="file"
-            accept=".csv"
-            onChange={uploadFile}
-          />
-        </button>
+        <FileUploader onChangeChartData={setChartData} />
+
         <Spacing size={6} />
+
         <button css={sideBarCss.sampleDownloadButton} onClick={() => {}}>
           <Download css={{ width: 14, height: 14 }} />
           <Text>샘플 데이터 다운로드</Text>
@@ -132,7 +116,11 @@ const SideBar = (props: SideBarProps) => {
               </Select.Trigger>
               <Select.Content>
                 {chartDataKeys.map((key) => (
-                  <Select.Item key={key} value={key}>
+                  <Select.Item
+                    key={key}
+                    value={key}
+                    disabled={key === xAxisKey}
+                  >
                     {key}
                   </Select.Item>
                 ))}
@@ -146,6 +134,7 @@ const SideBar = (props: SideBarProps) => {
               name={yAxisKeys}
               onChange={setYAxisKeys}
               items={chartDataKeys}
+              disabledItem={xAxisKey}
             />
           </Flex>
         )}

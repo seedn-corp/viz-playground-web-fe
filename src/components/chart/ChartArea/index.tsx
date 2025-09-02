@@ -1,10 +1,11 @@
 import { Choose } from '@basiln/utils';
-import LineChart from './LineChart';
-import BarChart from './BarChart';
-import AreaChart from './AreaChart';
-import PieChart from './PieChart';
+import LineChart from '@/components/common/charts/LineChart';
+import BarChart from '@/components/common/charts/BarChart';
+import AreaChart from '@/components/common/charts/AreaChart';
+import PieChart from '@/components/common/charts/PieChart';
 
-import type { ChartAreaProps, ChartProps } from './types';
+import type { ChartAreaProps } from './types';
+import type { ChartProps } from '@/components/common/charts/types';
 
 const ChartArea = ({
   chartData,

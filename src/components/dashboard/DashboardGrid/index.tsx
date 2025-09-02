@@ -1,8 +1,6 @@
-// src/components/dashboard/DashboardGrid.tsx
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { css } from "@emotion/react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Flex, If, Spacing } from "@basiln/utils";
 import { Button, Text } from "@basiln/design-system";
@@ -15,29 +13,12 @@ import {
   nextLayoutsAfterRemove,
 } from "@/atoms/dashboard";
 import { WidgetSlot } from "@/components/widgets/WidgetSlot";
+import { styles } from "./styles";
+import type { DashboardGridProps } from "./types";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const styles = {
-  grid: css({
-    ".react-grid-item": { transition: "box-shadow 120ms ease" },
-    ".react-grid-item.react-grid-placeholder": {
-      background: "rgba(99,102,241,0.25)",
-      borderRadius: 8,
-    },
-    ".react-resizable-handle": {
-      width: 12,
-      height: 12,
-      right: 6,
-      bottom: 6,
-      background:
-        "conic-gradient(from 180deg at 50% 50%, #adb5bd, transparent) 50%/100% 100% no-repeat",
-      borderRadius: 3,
-    },
-  }),
-};
-
-export const DashboardGrid = () => {
+export const DashboardGrid = ({ onOpenDialog }: DashboardGridProps) => {
   const [layouts, setLayouts] = useAtom(layoutsAtom);
   const widgets = useAtomValue(widgetsAtom);
   const setWidgets = useSetAtom(widgetsAtom);
@@ -87,6 +68,7 @@ export const DashboardGrid = () => {
             size="regular-2"
             gutter="20px"
             radius="small"
+            onClick={onOpenDialog}
           >
             + 첫 번째 위젯 추가하기
           </Button>

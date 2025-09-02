@@ -90,6 +90,8 @@ const SideBar = (props: SideBarProps) => {
           </Select>
         </Flex>
 
+        <Spacing size={20} />
+
         {chartType === 'pie' ? (
           <Flex align="start" direction="column" css={{ width: '100%' }}>
             <Text>Y축</Text>

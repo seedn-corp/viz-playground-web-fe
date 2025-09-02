@@ -11,10 +11,18 @@ import type { ChartProps } from '../types';
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
-  const pieChartData = chartData.map((data) => ({
-    name: data[xAxisKey],
-    value: Number(data[yAxisKeys[0]]),
-  }));
+  const pieChartData: { name: string; value: number }[] = Object.values(
+    chartData.reduce((acc, cur) => {
+      const name = cur[xAxisKey];
+      const value = Number(cur[yAxisKeys[0]]);
+      // 같은 name을 가진 항목이 여러 개일 경우 value를 합산
+      if (!acc[name]) {
+        acc[name] = { name, value: 0 };
+      }
+      acc[name].value += value;
+      return acc;
+    }, {} as Record<string, { name: string; value: number }>)
+  );
 
   return (
     <div style={{ width: '100%', height: 300 }}>

@@ -9,14 +9,14 @@ import {
   YAxis,
 } from 'recharts';
 import type { ChartProps } from '../types';
+import { aggregateChartData } from '../utils';
 
 const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
-  // x축 선택
-  // y축 선택 (여러개)
+  const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
   return (
     <div>
       <ResponsiveContainer width="100%" height={150}>
-        <RechartsAreaChart data={chartData}>
+        <RechartsAreaChart data={aggregatedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey={xAxisKey} />
           <YAxis />

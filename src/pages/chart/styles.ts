@@ -1,14 +1,15 @@
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 export const chartPageCss = {
-  fileInput: css({
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    height: 32,
-    overflow: 'hidden',
-    opacity: 0,
-  }),
+  header: (theme: Theme) =>
+    css({
+      width: '100%',
+      height: 58,
+      minHeight: 58,
+      padding: '10px 20px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.colors.gray_050}`,
+      backgroundColor: theme.colors.white,
+    }),
 };

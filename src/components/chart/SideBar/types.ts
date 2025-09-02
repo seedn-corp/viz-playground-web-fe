@@ -12,4 +12,6 @@ export type SideBarProps = {
   setYAxisKeys: React.Dispatch<React.SetStateAction<string[]>>;
   chartType: ChartType;
   setChartType: React.Dispatch<React.SetStateAction<ChartType>>;
+  chartName: string;
+  setChartName: React.Dispatch<React.SetStateAction<string>>;
 };

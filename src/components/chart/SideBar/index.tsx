@@ -1,4 +1,3 @@
-import { chartPageCss } from '@/pages/chart/styles';
 import type { ChartType } from '@/pages/chart/types';
 import { Flex, Spacing, If } from '@basiln/utils';
 
@@ -8,9 +7,12 @@ import YAxisMultipleSelect from '../YAxisMultipleSelect';
 import Select from '../Select';
 import { parseCsvFileToJson } from '@/pages/chart/utils';
 import type { SideBarProps } from './types';
+import { sideBarCss } from './styles';
 
 const SideBar = (props: SideBarProps) => {
   const {
+    chartName,
+    setChartName,
     chartData,
     setChartData,
     chartDataKeys,
@@ -37,7 +39,7 @@ const SideBar = (props: SideBarProps) => {
         <button css={{ position: 'relative' }}>
           <Text>CSV 업로드</Text>
           <input
-            css={chartPageCss.fileInput}
+            css={sideBarCss.fileInput}
             type="file"
             accept=".csv"
             onChange={uploadFile}
@@ -50,7 +52,11 @@ const SideBar = (props: SideBarProps) => {
       <If condition={!!chartData}>
         <Flex align="start" direction="column">
           <Text>차트 제목</Text>
-          <input css={[selectCss.trigger, { width: '100%' }]} />
+          <input
+            css={[selectCss.trigger, { width: '100%' }]}
+            value={chartName}
+            onChange={(e) => setChartName(e.target.value)}
+          />
         </Flex>
 
         <Spacing size={20} />

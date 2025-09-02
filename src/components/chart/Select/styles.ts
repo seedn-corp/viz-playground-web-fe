@@ -10,7 +10,7 @@ export const selectCss = {
       width: '100%',
       height: 34,
       textAlign: 'start',
-      padding: '0 14px',
+      padding: '0 12px',
       display: 'flex',
       alignItems: 'center',
       ...theme.fonts['body-medium'],

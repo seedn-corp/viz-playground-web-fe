@@ -109,7 +109,7 @@ const SelectTrigger = forwardRef<
 
       {arrowIcon || (
         <Icon asChild>
-          <DownIcon color={theme.colors.gray_080} />
+          <DownIcon color={theme.colors.gray_080} width={18} />
         </Icon>
       )}
     </Trigger>

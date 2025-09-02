@@ -35,9 +35,12 @@ const YAxisMultipleSelect = ({
           {name.length ? name.join(', ') : 'Y축 항목을 선택하세요.'}
         </Text>
         <Spacing size="auto" css={{ flex: 1 }} />
-        <ChevronDownIcon />
+        <ChevronDownIcon width={18} />
       </Popover.Trigger>
-      <Popover.Content sideOffset={4} css={[selectCss.content, { width: 240 }]}>
+      <Popover.Content
+        sideOffset={4}
+        css={[selectCss.content, { width: 220 - 32 }]}
+      >
         {items.map((item) => {
           const isChecked = name.includes(item);
           return (
@@ -56,6 +59,7 @@ const YAxisMultipleSelect = ({
                 color={
                   isChecked ? theme.colors.seedn_key : theme.colors.gray_060
                 }
+                width={16}
               />
             </Popover.Item>
           );

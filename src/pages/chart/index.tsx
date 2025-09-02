@@ -1,11 +1,16 @@
-import { Flex } from '@basiln/utils';
+import { Flex, Spacing } from '@basiln/utils';
 import Separator from '@/components/chart/Separator';
 import { useEffect, useMemo, useState } from 'react';
 import ChartArea from '@/components/chart/ChartArea';
 import type { ChartType } from './types';
 import SideBar from '@/components/chart/SideBar';
+import { chartPageCss } from './styles';
+import { Link } from 'react-router';
+import { Text } from '@basiln/design-system';
+import { ArrowLeftIcon } from 'lucide-react';
 
 const Chart = () => {
+  const [chartName, setChartName] = useState('새 차트');
   const [chartType, setChartType] = useState<ChartType>('line');
   const [chartData, setChartData] = useState<Record<string, string>[]>();
 
@@ -16,6 +21,7 @@ const Chart = () => {
     () => (chartData ? Object.keys(chartData?.[0]) : []),
     [chartData]
   );
+  console.log(JSON.stringify(chartData));
 
   useEffect(() => {
     if (chartDataKeys.length > 0) {
@@ -32,11 +38,31 @@ const Chart = () => {
 
   return (
     <div css={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Flex css={{ height: 60 }} />
-      <Separator orientation="horizontal" css={{ height: '100%' }} />
+      <Flex justify="start" css={chartPageCss.header}>
+        <Link
+          to=".."
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '4px 8px',
+            borderRadius: 4,
+            ':hover': {
+              backgroundColor: '#f5f5f5',
+            },
+          }}
+        >
+          <ArrowLeftIcon css={{ width: 14 }} />
+          <Text>돌아가기</Text>
+        </Link>
+
+        <Spacing direction="horizontal" size={24} />
+
+        <Text size="title-medium">차트 만들기</Text>
+      </Flex>
 
       <Flex css={{ width: '100%', flex: 1 }}>
-        <div css={{ width: 240, height: '100%' }}>
+        <div css={{ width: 220, height: '100%', padding: '20px 16px' }}>
           <SideBar
             {...{
               chartData,
@@ -48,6 +74,8 @@ const Chart = () => {
               setYAxisKeys,
               chartType,
               setChartType,
+              chartName,
+              setChartName,
             }}
           />
         </div>

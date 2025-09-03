@@ -3,7 +3,7 @@ import { Spacing } from '@basiln/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom } from '@/atoms/dashboard';
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
@@ -12,6 +12,7 @@ import { dashboardQueries } from '@/queries/dashboard';
 
 export const DashboardDetail = () => {
   const { id = '' } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { openWidgetDialog } = useDashboardOutlet();
   const setLastId = useSetAtom(lastDashboardIdAtom);
 
@@ -24,6 +25,12 @@ export const DashboardDetail = () => {
   useEffect(() => {
     if (id) setLastId(id);
   }, [id, setLastId]);
+
+  useEffect(() => {
+    if (isError) {
+      navigate('/dashboards', { replace: true });
+    }
+  }, [isError, navigate]);
 
   if (!id) return <div>잘못된 접근입니다.</div>;
   if (isLoading) return <div>불러오는 중...</div>;

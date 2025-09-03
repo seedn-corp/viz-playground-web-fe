@@ -2,11 +2,12 @@ import { Button, Text } from '@basiln/design-system';
 import { If } from '@basiln/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom } from '@/atoms/dashboard';
 import { useCreateDashboard } from '@/hooks/mutation/dashboard/useCreateDashboard';
+import { useDeleteDashboard } from '@/hooks/mutation/dashboard/useDeleteDashboard';
 import { dashboardQueries } from '@/queries/dashboard';
 
 import { sidebarCss } from './styles';
@@ -17,6 +18,8 @@ export const DashboardSidebar = () => {
 
   const { data: dashboards, isLoading } = useQuery(dashboardQueries.list());
   const createMutation = useCreateDashboard();
+  const deleteMutation = useDeleteDashboard();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const setLastId = useSetAtom(lastDashboardIdAtom);
 
@@ -37,6 +40,20 @@ export const DashboardSidebar = () => {
         },
       },
     );
+  };
+
+  const onDelete = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setDeletingId(id);
+    deleteMutation.mutate(id, {
+      onSettled: () => setDeletingId(null),
+      onSuccess: () => {
+        setLastId(null);
+        if (activeId === id) {
+          navigate('/dashboards');
+        }
+      },
+    });
   };
 
   return (
@@ -83,6 +100,18 @@ export const DashboardSidebar = () => {
               aria-label={`open-dashboard-${d.name}`}
             >
               <Text size="body-medium">{d.name}</Text>
+              <Button
+                size="small"
+                display="inline"
+                radius="small"
+                variant="ghost"
+                color="danger"
+                onClick={(e) => onDelete(e, d.id)}
+                isLoading={deletingId === d.id && deleteMutation.isPending}
+                aria-label={`delete-dashboard-${d.name}`}
+              >
+                삭제
+              </Button>
             </div>
           ))}
         </div>

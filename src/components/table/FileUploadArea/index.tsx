@@ -12,9 +12,7 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
 
   return (
     <div
-      css={[
-        !isLoading ? fileUploadAreaCss.dropZone : fileUploadAreaCss.isLoading,
-      ]}
+      css={[!isLoading ? fileUploadAreaCss.dropZone : fileUploadAreaCss.isLoading]}
       onDrop={onDrop}
       onDragOver={onDragOver}
       style={{
@@ -49,7 +47,7 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
           <input
             id="csv-upload"
             type="file"
-            accept=".csv"
+            accept=".csv,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             onChange={onFileUpload}
             css={fileUploadAreaCss.input}
           />

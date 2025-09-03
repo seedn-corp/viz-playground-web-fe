@@ -2,7 +2,6 @@ import { Button, Text } from '@basiln/design-system';
 import { Grid, Spacing } from '@basiln/utils';
 import { groupBy } from 'es-toolkit';
 import { ArrowLeft } from 'lucide-react';
-import Papa from 'papaparse';
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
@@ -15,8 +14,9 @@ import {
   DataTable,
   NestedTable,
   Pagination,
+  ViewModeSelector,
 } from '@/components/table';
-import { ViewModeSelector } from '@/components/table/ViewModeSelector';
+import { parseCsvFileToJson, parseXlsxFileToJson, isCSV, isExcel } from '@/pages/chart/utils';
 
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import type { DataRow, Group } from './types';
@@ -53,58 +53,59 @@ export const TableWidgetPage = () => {
   const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
 
   const handleFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement> | { target: { files: File[] } }) => {
+    async (event: React.ChangeEvent<HTMLInputElement> | { target: { files: File[] } }) => {
       const file = event.target.files?.[0];
-      if (!file) {
-        return;
-      }
-
-      if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-        setError('CSV 파일만 업로드할 수 있습니다.');
-        return;
-      }
+      if (!file) return;
 
       setLoading(true);
       setError('');
       setFileName(file.name);
 
-      Papa.parse(file, {
-        complete: (results) => {
-          if (results.errors.length > 0) {
-            setError('CSV 파일을 읽는 중 오류가 발생했습니다.');
-            setLoading(false);
-            return;
-          }
+      try {
+        let records: Record<string, string>[] = [];
 
-          const data = results.data as DataRow[];
-          if (data.length === 0) {
-            setError('빈 파일입니다.');
-            setLoading(false);
-            return;
-          }
-
-          const headerRow = (data[0] as DataRow).map((header) =>
-            typeof header === 'string' ? header.trim() : String(header),
-          );
-          setHeaders(headerRow);
-          setSelectedColumns(headerRow);
-
-          const dataRows = data
-            .slice(1)
-            .filter((row: DataRow) =>
-              row.some((cell) => cell !== null && cell !== undefined && cell !== ''),
-            );
-          setCsvData(dataRows);
-          setCurrentPage(1);
-          setGroupingColumns([]);
-          setExpandedGroups(new Set());
+        if (isCSV(file) || file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv')) {
+          records = await parseCsvFileToJson(file);
+        } else if (isExcel(file)) {
+          records = await parseXlsxFileToJson(file);
+        } else {
+          setError('CSV 또는 Excel(.xls/.xlsx) 파일만 업로드할 수 있습니다.');
           setLoading(false);
-        },
-        header: false,
-        skipEmptyLines: true,
-        dynamicTyping: true,
-        encoding: 'UTF-8',
-      });
+          return;
+        }
+
+        if (!records || records.length === 0) {
+          setError('빈 파일입니다.');
+          setLoading(false);
+          return;
+        }
+
+        const headerRow = Object.keys(records[0]).map((h) =>
+          typeof h === 'string' ? h.trim() : String(h),
+        );
+
+        setHeaders(headerRow);
+        setSelectedColumns(headerRow);
+
+        const dataRows = records.map((rec) =>
+          headerRow.map((h) => {
+            const v = rec[h];
+            if (v === undefined || v === '') return null;
+            const n = Number(v);
+            return Number.isNaN(n) ? v : n;
+          }),
+        ) as DataRow[];
+
+        setCsvData(dataRows);
+        setCurrentPage(1);
+        setGroupingColumns([]);
+        setExpandedGroups(new Set());
+      } catch (err) {
+        console.error(err);
+        setError('파일을 읽는 중 오류가 발생했습니다.');
+      } finally {
+        setLoading(false);
+      }
     },
     [],
   );

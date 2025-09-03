@@ -22,7 +22,7 @@ any) => {
       }}
     >
       <div style={{ fontWeight: 600, marginBottom: 4, color: '#555' }}>{label}</div>
-      {(payload as { name: string; value: number }[]).map((entry, index) => (
+      {(payload as { name: string; value: string | number }[]).map((entry, index) => (
         <div
           key={index}
           style={{
@@ -33,7 +33,9 @@ any) => {
           }}
         >
           <span css={[{ width: 80 }, ellipsis]}>{entry.name}</span>
-          <span>{entry.value}</span>
+          <span>
+            {typeof entry.value === 'number' ? Number(entry.value).toFixed(2) : entry.value}
+          </span>
         </div>
       ))}
     </div>

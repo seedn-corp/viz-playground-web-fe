@@ -62,6 +62,13 @@ export const widgetTableCss = {
     padding: '20px',
     height: 'calc(100vh - 100px)',
     width: 'calc(100vw - 300px)',
-    overflow: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+  }),
+
+  previewTableContainer: css({
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'calc(100% - 35px)',
   }),
 };

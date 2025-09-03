@@ -467,10 +467,12 @@ export const TableWidgetPage = () => {
               />
             )}
 
+            <Spacing size={10} />
+
             {csvData.length > 0 && selectedColumns.length > 0 && (
               <>
-                <div css={{ overflow: 'hidden' }}>
-                  <div css={{ overflow: 'auto' }}>
+                <div css={widgetTableCss.previewTableContainer}>
+                  <div css={{ flex: 1, overflow: 'auto' }}>
                     {viewMode === 'table' ? (
                       <DataTable
                         selectedColumns={selectedColumns}
@@ -489,11 +491,13 @@ export const TableWidgetPage = () => {
                   </div>
 
                   {viewMode === 'table' && totalPages > 1 && (
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={setCurrentPage}
-                    />
+                    <div css={{ marginTop: '12px' }}>
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                      />
+                    </div>
                   )}
                 </div>
               </>

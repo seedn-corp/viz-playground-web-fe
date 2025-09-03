@@ -17,7 +17,7 @@ import { Button, Text } from '@basiln/design-system';
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import { ViewModeSelector } from '@/components/common/widget-table/ViewModeSelector';
 
-export const WidgetTablePage = () => {
+export const TableWidgetPage = () => {
   const [headers, setHeaders] = useState<string[]>([]);
   const [csvData, setCsvData] = useState<DataRow[]>([]);
 

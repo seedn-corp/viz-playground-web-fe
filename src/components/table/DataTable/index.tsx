@@ -9,11 +9,7 @@ export const DataTable = (props: DataTableProps) => {
       <thead css={dataTableCss.thead}>
         <tr>
           {selectedColumns.map((header, index) => (
-            <th
-              key={index}
-              css={dataTableCss.th}
-              onClick={() => onSort(header)}
-            >
+            <th key={index} css={dataTableCss.th} onClick={() => onSort(header)}>
               {header}
               {sortConfig.key === header && (
                 <span css={dataTableCss.sortIcon}>
@@ -26,15 +22,17 @@ export const DataTable = (props: DataTableProps) => {
       </thead>
 
       <tbody css={dataTableCss.tbody}>
-        {paginatedData.map((row, rowIndex) => (
-          <tr key={rowIndex} css={dataTableCss.tr}>
-            {row.map((cell, cellIndex) => (
-              <td key={cellIndex} css={dataTableCss.td}>
-                {cell !== null && cell !== undefined ? String(cell) : ''}
-              </td>
-            ))}
-          </tr>
-        ))}
+        {paginatedData.map((row, rowIndex) => {
+          return (
+            <tr key={rowIndex} css={dataTableCss.tr}>
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex} css={dataTableCss.td}>
+                  {cell !== null && cell !== undefined ? String(cell) : ''}
+                </td>
+              ))}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

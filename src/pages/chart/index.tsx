@@ -11,7 +11,7 @@ import SideBar from '@/components/chart/SideBar';
 
 import { chartPageCss } from './styles';
 import type { ChartType } from './types';
-
+import type { WidgetType } from '@/atoms/dashboard';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -23,15 +23,13 @@ const Chart = () => {
   const [xAxisKey, setXAxisKey] = useState('');
   const [yAxisKeys, setYAxisKeys] = useState<string[]>([]);
 
-  const chartDataKeys = useMemo(
-    () => (chartData ? Object.keys(chartData?.[0]) : []),
-    [chartData]
-  );
+  const chartDataKeys = useMemo(() => (chartData ? Object.keys(chartData?.[0]) : []), [chartData]);
+  const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
 
   useEffect(() => {
     if (chartDataKeys.length > 0) {
       setXAxisKey(chartDataKeys[0]);
-      setYAxisKeys(chartDataKeys.slice(1, 3));
+      setYAxisKeys(numberValueKeys.slice(1, 3));
     }
   }, [chartDataKeys]);
 
@@ -48,13 +46,20 @@ const Chart = () => {
   }, [xAxisKey, yAxisKeys]);
 
   const addWidget = () => {
-    console.log({
-      name: chartName || '새 차트',
-      type: chartType,
-      processed_data: JSON.stringify(chartData),
-      config: JSON.stringify({ xAxisKey, yAxisKeys }),
-      position: {}, //
-    });
+    console.log(
+      JSON.stringify({
+        name: chartName || '새 차트',
+        type: (chartType + '_chart') as WidgetType,
+        processed_data: JSON.stringify(chartData),
+        config: JSON.stringify({ xAxisKey, yAxisKeys }),
+        position: {
+          x: 0,
+          y: 0,
+          width: 4,
+          height: 3,
+        },
+      }),
+    );
     toast.success('위젯이 추가되었습니다.');
     navigate('/');
   };
@@ -111,10 +116,7 @@ const Chart = () => {
         {/* 차트 영역 */}
         {chartData ? (
           <Flex direction="column" css={chartPageCss.chartContainer}>
-            <Text
-              size="body-large"
-              css={{ position: 'absolute', top: 20, left: 20 }}
-            >
+            <Text size="body-large" css={{ position: 'absolute', top: 20, left: 20 }}>
               미리보기
             </Text>
             <ChartArea

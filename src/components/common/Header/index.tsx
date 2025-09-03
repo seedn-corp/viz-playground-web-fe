@@ -1,17 +1,43 @@
-import { Button, Text } from "@basiln/design-system";
-import { Flex } from "@basiln/utils";
+import { Button, Text } from '@basiln/design-system';
+import { Flex } from '@basiln/utils';
+import { useNavigate } from 'react-router';
 
-import { headerCss } from "@/components/common/Header/styles";
+import { headerCss } from '@/components/common/Header/styles';
+import { useAuth } from '@/hooks/auth/useAuth';
+import { useLogout } from '@/hooks/mutation/auth/useLogout';
 
-interface HeaderProps {
-  onOpenDialog: () => void;
-}
+import type { HeaderProps } from './types';
 
 export const Header = ({ onOpenDialog }: HeaderProps) => {
+  const { user, accessToken } = useAuth();
+  const logoutMutation = useLogout();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    if (accessToken) {
+      logoutMutation.mutate(
+        { accessToken },
+        {
+          onSuccess: () => {
+            navigate('/signin', { replace: true });
+          },
+        },
+      );
+    } else {
+      // 토큰이 없는 경우 바로 로그인 페이지로 이동
+      navigate('/signin', { replace: true });
+    }
+  };
+
   return (
-    <Flex justify="flex-start" css={headerCss.container}>
+    <Flex justify="space-between" css={headerCss.container}>
       <Text size="title-large">대시보드</Text>
-      <Flex gap={20}>
+      <Flex gap={20} align="center">
+        {user && (
+          <Text size="body-medium" color="gray_060">
+            {user.email}
+          </Text>
+        )}
         <Button
           display="inline"
           size="regular-2"
@@ -27,6 +53,7 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
           size="regular-2"
           gutter="20px"
           radius="small"
+          onClick={handleLogout}
         >
           로그아웃
         </Button>

@@ -24,6 +24,8 @@ const Chart = () => {
   const [chartName, setChartName] = useState('새 차트');
   const [chartType, setChartType] = useState<ChartType>('line');
   const [chartData, setChartData] = useState<Record<string, string>[]>();
+  const [filteredData, setFilteredData] = useState<Record<string, string>[]>();
+  const [filters, setFilters] = useState<Record<string, string[]>>({});
 
   const [xAxisKey, setXAxisKey] = useState('');
   const [yAxisKeys, setYAxisKeys] = useState<string[]>([]);
@@ -41,6 +43,10 @@ const Chart = () => {
       setYAxisKeys(numberValueKeys.slice(1, 3));
     }
   }, [chartDataKeys]);
+
+  useEffect(() => {
+    setFilteredData(chartData);
+  }, [chartData]);
 
   useEffect(() => {
     if (chartType === 'pie') {
@@ -61,7 +67,7 @@ const Chart = () => {
         name: chartName || '새 차트',
         type: (chartType + '_chart') as WidgetType,
         processed_data: JSON.stringify(chartData),
-        config: JSON.stringify({ xAxisKey, yAxisKeys }),
+        config: JSON.stringify({ xAxisKey, yAxisKeys, filters }),
         position: computeNextPosition(data),
       },
       {
@@ -120,6 +126,9 @@ const Chart = () => {
               setChartType,
               chartName,
               setChartName,
+              onFilterChange: setFilteredData,
+              filters,
+              setFilters,
             }}
           />
         </div>
@@ -133,7 +142,7 @@ const Chart = () => {
               미리보기
             </Text>
             <ChartArea
-              chartData={chartData}
+              chartData={filteredData || chartData}
               chartType={chartType}
               xAxisKey={xAxisKey}
               yAxisKeys={yAxisKeys}

@@ -24,14 +24,13 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
         },
       );
     } else {
-      // 토큰이 없는 경우 바로 로그인 페이지로 이동
       navigate('/signin', { replace: true });
     }
   };
 
   return (
     <Flex justify="space-between" css={headerCss.container}>
-      <Text size="title-large">대시보드</Text>
+      <Text size="title-large">나만의 운영 대시보드</Text>
       <Flex gap={20} align="center">
         {user && (
           <Text size="body-medium" color="gray_060">

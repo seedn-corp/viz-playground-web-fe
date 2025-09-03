@@ -3,6 +3,7 @@ type WidgetItem = { position?: WidgetPosition };
 
 const DEFAULT_WIDTH = 4;
 const DEFAULT_HEIGHT = 8;
+
 export const computeNextPosition = (widgets?: WidgetItem[]) => {
   if (!widgets || widgets.length === 0) {
     return { x: 0, y: 0, width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };

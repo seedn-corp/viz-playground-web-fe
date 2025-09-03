@@ -25,17 +25,17 @@
 export const aggregateChartData = (
   chartData: Record<string, string>[],
   xAxisKey: string,
-  yAxisKeys: string[]
+  yAxisKeys: string[],
 ) => {
   return Object.values(
     chartData.reduce((acc, cur) => {
       const groupKey = cur[xAxisKey];
 
-      if (!acc[groupKey]) {
+      if (!acc[groupKey] || typeof acc[groupKey] !== 'number') {
         // xAxisKey와 yAxisKeys만 남겨서 초기화
         acc[groupKey] = { [xAxisKey]: groupKey };
         yAxisKeys.forEach((yKey) => {
-          acc[groupKey][yKey] = Number(cur[yKey]) || 0;
+          acc[groupKey][yKey] = Number(cur[yKey]) || cur[yKey];
         });
       } else {
         yAxisKeys.forEach((yKey) => {
@@ -44,6 +44,6 @@ export const aggregateChartData = (
       }
 
       return acc;
-    }, {} as Record<string, any>)
+    }, {} as Record<string, any>),
   );
 };

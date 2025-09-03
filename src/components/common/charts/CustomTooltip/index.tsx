@@ -1,3 +1,5 @@
+import { ellipsis } from '@basiln/utils';
+
 export const CustomTooltip = ({
   active,
   payload,
@@ -19,21 +21,18 @@ any) => {
         minWidth: 120,
       }}
     >
-      <div style={{ fontWeight: 600, marginBottom: 4, color: '#555' }}>
-        {label}
-      </div>
+      <div style={{ fontWeight: 600, marginBottom: 4, color: '#555' }}>{label}</div>
       {(payload as { name: string; value: number }[]).map((entry, index) => (
         <div
           key={index}
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
             fontWeight: 500,
             color: '#111',
             marginBottom: 2,
           }}
         >
-          <span>{entry.name}</span>
+          <span css={[{ width: 80 }, ellipsis]}>{entry.name}</span>
           <span>{entry.value}</span>
         </div>
       ))}

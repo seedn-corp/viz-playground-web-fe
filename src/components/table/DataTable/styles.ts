@@ -29,7 +29,6 @@ export const dataTableCss = {
     marginLeft: '0.25rem',
   }),
 
-  // className="divide-y divide-gray-200"
   tbody: css({
     borderTop: '1px solid #e5e7eb',
   }),

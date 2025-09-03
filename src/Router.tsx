@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router';
 
 import Chart from './pages/chart';
 import { Home } from './pages/home';
-import { TableWidgetPage } from './pages/widget-table';
+import { TableWidgetPage } from './pages/table';
 
 export const Router = () => {
   return (

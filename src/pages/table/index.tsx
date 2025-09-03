@@ -15,8 +15,8 @@ import {
   DataTable,
   NestedTable,
   Pagination,
-} from '@/components/common/widget-table';
-import { ViewModeSelector } from '@/components/common/widget-table/ViewModeSelector';
+} from '@/components/table';
+import { ViewModeSelector } from '@/components/table/ViewModeSelector';
 
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import type { DataRow, Group } from './types';

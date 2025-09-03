@@ -1,7 +1,7 @@
 import { Text } from '@basiln/design-system';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 
-import type { DataRow, Group } from '@/pages/widget-table/types';
+import type { DataRow, Group } from '@/pages/table/types';
 
 import { DataTable } from '../DataTable';
 import { nestedTableCss } from './styles';
@@ -10,11 +10,7 @@ import type { NestedTableProps } from './types';
 export const NestedTable = (props: NestedTableProps) => {
   const { data, selectedColumns, expandedGroups, onToggleGroup } = props;
 
-  const renderNestedGroup = (
-    group: Group,
-    groupIndex: number,
-    parentPath: string = ''
-  ) => {
+  const renderNestedGroup = (group: Group, groupIndex: number, parentPath: string = '') => {
     if (!group.isGroup) {
       return null;
     }
@@ -36,10 +32,7 @@ export const NestedTable = (props: NestedTableProps) => {
         }}
       >
         <div
-          css={[
-            nestedTableCss.groupDepthContainer,
-            nestedTableCss.groupDepth[group.depth],
-          ]}
+          css={[nestedTableCss.groupDepthContainer, nestedTableCss.groupDepth[group.depth]]}
           onClick={() => onToggleGroup(groupId)}
         >
           {isExpanded ? (
@@ -60,15 +53,11 @@ export const NestedTable = (props: NestedTableProps) => {
         </div>
 
         {isExpanded && (
-          <div
-            css={[
-              { marginTop: '7px', marginLeft: group.depth > 0 ? '16px' : '0' },
-            ]}
-          >
+          <div css={[{ marginTop: '7px', marginLeft: group.depth > 0 ? '16px' : '0' }]}>
             {hasSubGroups ? (
               <div className="space-y-2">
                 {(group.items as Group[]).map((subGroup, subIndex) =>
-                  renderNestedGroup(subGroup, subIndex, `${groupId}_`)
+                  renderNestedGroup(subGroup, subIndex, `${groupId}_`),
                 )}
               </div>
             ) : (

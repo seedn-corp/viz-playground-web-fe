@@ -11,17 +11,47 @@ export const NestedTable = (props: NestedTableProps) => {
   const { data, selectedColumns, expandedGroups, onToggleGroup } = props;
 
   const renderNestedGroup = (group: Group, groupIndex: number, parentPath: string = '') => {
-    if (!group.isGroup) {
-      return null;
-    }
+    if (!group.isGroup) return null;
 
     const groupId = `${parentPath}${group.groupValue}`;
     const isExpanded = expandedGroups.has(groupId);
     const hasSubGroups =
       Array.isArray(group.items) &&
-      'isGroup' in group.items[0] &&
       group.items.length > 0 &&
+      'isGroup' in group.items[0] &&
       group.items[0]?.isGroup;
+
+    const renderSubGroups = (subGroups: Group[], parentGroupId: string) => {
+      const subGroupHasSubGroups = (g: Group) =>
+        Array.isArray(g.items) &&
+        g.items.length > 0 &&
+        'isGroup' in g.items[0] &&
+        g.items[0]?.isGroup;
+
+      const isLeafLevel = subGroups.length > 0 && !subGroups.some(subGroupHasSubGroups);
+
+      if (isLeafLevel) {
+        const combinedItems = subGroups.flatMap((sg) => (sg.items as DataRow[]) || []);
+        return (
+          <div css={nestedTableCss.notSubGroupContainer}>
+            <DataTable
+              selectedColumns={selectedColumns}
+              paginatedData={combinedItems}
+              sortConfig={{ key: null, direction: 'asc' }}
+              onSort={() => {}}
+            />
+          </div>
+        );
+      }
+
+      return (
+        <div>
+          {subGroups.map((subGroup, subIndex) =>
+            renderNestedGroup(subGroup, subIndex, `${parentGroupId}_`),
+          )}
+        </div>
+      );
+    };
 
     return (
       <div
@@ -55,11 +85,7 @@ export const NestedTable = (props: NestedTableProps) => {
         {isExpanded && (
           <div css={[{ marginTop: '7px', marginLeft: group.depth > 0 ? '16px' : '0' }]}>
             {hasSubGroups ? (
-              <div className="space-y-2">
-                {(group.items as Group[]).map((subGroup, subIndex) =>
-                  renderNestedGroup(subGroup, subIndex, `${groupId}_`),
-                )}
-              </div>
+              renderSubGroups(group.items as Group[], groupId)
             ) : (
               <div css={nestedTableCss.notSubGroupContainer}>
                 <DataTable

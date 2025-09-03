@@ -469,8 +469,8 @@ export const TableWidgetPage = () => {
 
             {csvData.length > 0 && selectedColumns.length > 0 && (
               <>
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                  <div className="overflow-x-auto">
+                <div css={{ overflow: 'hidden' }}>
+                  <div css={{ overflow: 'auto' }}>
                     {viewMode === 'table' ? (
                       <DataTable
                         selectedColumns={selectedColumns}

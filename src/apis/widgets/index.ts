@@ -17,7 +17,7 @@ export const updateWidget = async ({ id, ...params }: UpdateWidgetParams) => {
   return data;
 };
 
-export const getAllWidget = async (dashboardId: string) => {
+export const getAllWidget = async (dashboardId: string): Promise<WidgetDetailResponse[]> => {
   const { data } = await client.get(`/api/dashboards/${dashboardId}/widgets`);
 
   return data.widgets;

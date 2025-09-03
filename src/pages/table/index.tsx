@@ -24,6 +24,8 @@ import { computeNextPosition } from '@/utils/computeNextPosition';
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import type { DataRow, Group } from './types';
 
+const TEST_DASHBOARD_ID = 'd3985fd6-327b-4ab6-8720-0fa6e63b916b';
+
 export const TableWidgetPage = () => {
   const navigate = useNavigate();
 
@@ -65,9 +67,7 @@ export const TableWidgetPage = () => {
   } = useTableData({ initialItemsPerPage: 10, viewMode });
 
   const { mutate, isPending } = useCreateWidget();
-  const { data, error: widgetsError } = useQuery(
-    widgetsQueries.all('d3985fd6-327b-4ab6-8720-0fa6e63b916b'),
-  );
+  const { data, error: widgetsError } = useQuery(widgetsQueries.all(TEST_DASHBOARD_ID));
 
   const handleAddWidget = () => {
     if (widgetsError) {
@@ -87,7 +87,7 @@ export const TableWidgetPage = () => {
 
     mutate(
       {
-        dashboardId: 'd3985fd6-327b-4ab6-8720-0fa6e63b916b',
+        dashboardId: TEST_DASHBOARD_ID,
 
         name: tableName || '새 테이블',
         type: 'table',

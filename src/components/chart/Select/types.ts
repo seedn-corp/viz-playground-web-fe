@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import type * as SelectPrimitive from '@radix-ui/react-select';
+import type { ReactNode } from 'react';
 
 export type SelectProps = SelectPrimitive.SelectProps & {
   value?: string;

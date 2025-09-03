@@ -6,9 +6,10 @@ import {
   Legend,
   PieChart as RechartsPieChart,
 } from 'recharts';
+
+import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
 import { LEGEND_STYLE } from '../utils';
-import { CustomTooltip } from '../CustomTooltip';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 

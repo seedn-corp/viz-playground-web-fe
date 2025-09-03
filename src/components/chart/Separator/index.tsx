@@ -1,5 +1,5 @@
-import { forwardRef } from 'react';
 import * as SeparatorPrimitive from '@radix-ui/react-separator';
+import { forwardRef } from 'react';
 
 import { separatorCss } from './styles';
 import type { SeparatorProps } from './types';
@@ -16,5 +16,7 @@ const Separator = forwardRef<HTMLDivElement, SeparatorProps>(
     );
   },
 );
+
+Separator.displayName = 'Separator';
 
 export default Separator;

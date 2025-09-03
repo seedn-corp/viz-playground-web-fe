@@ -1,5 +1,6 @@
 // src/widgets/WidgetSlot.tsx
 import type { WidgetType } from "@/atoms/dashboard";
+
 import { WidgetShell } from "../WidgetShell";
 
 type Props = {

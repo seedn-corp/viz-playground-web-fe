@@ -1,6 +1,3 @@
-import { ChevronDownIcon as DownIcon } from 'lucide-react';
-
-import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Flex, useCombinedRefs, useControllableState } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import {
@@ -15,19 +12,15 @@ import {
   Value,
   Item,
 } from '@radix-ui/react-select';
+import { ChevronDownIcon as DownIcon } from 'lucide-react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { SelectProvider, useSelectContext } from './context';
 import { selectCss } from './styles';
 import type { SelectProps, SelectTriggerProps } from './types';
 
 const SelectImpl = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
-  const {
-    children,
-    value: valueFromProps,
-    defaultValue,
-    onValueChange,
-    ...restProps
-  } = props;
+  const { children, value: valueFromProps, defaultValue, onValueChange, ...restProps } = props;
 
   const [value, setValue] = useControllableState({
     prop: valueFromProps,
@@ -51,19 +44,17 @@ const SelectImpl = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
     </SelectProvider>
   );
 });
+SelectImpl.displayName = 'Select';
 
 const SelectTrigger = forwardRef<
   HTMLButtonElement,
   SelectTriggerProps & {
     arrowIcon?: React.ReactNode;
-    valueRightAddon?:
-      | React.ReactNode
-      | ((isHover: boolean, value?: string) => React.ReactNode);
+    valueRightAddon?: React.ReactNode | ((isHover: boolean, value?: string) => React.ReactNode);
   }
 >((props, forwardedRef) => {
   const theme = useTheme();
-  const { children, leftAddon, arrowIcon, valueRightAddon, ...restProps } =
-    props;
+  const { children, leftAddon, arrowIcon, valueRightAddon, ...restProps } = props;
 
   const ref = useRef<HTMLButtonElement>(null);
   const combinedRefs = useCombinedRefs(ref, forwardedRef);
@@ -115,51 +106,52 @@ const SelectTrigger = forwardRef<
     </Trigger>
   );
 });
+SelectTrigger.displayName = 'SelectTrigger';
 
-const SelectContent = forwardRef<
-  HTMLDivElement,
-  SelectContentProps & { error?: boolean }
->((props, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { children, position, error, ...restProps } = props;
+const SelectContent = forwardRef<HTMLDivElement, SelectContentProps & { error?: boolean }>(
+  (props, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { children, position, error, ...restProps } = props;
 
-  const { triggerWidth } = useSelectContext('Select.Content');
+    const { triggerWidth } = useSelectContext('Select.Content');
 
-  return (
-    <Portal>
-      <Content
-        ref={ref}
-        align="end"
-        position="popper"
-        sideOffset={4}
-        css={[selectCss.content, { width: triggerWidth, margin: 0 }]}
-        {...restProps}
-      >
-        {error ? (
-          <Select.Item value="error" disabled>
-            오류가 발생했습니다.
-          </Select.Item>
-        ) : (
-          children
-        )}
-      </Content>
-    </Portal>
-  );
-});
+    return (
+      <Portal>
+        <Content
+          ref={ref}
+          align="end"
+          position="popper"
+          sideOffset={4}
+          css={[selectCss.content, { width: triggerWidth, margin: 0 }]}
+          {...restProps}
+        >
+          {error ? (
+            <Select.Item value="error" disabled>
+              오류가 발생했습니다.
+            </Select.Item>
+          ) : (
+            children
+          )}
+        </Content>
+      </Portal>
+    );
+  },
+);
+SelectContent.displayName = 'SelectContent';
 
-const SelectValue = forwardRef<
-  HTMLSpanElement,
-  SelectValueProps & { canRemove?: boolean }
->((props, ref) => {
-  const { children, ...restProps } = props;
-  const { value } = useSelectContext('Select.Value');
+const SelectValue = forwardRef<HTMLSpanElement, SelectValueProps & { canRemove?: boolean }>(
+  (props, ref) => {
+    const { children, ...restProps } = props;
+    const { value } = useSelectContext('Select.Value');
 
-  return (
-    <Value ref={ref} {...restProps}>
-      {children || value}
-    </Value>
-  );
-});
+    return (
+      <Value ref={ref} {...restProps}>
+        {children || value}
+      </Value>
+    );
+  },
+);
+SelectValue.displayName = 'SelectValue';
 
 const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, ref) => {
   const { children, value, ...restProps } = props;
@@ -177,6 +169,7 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, ref) => {
     </Item>
   );
 });
+SelectItem.displayName = 'SelectItem';
 
 const Select = Object.assign(SelectImpl, {
   Trigger: SelectTrigger,

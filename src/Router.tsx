@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router';
-import { Home } from './pages/home';
+
 import Chart from './pages/chart';
+import { Home } from './pages/home';
 
 export const Router = () => {
   return (

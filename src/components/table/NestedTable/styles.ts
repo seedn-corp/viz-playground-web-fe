@@ -94,10 +94,15 @@ export const nestedTableCss = {
   }),
 
   notSubGroupContainer: css({
+    display: 'flex',
+    flexDirection: 'column',
+  }),
+  notSubGroupTableContainer: css({
     backgroundColor: '#fff',
     border: '1px solid #eee',
     borderRadius: '0.375rem',
-    overflow: 'hidden',
+    overflow: 'auto',
+    flex: 1,
   }),
 
   notSubGroupTable: css({

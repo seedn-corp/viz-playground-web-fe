@@ -34,12 +34,14 @@ export const NestedTable = (props: NestedTableProps) => {
         const combinedItems = subGroups.flatMap((sg) => (sg.items as DataRow[]) || []);
         return (
           <div css={nestedTableCss.notSubGroupContainer}>
-            <DataTable
-              selectedColumns={selectedColumns}
-              paginatedData={combinedItems}
-              sortConfig={{ key: null, direction: 'asc' }}
-              onSort={() => {}}
-            />
+            <div css={nestedTableCss.notSubGroupTableContainer}>
+              <DataTable
+                selectedColumns={selectedColumns}
+                paginatedData={combinedItems}
+                sortConfig={{ key: null, direction: 'asc' }}
+                onSort={() => {}}
+              />
+            </div>
           </div>
         );
       }
@@ -88,12 +90,14 @@ export const NestedTable = (props: NestedTableProps) => {
               renderSubGroups(group.items as Group[], groupId)
             ) : (
               <div css={nestedTableCss.notSubGroupContainer}>
-                <DataTable
-                  selectedColumns={selectedColumns}
-                  paginatedData={group.items as DataRow[]}
-                  sortConfig={{ key: null, direction: 'asc' }}
-                  onSort={() => {}}
-                />
+                <div css={nestedTableCss.notSubGroupTableContainer}>
+                  <DataTable
+                    selectedColumns={selectedColumns}
+                    paginatedData={group.items as DataRow[]}
+                    sortConfig={{ key: null, direction: 'asc' }}
+                    onSort={() => {}}
+                  />
+                </div>
               </div>
             )}
           </div>

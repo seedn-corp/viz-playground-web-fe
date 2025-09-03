@@ -45,4 +45,21 @@ export const fileUploadAreaCss = {
   input: css({
     display: 'none',
   }),
+
+  clearButton: css({
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    position: 'absolute',
+    top: -8,
+    right: -8,
+  }),
+
+  uploadInfo: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }),
 };

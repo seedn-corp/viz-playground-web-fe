@@ -3,9 +3,7 @@ import * as XLSX from 'xlsx';
 /**
  * CSV 파일을 JSON으로 파싱하는 함수
  */
-export async function parseCsvFileToJson(
-  file: File
-): Promise<Record<string, string>[]> {
+export async function parseCsvFileToJson(file: File): Promise<Record<string, string>[]> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -35,9 +33,7 @@ export async function parseCsvFileToJson(
   });
 }
 
-export async function parseXlsxFileToJson(
-  file: File
-): Promise<Record<string, string>[]> {
+export async function parseXlsxFileToJson(file: File): Promise<Record<string, string>[]> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -53,7 +49,7 @@ export async function parseXlsxFileToJson(
         // 시트를 JSON으로 변환
         const jsonData: Record<string, string>[] = XLSX.utils.sheet_to_json(
           worksheet,
-          { defval: '' } // 값이 없을 때 빈 문자열로 처리
+          { defval: '' }, // 값이 없을 때 빈 문자열로 처리
         );
 
         resolve(jsonData);
@@ -68,9 +64,12 @@ export async function parseXlsxFileToJson(
 }
 
 export const isCSV = (file: File) => {
-  return file.name.endsWith('.csv');
+  return file.name.toLocaleLowerCase().endsWith('.csv');
 };
 
 export const isExcel = (file: File) => {
-  return file.name.endsWith('.xlsx');
+  return (
+    file.name.toLocaleLowerCase().endsWith('.xlsx') ||
+    file.name.toLocaleLowerCase().endsWith('.xls')
+  );
 };

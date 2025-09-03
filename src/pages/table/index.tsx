@@ -365,7 +365,7 @@ export const TableWidgetPage = () => {
             leftAddon={<ArrowLeft size={14} />}
             radius="small"
             variant="ghost"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/')}
           >
             <Text color="black" size="btn-medium">
               돌아가기

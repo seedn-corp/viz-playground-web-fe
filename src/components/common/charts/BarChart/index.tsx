@@ -17,7 +17,7 @@ import { LEGEND_STYLE, COLORS } from '../utils';
 const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height="100%">
       <RechartsBarChart data={aggregatedData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} tick={{ fill: '#666', fontSize: 12 }} />
@@ -25,12 +25,7 @@ const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
         <Tooltip content={<CustomTooltip />} />
         <Legend {...LEGEND_STYLE} />
         {yAxisKeys.map((item, index) => (
-          <Bar
-            key={item}
-            type="monotone"
-            dataKey={item}
-            fill={COLORS[index % COLORS.length]}
-          />
+          <Bar key={item} type="monotone" dataKey={item} fill={COLORS[index % COLORS.length]} />
         ))}
       </RechartsBarChart>
     </ResponsiveContainer>

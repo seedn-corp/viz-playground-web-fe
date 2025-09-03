@@ -28,7 +28,7 @@ const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   );
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height="100%">
       <RechartsPieChart>
         <Pie
           data={pieChartData}

@@ -17,7 +17,7 @@ import { COLORS, LEGEND_STYLE } from '../utils';
 const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height="100%">
       <RechartsAreaChart data={aggregatedData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} tick={{ fill: '#666', fontSize: 12 }} />

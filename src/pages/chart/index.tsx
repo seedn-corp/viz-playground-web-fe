@@ -11,7 +11,12 @@ import SideBar from '@/components/chart/SideBar';
 
 import { chartPageCss } from './styles';
 import type { ChartType } from './types';
-import type { WidgetType } from '@/atoms/dashboard';
+
+import { useCreateWidget } from '@/hooks/mutation/widgets/useCreateWidget';
+import type { WidgetType } from '@/types/widgets';
+import { useQuery } from '@tanstack/react-query';
+import { widgetsQueries } from '@/queries/widgets';
+import { computeNextPosition } from '@/utils/computeNextPosition';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -25,6 +30,10 @@ const Chart = () => {
 
   const chartDataKeys = useMemo(() => (chartData ? Object.keys(chartData?.[0]) : []), [chartData]);
   const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
+
+  const { data } = useQuery(widgetsQueries.all('d3985fd6-327b-4ab6-8720-0fa6e63b916b'));
+
+  const { mutate, isPending } = useCreateWidget();
 
   useEffect(() => {
     if (chartDataKeys.length > 0) {
@@ -46,22 +55,25 @@ const Chart = () => {
   }, [xAxisKey, yAxisKeys]);
 
   const addWidget = () => {
-    console.log(
-      JSON.stringify({
+    mutate(
+      {
+        dashboardId: 'd3985fd6-327b-4ab6-8720-0fa6e63b916b',
         name: chartName || '새 차트',
         type: (chartType + '_chart') as WidgetType,
         processed_data: JSON.stringify(chartData),
         config: JSON.stringify({ xAxisKey, yAxisKeys }),
-        position: {
-          x: 0,
-          y: 0,
-          width: 4,
-          height: 3,
+        position: computeNextPosition(data),
+      },
+      {
+        onSuccess: () => {
+          toast.success('위젯이 추가되었습니다.');
+          navigate('/');
         },
-      }),
+        onError: (error) => {
+          toast.error(`위젯 추가에 실패했습니다: ${error.message}`);
+        },
+      },
     );
-    toast.success('위젯이 추가되었습니다.');
-    navigate('/');
   };
 
   return (
@@ -85,7 +97,8 @@ const Chart = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={addWidget}
-          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey}
+          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey || isPending}
+          isLoading={isPending}
         >
           <Text color="white">저장하기</Text>
         </Button>

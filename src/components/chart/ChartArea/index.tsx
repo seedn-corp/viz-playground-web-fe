@@ -8,28 +8,25 @@ import type { ChartProps } from '@/components/common/charts/types';
 
 import type { ChartAreaProps } from './types';
 
-const ChartArea = ({
-  chartData,
-  chartType,
-  xAxisKey,
-  yAxisKeys,
-}: ChartAreaProps) => {
+const ChartArea = ({ chartData, chartType, xAxisKey, yAxisKeys }: ChartAreaProps) => {
   const chartProps: ChartProps = { chartData, xAxisKey, yAxisKeys };
   return (
-    <Choose>
-      <Choose.When condition={chartType === 'line'}>
-        <LineChart {...chartProps} />
-      </Choose.When>
-      <Choose.When condition={chartType === 'bar'}>
-        <BarChart {...chartProps} />
-      </Choose.When>
-      <Choose.When condition={chartType === 'area'}>
-        <AreaChart {...chartProps} />
-      </Choose.When>
-      <Choose.When condition={chartType === 'pie'}>
-        <PieChart {...chartProps} />
-      </Choose.When>
-    </Choose>
+    <div css={{ width: '100%', height: 300 }}>
+      <Choose>
+        <Choose.When condition={chartType === 'line'}>
+          <LineChart {...chartProps} />
+        </Choose.When>
+        <Choose.When condition={chartType === 'bar'}>
+          <BarChart {...chartProps} />
+        </Choose.When>
+        <Choose.When condition={chartType === 'area'}>
+          <AreaChart {...chartProps} />
+        </Choose.When>
+        <Choose.When condition={chartType === 'pie'}>
+          <PieChart {...chartProps} />
+        </Choose.When>
+      </Choose>
+    </div>
   );
 };
 

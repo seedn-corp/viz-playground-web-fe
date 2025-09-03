@@ -1,25 +1,53 @@
-import { css } from "@emotion/react";
+import { theme } from '@basiln/design-system';
+import { css } from '@emotion/react';
 
 export const signInCss = {
   container: css({
-    width: "100%",
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "12px 26px 0 32px",
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.gray_020,
+    padding: '20px',
   }),
+
   content: css({
-    width: "fit-content",
+    width: '100%',
     maxWidth: 400,
+    backgroundColor: theme.colors.white,
+    borderRadius: 16,
+    padding: '40px 32px',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
   }),
-  buttonContainer: css({
-    width: "100%",
+
+  form: css({
+    width: '100%',
   }),
-  buttonText: css({
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: 700,
+
+  submitButton: css({
+    width: '100%',
+    marginTop: 8,
+  }),
+
+  inputWrap: css({
+    width: '100%',
+  }),
+
+  input: css({
+    width: '100%',
+    padding: '12px 16px',
+    border: `1px solid ${theme.colors.gray_040}`,
+    borderRadius: 8,
+    fontSize: 14,
+    lineHeight: 1.5,
+    transition: 'border-color 0.2s ease',
+    '&:focus': {
+      outline: 'none',
+      borderColor: theme.colors.seedn_key,
+    },
+    '&:disabled': {
+      backgroundColor: theme.colors.gray_020,
+      cursor: 'not-allowed',
+    },
   }),
 };

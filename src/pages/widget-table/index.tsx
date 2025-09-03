@@ -406,9 +406,15 @@ export const TableWidgetPage = () => {
           display="inline"
           gutter="20px"
           radius="small"
+          css={{ height: 36 }}
           onClick={addWidget}
+          disabled={
+            headers.length === 0 ||
+            csvData.length === 0 ||
+            selectedColumns.length === 0
+          }
         >
-          저장
+          <Text color="white">저장하기</Text>
         </Button>
       </header>
 

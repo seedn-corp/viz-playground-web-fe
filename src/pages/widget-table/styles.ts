@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 export const widgetTablePageHeaderCss = {
   self: css({
-    height: '60px',
+    height: '58px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -21,7 +21,7 @@ export const widgetTablePageHeaderCss = {
 
 export const widgetTableCss = {
   container: css({
-    height: 'calc(100vh - 60px)',
+    height: 'calc(100vh - 58px)',
   }),
 
   fieldTitle: css({

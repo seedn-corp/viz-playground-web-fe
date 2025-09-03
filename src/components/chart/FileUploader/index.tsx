@@ -1,14 +1,11 @@
-import {
-  isCSV,
-  isExcel,
-  parseCsvFileToJson,
-  parseXlsxFileToJson,
-} from '@/pages/chart/utils';
+import { isCSV, isExcel, parseCsvFileToJson, parseXlsxFileToJson } from '@/pages/chart/utils';
+
+import { Text, theme } from '@basiln/design-system';
+
 import { Upload } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { Text, theme } from '@basiln/design-system';
 import { fileUploaderCss } from './styles';
 
 const FileUploader = ({
@@ -34,18 +31,14 @@ const FileUploader = ({
         toast.error('CSV 또는 Excel 파일만 업로드 가능합니다.');
         return;
       }
-      const data = isCSV(file)
-        ? await parseCsvFileToJson(file)
-        : await parseXlsxFileToJson(file);
+      const data = isCSV(file) ? await parseCsvFileToJson(file) : await parseXlsxFileToJson(file);
       onChangeChartData(data);
     } catch {
       toast.error('파일 처리 중 오류가 발생했습니다.');
     }
   };
 
-  const handleFileInputChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) await handleFile(file);
   };

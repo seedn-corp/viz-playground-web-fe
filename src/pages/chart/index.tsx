@@ -1,14 +1,17 @@
-import { Flex, Spacing } from '@basiln/utils';
-import Separator from '@/components/chart/Separator';
-import { useEffect, useMemo, useState } from 'react';
-import ChartArea from '@/components/chart/ChartArea';
-import type { ChartType } from './types';
-import SideBar from '@/components/chart/SideBar';
-import { chartPageCss } from './styles';
-import { Link, useNavigate } from 'react-router';
 import { Button, Text } from '@basiln/design-system';
+import { Flex, Spacing } from '@basiln/utils';
 import { ArrowLeftIcon, Upload } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router';
+
+import ChartArea from '@/components/chart/ChartArea';
+import Separator from '@/components/chart/Separator';
+import SideBar from '@/components/chart/SideBar';
+
+import { chartPageCss } from './styles';
+import type { ChartType } from './types';
+
 
 const Chart = () => {
   const navigate = useNavigate();

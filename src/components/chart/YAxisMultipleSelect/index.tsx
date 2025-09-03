@@ -1,10 +1,11 @@
 import { Text } from '@basiln/design-system';
 import { Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
-
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
+
 import Popover from '@/components/chart/Popover';
 import { selectCss } from '@/components/chart/Select/styles';
+
 import type { YAxisMultipleSelectProps } from './types';
 
 const YAxisMultipleSelect = ({

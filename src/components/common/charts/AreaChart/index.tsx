@@ -8,10 +8,11 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+
 import { aggregateChartData } from '../../../chart/ChartArea/utils';
+import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
 import { COLORS, LEGEND_STYLE } from '../utils';
-import { CustomTooltip } from '../CustomTooltip';
 
 const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);

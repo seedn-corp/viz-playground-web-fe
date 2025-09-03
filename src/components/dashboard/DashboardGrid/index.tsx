@@ -1,9 +1,9 @@
-import { Responsive, WidthProvider } from "react-grid-layout";
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Flex, If, Spacing } from "@basiln/utils";
-import { Button, Text } from "@basiln/design-system";
+import { Button, Text } from '@basiln/design-system';
+import { Flex, If, Spacing } from '@basiln/utils';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { Responsive, WidthProvider } from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 import {
   widgetsAtom,
@@ -11,10 +11,11 @@ import {
   BREAKPOINTS,
   COLS,
   nextLayoutsAfterRemove,
-} from "@/atoms/dashboard";
-import { WidgetSlot } from "@/components/widgets/WidgetSlot";
-import { styles } from "./styles";
-import type { DashboardGridProps } from "./types";
+} from '@/atoms/dashboard';
+import { WidgetSlot } from '@/components/widgets/WidgetSlot';
+
+import { styles } from './styles';
+import type { DashboardGridProps } from './types';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -45,11 +46,7 @@ export const DashboardGrid = ({ onOpenDialog }: DashboardGridProps) => {
       >
         {widgets.map((w) => (
           <div key={w.id}>
-            <WidgetSlot
-              type={w.type}
-              props={w.props}
-              onRemove={() => handleRemove(w.id)}
-            />
+            <WidgetSlot type={w.type} props={w.props} onRemove={() => handleRemove(w.id)} />
           </div>
         ))}
       </ResponsiveGridLayout>

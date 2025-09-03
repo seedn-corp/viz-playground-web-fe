@@ -1,12 +1,15 @@
 import { Route, Routes } from 'react-router';
-import { Home } from './pages/home';
+
 import Chart from './pages/chart';
+import { Home } from './pages/home';
+import { TableWidgetPage } from './pages/table';
 
 export const Router = () => {
   return (
     <Routes>
       <Route index element={<Home />} />
       <Route path="/chart" element={<Chart />} />
+      <Route path="/table" element={<TableWidgetPage />} />
     </Routes>
   );
 };

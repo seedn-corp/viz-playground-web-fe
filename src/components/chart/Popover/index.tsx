@@ -1,5 +1,5 @@
-import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import * as Primitive from '@radix-ui/react-popover';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 import { selectCss } from '@/components/chart/Select/styles';
 
@@ -7,10 +7,7 @@ const Popover = ({ children, ...restProps }: Primitive.PopoverProps) => {
   return <Primitive.Root {...restProps}>{children}</Primitive.Root>;
 };
 
-const PopoverTrigger = ({
-  children,
-  ...restProps
-}: Primitive.PopoverTriggerProps) => {
+const PopoverTrigger = ({ children, ...restProps }: Primitive.PopoverTriggerProps) => {
   return (
     <Primitive.Trigger asChild {...restProps}>
       {children}
@@ -18,23 +15,23 @@ const PopoverTrigger = ({
   );
 };
 
-const PopoverContent = forwardRef<
-  HTMLDivElement,
-  Primitive.PopoverContentProps
->(({ children, ...restProps }, ref) => {
-  return (
-    <Primitive.Portal>
-      <Primitive.Content
-        ref={ref}
-        css={selectCss.content}
-        onWheel={(e) => e.stopPropagation()}
-        {...restProps}
-      >
-        {children}
-      </Primitive.Content>
-    </Primitive.Portal>
-  );
-});
+const PopoverContent = forwardRef<HTMLDivElement, Primitive.PopoverContentProps>(
+  ({ children, ...restProps }, ref) => {
+    return (
+      <Primitive.Portal>
+        <Primitive.Content
+          ref={ref}
+          css={selectCss.content}
+          onWheel={(e) => e.stopPropagation()}
+          {...restProps}
+        >
+          {children}
+        </Primitive.Content>
+      </Primitive.Portal>
+    );
+  },
+);
+PopoverContent.displayName = 'PopoverContent';
 
 const PopoverItem = forwardRef<
   HTMLButtonElement,
@@ -56,13 +53,14 @@ const PopoverItem = forwardRef<
     </button>
   );
 });
+PopoverItem.displayName = 'PopoverItem';
 
-const PopoverClose = forwardRef<
-  HTMLButtonElement,
-  ButtonHTMLAttributes<HTMLButtonElement>
->((props, ref) => {
-  return <Primitive.Close ref={ref} {...props} />;
-});
+const PopoverClose = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
+  (props, ref) => {
+    return <Primitive.Close ref={ref} {...props} />;
+  },
+);
+PopoverClose.displayName = 'PopoverClose';
 
 Popover.Trigger = PopoverTrigger;
 Popover.Content = PopoverContent;

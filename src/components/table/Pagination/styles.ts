@@ -3,8 +3,6 @@ import { css } from '@emotion/react';
 export const paginationCss = {
   container: css({
     backgroundColor: '#fff',
-    padding: '1rem',
-    borderTop: '1px solid #eee',
   }),
 
   buttonContainer: css({
@@ -14,30 +12,43 @@ export const paginationCss = {
   }),
 
   button: css({
-    padding: '0.25rem 0.75rem',
-    borderRadius: '0.375rem',
-    backgroundColor: '#f3f4f6',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 36,
+    height: 36,
+    padding: '0 6px',
+    borderRadius: '50%',
     color: '#374151',
     cursor: 'pointer',
+
     '&:hover': {
       backgroundColor: '#e5e7eb',
     },
 
     '&:disabled': {
-      backgroundColor: '#f3f4f6',
+      opacity: 0.5,
       color: '#a1a1a1',
       cursor: 'not-allowed',
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
     },
   }),
 
   numberButtonContainer: css({
     display: 'flex',
-    gap: '0.25rem',
+    gap: '6px',
   }),
+
   numberButton: css({
-    padding: '0.25rem 0.75rem',
-    borderRadius: '0.375rem',
-    backgroundColor: '#f3f4f6',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 36,
+    height: 36,
+    padding: '0 6px',
+    borderRadius: '50%',
     color: '#374151',
     cursor: 'pointer',
 
@@ -47,7 +58,16 @@ export const paginationCss = {
   }),
 
   numberButtonActive: css({
-    backgroundColor: '#2563eb',
-    color: '#fff',
+    backgroundColor: '#f3f4f6',
+    color: '#000000',
+  }),
+
+  ellipsis: css({
+    width: 36,
+    height: 36,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#6b7280',
   }),
 };

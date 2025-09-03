@@ -49,11 +49,11 @@ const Chart = () => {
 
   const addWidget = () => {
     console.log({
-      chartName,
-      chartType,
-      chartData,
-      xAxisKey,
-      yAxisKeys,
+      name: chartName || '새 차트',
+      type: chartType,
+      processed_data: JSON.stringify(chartData),
+      config: JSON.stringify({ xAxisKey, yAxisKeys }),
+      position: {}, //
     });
     toast.success('위젯이 추가되었습니다.');
     navigate('/');

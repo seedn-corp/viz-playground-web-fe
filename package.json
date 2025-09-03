@@ -29,7 +29,8 @@
     "react-grid-layout": "^1.5.2",
     "react-hot-toast": "^2.6.0",
     "react-router": "^7.8.2",
-    "recharts": "^3.1.2"
+    "recharts": "^3.1.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

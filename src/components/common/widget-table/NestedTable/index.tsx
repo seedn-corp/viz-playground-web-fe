@@ -1,32 +1,20 @@
-import type { Group, DataRow } from '../../../../pages/widget-table/types';
+import { ChevronRight, ChevronDown } from 'lucide-react';
+import { DataTable } from '../DataTable';
 import type { NestedTableProps } from './types';
 import { nestedTableCss } from './styles';
+import type { DataRow, Group } from '@/pages/widget-table/types';
+import { Text } from '@basiln/design-system';
 
 export const NestedTable = (props: NestedTableProps) => {
-  const { sortedData, selectedColumns, expandedGroups, onToggleGroup } = props;
+  const { data, selectedColumns, expandedGroups, onToggleGroup } = props;
 
   const renderNestedGroup = (
     group: Group,
     groupIndex: number,
-    parentPath = ''
+    parentPath: string = ''
   ) => {
-    if (
-      Array.isArray(group.items) &&
-      group.items.length === 1 &&
-      typeof group.items[0] !== 'undefined' &&
-      !(group.items[0] as Group).groupKey
-    ) {
-      const row = group.items[0] as DataRow;
-
-      return (
-        <div key={groupIndex} css={nestedTableCss.groupRowContainer}>
-          {row.map((cell, cellIndex) => (
-            <div key={cellIndex} css={nestedTableCss.groupRow}>
-              {cell !== null && cell !== undefined ? String(cell) : ''}
-            </div>
-          ))}
-        </div>
-      );
+    if (!group.isGroup) {
+      return null;
     }
 
     const groupId = `${parentPath}${group.groupValue}`;
@@ -52,65 +40,43 @@ export const NestedTable = (props: NestedTableProps) => {
           ]}
           onClick={() => onToggleGroup(groupId)}
         >
-          <span css={nestedTableCss.expandIcon}>{isExpanded ? '▼' : '▶'}</span>
+          {isExpanded ? (
+            <ChevronDown css={nestedTableCss.expandIcon} />
+          ) : (
+            <ChevronRight css={nestedTableCss.expandIcon} />
+          )}
 
           <div css={nestedTableCss.groupContentContainer}>
-            <span>
-              <span>{group.groupColumn}:</span> <span>{group.groupValue}</span>
-            </span>
-            <span
-              css={[
-                nestedTableCss.groupText,
-                nestedTableCss.groupDepthText[group.depth],
-              ]}
-            >
+            <Text>{group.groupColumn}:</Text>
+            <Text>{group.groupValue}</Text>
+            <Text css={nestedTableCss.groupDepthText[group.depth]}>
               {hasSubGroups
                 ? `${group.items.length}개 그룹`
                 : `${group.totalItems || group.items.length}개 항목`}
-            </span>
+            </Text>
           </div>
         </div>
 
         {isExpanded && (
           <div
-            css={{
-              marginTop: '0.5rem',
-              ...(group.depth > 0 ? { marginLeft: '1rem' } : {}),
-            }}
+            css={[
+              { marginTop: '7px', marginLeft: group.depth > 0 ? '16px' : '0' },
+            ]}
           >
             {hasSubGroups ? (
-              <div css={nestedTableCss.subGroupContainer}>
+              <div className="space-y-2">
                 {(group.items as Group[]).map((subGroup, subIndex) =>
                   renderNestedGroup(subGroup, subIndex, `${groupId}_`)
                 )}
               </div>
             ) : (
               <div css={nestedTableCss.notSubGroupContainer}>
-                <table css={nestedTableCss.notSubGroupTable}>
-                  <thead css={nestedTableCss.notSubGroupTableHeader}>
-                    <tr>
-                      {selectedColumns.map((header, index) => (
-                        <th key={index} css={nestedTableCss.notSubGroupTh}>
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-
-                  <tbody css={nestedTableCss.notSubGroupTbody}>
-                    {(group.items as DataRow[]).map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        {row.map((cell, cellIndex) => (
-                          <td key={cellIndex}>
-                            {cell !== null && cell !== undefined
-                              ? String(cell)
-                              : ''}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <DataTable
+                  selectedColumns={selectedColumns}
+                  paginatedData={group.items as DataRow[]}
+                  sortConfig={{ key: null, direction: 'asc' }}
+                  onSort={() => {}}
+                />
               </div>
             )}
           </div>
@@ -121,9 +87,7 @@ export const NestedTable = (props: NestedTableProps) => {
 
   return (
     <div css={nestedTableCss.self}>
-      {sortedData.map((group, groupIndex) =>
-        renderNestedGroup(group, groupIndex)
-      )}
+      {data.map((group, groupIndex) => renderNestedGroup(group, groupIndex))}
     </div>
   );
 };

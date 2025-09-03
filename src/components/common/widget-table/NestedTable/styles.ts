@@ -46,30 +46,24 @@ export const nestedTableCss = {
     }),
   ],
 
-  groupText: css({
-    fontSize: '0.875rem',
-    padding: '0.25rem 0.5rem',
-    borderRadius: '0.375rem',
-    color: '#fff',
-  }),
   groupDepthText: [
     css({
-      backgroundColor: '#3b82f6',
+      color: '#3b82f6',
     }),
     css({
-      backgroundColor: '#10b981',
+      color: '#10b981',
     }),
     css({
-      backgroundColor: '#f59e0b',
+      color: '#f59e0b',
     }),
     css({
-      backgroundColor: '#6d28d9',
+      color: '#6d28d9',
     }),
   ],
 
   expandIcon: css({
-    height: '1rem',
-    width: '1rem',
+    height: '14px',
+    width: '14px',
     color: '#6b7280',
     flexShrink: 0,
   }),
@@ -77,8 +71,8 @@ export const nestedTableCss = {
   groupContentContainer: css({
     display: 'flex',
     alignItems: 'center',
-    gap: '0.75rem',
     flex: 1,
+    gap: '3px',
   }),
 
   groupRowContainer: css({

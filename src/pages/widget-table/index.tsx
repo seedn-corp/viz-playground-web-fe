@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { DataRow, Group } from './types';
 import { ArrowLeft } from 'lucide-react';
 import Papa from 'papaparse';
@@ -26,7 +26,10 @@ export const WidgetTablePage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [
+    searchTerm,
+    // setSearchTerm
+  ] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [sortConfig, setSortConfig] = useState<{
@@ -344,6 +347,12 @@ export const WidgetTablePage = () => {
     });
   };
 
+  useEffect(() => {
+    if (groupingColumns.length === 0 && viewMode === 'group') {
+      setViewMode('table');
+    }
+  }, [groupingColumns, viewMode]);
+
   // const resetData = () => {
   //   setCsvData([]);
   //   setHeaders([]);
@@ -459,6 +468,7 @@ export const WidgetTablePage = () => {
             {csvData.length > 0 && (
               <ViewModeSelector
                 type={viewMode}
+                groupingColumns={groupingColumns}
                 onTypeChange={setViewMode}
                 itemsPerPage={itemsPerPage}
                 onItemsPerPageChange={setItemsPerPage}
@@ -481,7 +491,7 @@ export const WidgetTablePage = () => {
                       />
                     ) : (
                       <NestedTable
-                        sortedData={sortedData as Group[]}
+                        data={sortedData as Group[]}
                         selectedColumns={selectedColumns}
                         expandedGroups={expandedGroups}
                         onToggleGroup={toggleGroupExpansion}

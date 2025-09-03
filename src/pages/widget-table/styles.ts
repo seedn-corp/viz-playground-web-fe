@@ -60,6 +60,7 @@ export const widgetTableCss = {
     border: '1px solid #0000001a',
     borderRadius: '6px',
     padding: '20px',
-    height: '100%',
+    height: 'calc(100vh - 100px)',
+    overflow: 'auto',
   }),
 };

@@ -12,6 +12,7 @@ export const ViewModeSelector = (props: ViewModeSelectorProps) => {
     onTypeChange,
     itemsPerPage,
     onItemsPerPageChange,
+    groupingColumns,
     onCurrentPageChange,
     onExpandAllGroups,
     onCollapseAllGroups,
@@ -25,7 +26,9 @@ export const ViewModeSelector = (props: ViewModeSelectorProps) => {
           onChange={(e) => onTypeChange(e.target.value as 'group' | 'table')}
         >
           <option value={'table'}>테이블 형식으로 보기</option>
-          <option value={'group'}>그룹화 형식으로 보기</option>
+          {groupingColumns.length > 0 && (
+            <option value={'group'}>그룹화 형식으로 보기</option>
+          )}
         </select>
       </div>
 

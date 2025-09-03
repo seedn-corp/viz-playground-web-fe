@@ -40,7 +40,7 @@ export type CreateWidgetParams = {
 };
 
 export type UpdateWidgetParams = {
-  id: number;
+  id: string;
 
   name?: string;
   type?: string;

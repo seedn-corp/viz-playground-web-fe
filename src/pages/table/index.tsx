@@ -1,5 +1,5 @@
 import { Button, Text } from '@basiln/design-system';
-import { Grid, Spacing } from '@basiln/utils';
+import { Grid, If, Spacing } from '@basiln/utils';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -32,6 +32,7 @@ export const TableWidgetPage = () => {
     fileName,
     loading,
     error,
+    fileSize,
     currentPage,
     itemsPerPage,
     sortConfig,
@@ -51,6 +52,7 @@ export const TableWidgetPage = () => {
     handleDrop,
     handleDragOver,
     handleSort,
+    resetData,
     toggleColumnSelection,
     updateGroupingLevel,
     expandAllGroups,
@@ -129,10 +131,17 @@ export const TableWidgetPage = () => {
           </Text>
 
           <FileUploadArea
+            type="compact"
             onFileUpload={handleFileUpload}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             isLoading={loading}
+            uploadedFileName={fileName || null}
+            uploadedFileSize={fileSize}
+            onRemove={() => {
+              resetData();
+              toast.success('파일이 제거되었습니다.');
+            }}
           />
           {error && (
             <Text
@@ -185,7 +194,7 @@ export const TableWidgetPage = () => {
 
         <Grid.Item css={widgetTableCss.right}>
           <div css={widgetTableCss.previewContainer}>
-            {csvData.length > 0 && (
+            <If condition={csvData.length > 0}>
               <ViewModeSelector
                 type={viewMode}
                 groupingColumns={groupingColumns}
@@ -196,43 +205,59 @@ export const TableWidgetPage = () => {
                 onExpandAllGroups={expandAllGroups}
                 onCollapseAllGroups={collapseAllGroups}
               />
-            )}
 
-            <Spacing size={10} />
+              <Spacing size={10} />
 
-            {csvData.length > 0 && selectedColumns.length > 0 && (
-              <>
-                <div css={widgetTableCss.previewTableContainer}>
-                  <div css={{ flex: 1, overflow: 'auto' }}>
-                    {viewMode === 'table' ? (
-                      <DataTable
-                        selectedColumns={selectedColumns}
-                        paginatedData={paginatedData as DataRow[]}
-                        sortConfig={sortConfig}
-                        onSort={handleSort}
-                      />
-                    ) : (
-                      <NestedTable
-                        data={nestedData as Group[]}
-                        selectedColumns={selectedColumns}
-                        expandedGroups={expandedGroups}
-                        onToggleGroup={toggleGroupExpansion}
-                      />
+              {selectedColumns.length > 0 && (
+                <>
+                  <div css={widgetTableCss.previewTableContainer}>
+                    <div css={{ flex: 1, overflow: 'auto' }}>
+                      {viewMode === 'table' ? (
+                        <DataTable
+                          selectedColumns={selectedColumns}
+                          paginatedData={paginatedData as DataRow[]}
+                          sortConfig={sortConfig}
+                          onSort={handleSort}
+                        />
+                      ) : (
+                        <NestedTable
+                          data={nestedData as Group[]}
+                          selectedColumns={selectedColumns}
+                          expandedGroups={expandedGroups}
+                          onToggleGroup={toggleGroupExpansion}
+                        />
+                      )}
+                    </div>
+
+                    {viewMode === 'table' && totalPages > 1 && (
+                      <div css={{ marginTop: '12px' }}>
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                        />
+                      </div>
                     )}
                   </div>
+                </>
+              )}
+            </If>
 
-                  {viewMode === 'table' && totalPages > 1 && (
-                    <div css={{ marginTop: '12px' }}>
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                      />
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
+            <If condition={csvData.length === 0}>
+              <FileUploadArea
+                type="full"
+                onFileUpload={handleFileUpload}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                isLoading={loading}
+                uploadedFileName={fileName || null}
+                uploadedFileSize={fileSize}
+                onRemove={() => {
+                  resetData();
+                  toast.success('파일이 제거되었습니다.');
+                }}
+              />
+            </If>
           </div>
         </Grid.Item>
       </Grid>

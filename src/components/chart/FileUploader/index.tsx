@@ -1,9 +1,10 @@
-import { isCSV, parseCsvFileToJson } from '@/pages/chart/utils';
+import { Text, theme } from '@basiln/design-system';
 import { Upload } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { Text, theme } from '@basiln/design-system';
+import { isCSV, parseCsvFileToJson } from '@/pages/chart/utils';
+
 import { fileUploaderCss } from './styles';
 
 const FileUploader = ({

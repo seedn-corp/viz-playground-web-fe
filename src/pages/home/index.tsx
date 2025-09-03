@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Header } from '@/components/common/Header';
-import { homeCss } from '@/pages/home/styles';
-import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
-import { WidgetAddDialog } from '@/components/common/WidgetAddDialog';
 import { useNavigate } from 'react-router';
+
+import { Header } from '@/components/common/Header';
+import { WidgetAddDialog } from '@/components/common/WidgetAddDialog';
+import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
+import { homeCss } from '@/pages/home/styles';
 
 export const Home = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

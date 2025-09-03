@@ -8,10 +8,11 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { ChartProps } from '../types';
+
 import { aggregateChartData } from '../../../chart/ChartArea/utils';
-import { LEGEND_STYLE, COLORS } from '../utils';
 import { CustomTooltip } from '../CustomTooltip';
+import type { ChartProps } from '../types';
+import { LEGEND_STYLE, COLORS } from '../utils';
 
 const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);

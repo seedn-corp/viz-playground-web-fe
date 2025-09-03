@@ -1,17 +1,17 @@
-import type { ChartType } from '@/pages/chart/types';
-import { Flex, Spacing, If } from '@basiln/utils';
-
 import { Text } from '@basiln/design-system';
-import { selectCss } from '../Select/styles';
-import YAxisMultipleSelect from '../YAxisMultipleSelect';
-import Select from '../Select';
-
-import type { SideBarProps } from './types';
-import { sideBarCss } from './styles';
+import { Flex, Spacing, If } from '@basiln/utils';
 import { Download } from 'lucide-react';
-import Separator from '../Separator';
+
+import type { ChartType } from '@/pages/chart/types';
+
 
 import FileUploader from '../FileUploader';
+import Select from '../Select';
+import { sideBarCss } from './styles';
+import { selectCss } from '../Select/styles';
+import YAxisMultipleSelect from '../YAxisMultipleSelect';
+import type { SideBarProps } from './types';
+import Separator from '../Separator';
 
 const SideBar = (props: SideBarProps) => {
   const {

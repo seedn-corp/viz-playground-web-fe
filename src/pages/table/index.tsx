@@ -24,6 +24,8 @@ import type { DataRow, Group } from './types';
 export const TableWidgetPage = () => {
   const navigate = useNavigate();
 
+  const [tableName, setTableName] = useState('새 테이블');
+
   const [headers, setHeaders] = useState<string[]>([]);
   const [csvData, setCsvData] = useState<DataRow[]>([]);
 
@@ -322,10 +324,11 @@ export const TableWidgetPage = () => {
 
   const addWidget = () => {
     console.log({
-      columns: headers,
-      rows: csvData,
-      filterFields: selectedColumns,
-      grouping: groupingColumns,
+      name: tableName || '새 테이블',
+      type: 'table',
+      processed_data: JSON.stringify({ columns: headers, rows: csvData }),
+      config: JSON.stringify({ filterFields: selectedColumns, grouping: groupingColumns }),
+      position: {},
     });
 
     toast.success('위젯이 추가되었습니다.');
@@ -388,7 +391,13 @@ export const TableWidgetPage = () => {
           <label htmlFor="file-name" css={widgetTableCss.tableNameContainer}>
             <Text css={widgetTableCss.fieldTitle}>테이블 제목</Text>
 
-            <input id="file-name" css={widgetTableCss.tableNameInput} placeholder="새 테이블" />
+            <input
+              id="file-name"
+              value={tableName}
+              onChange={(e) => setTableName(e.target.value)}
+              css={widgetTableCss.tableNameInput}
+              placeholder="새 테이블"
+            />
           </label>
 
           <Spacing size={20} />

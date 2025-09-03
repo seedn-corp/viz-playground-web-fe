@@ -47,10 +47,10 @@ export async function parseXlsxFileToJson(file: File): Promise<Record<string, st
         const worksheet = workbook.Sheets[firstSheetName];
 
         // 시트를 JSON으로 변환
-        const jsonData: Record<string, string>[] = XLSX.utils.sheet_to_json(
-          worksheet,
-          { defval: '' }, // 값이 없을 때 빈 문자열로 처리
-        );
+        const jsonData: Record<string, string>[] = XLSX.utils.sheet_to_json(worksheet, {
+          defval: '', // 값이 없을 때 빈 문자열로 처리
+          raw: false, // 날짜/시간 값 string으로 변환
+        });
 
         resolve(jsonData);
       } catch (error) {

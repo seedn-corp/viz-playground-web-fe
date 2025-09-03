@@ -24,7 +24,7 @@ const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
       }
       acc[name].value += value;
       return acc;
-    }, {} as Record<string, { name: string; value: number }>)
+    }, {} as Record<string, { name: string; value: number }>),
   );
 
   return (
@@ -37,7 +37,6 @@ const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
           labelLine={false}
           outerRadius={100}
           fill="#8884d8"
-          label={{ fill: '#333', fontSize: 12, fontWeight: 500 }}
         >
           {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

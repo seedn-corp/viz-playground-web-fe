@@ -77,7 +77,7 @@ const FileUploader = ({
         <input
           css={fileUploaderCss.fileInput}
           type="file"
-          accept=".csv"
+          accept=".csv,.xlsx"
           onChange={handleFileInputChange}
         />
       </button>

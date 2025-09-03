@@ -1,5 +1,5 @@
 import { Text } from '@basiln/design-system';
-import { Spacing } from '@basiln/utils';
+import { ellipsis, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 
@@ -8,12 +8,7 @@ import { selectCss } from '@/components/chart/Select/styles';
 
 import type { YAxisMultipleSelectProps } from './types';
 
-const YAxisMultipleSelect = ({
-  name,
-  onChange,
-  items,
-  disabledItem,
-}: YAxisMultipleSelectProps) => {
+const YAxisMultipleSelect = ({ name, onChange, items, disabledItem }: YAxisMultipleSelectProps) => {
   const theme = useTheme();
 
   const onToggleItem = (item: string) => {
@@ -26,20 +21,14 @@ const YAxisMultipleSelect = ({
 
   return (
     <Popover>
-      <Popover.Trigger
-        asChild={false}
-        css={[selectCss.trigger, { width: '100%' }]}
-      >
-        <Text color={name.length ? 'black' : 'gray_060'}>
+      <Popover.Trigger asChild={false} css={[selectCss.trigger, { width: '100%' }]}>
+        <Text color={name.length ? 'black' : 'gray_060'} css={ellipsis}>
           {name.length ? name.join(', ') : 'Y축 항목을 선택하세요.'}
         </Text>
         <Spacing size="auto" css={{ flex: 1 }} />
         <ChevronDownIcon width={18} />
       </Popover.Trigger>
-      <Popover.Content
-        sideOffset={4}
-        css={[selectCss.content, { width: 240 - 32 }]}
-      >
+      <Popover.Content sideOffset={4} css={[selectCss.content, { width: 240 - 32 }]}>
         {items.map((item) => {
           const isChecked = name.includes(item);
           return (
@@ -56,9 +45,7 @@ const YAxisMultipleSelect = ({
             >
               {item}
               <CheckIcon
-                color={
-                  isChecked ? theme.colors.seedn_key : theme.colors.gray_060
-                }
+                color={isChecked ? theme.colors.seedn_key : theme.colors.gray_060}
                 width={16}
               />
             </Popover.Item>

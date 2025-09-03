@@ -38,6 +38,7 @@ export const selectCss = {
       zIndex: 10,
       // minWidth: 'max-content',
       width: '100%',
+      maxHeight: 240,
     }),
   item: (theme: Theme) =>
     css({

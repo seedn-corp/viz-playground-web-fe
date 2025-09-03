@@ -120,7 +120,6 @@ export const nestedTableCss = {
   }),
 
   notSubGroupTbody: css({
-    // className="divide-y divide-gray-200"
     '& tr': {
       borderBottom: '1px solid #eee',
       '&:hover': {

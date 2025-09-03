@@ -64,9 +64,12 @@ export async function parseXlsxFileToJson(file: File): Promise<Record<string, st
 }
 
 export const isCSV = (file: File) => {
-  return file.name.endsWith('.csv');
+  return file.name.toLocaleLowerCase().endsWith('.csv');
 };
 
 export const isExcel = (file: File) => {
-  return file.name.endsWith('.xlsx');
+  return (
+    file.name.toLocaleLowerCase().endsWith('.xlsx') ||
+    file.name.toLocaleLowerCase().endsWith('.xls')
+  );
 };

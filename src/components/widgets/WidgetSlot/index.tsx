@@ -1,17 +1,10 @@
-// src/widgets/WidgetSlot.tsx
-import type { WidgetType } from "@/atoms/dashboard";
+import { WidgetShell } from '@/components/widgets/WidgetShell';
 
-import { WidgetShell } from "../WidgetShell";
+import type { WidgetSlotProps } from './types';
 
-type Props = {
-  type: WidgetType;
-  onRemove: () => void;
-  props?: Record<string, unknown>;
-};
-
-export const WidgetSlot = ({ type, onRemove, props }: Props) => {
+export const WidgetSlot = ({ type, onRemove, props }: WidgetSlotProps) => {
   switch (type) {
-    case "excel":
+    case 'excel':
       return (
         <WidgetShell title="📊 Excel 위젯" onRemove={onRemove}>
           {/* TODO: 실제 Excel 렌더러로 교체 */}
@@ -19,7 +12,7 @@ export const WidgetSlot = ({ type, onRemove, props }: Props) => {
         </WidgetShell>
       );
 
-    case "chart":
+    case 'chart':
       return (
         <WidgetShell title="📈 차트 위젯" onRemove={onRemove}>
           {/* TODO: 실제 차트 렌더러로 교체 */}

@@ -1,15 +1,10 @@
-import type { JSX } from "react";
+import type { WidgetType } from '@/atoms/dashboard';
 
-import type { WidgetType } from "@/atoms/dashboard";
-
-export type WidgetRenderer = (p: { onRemove: () => void }) => JSX.Element;
+import type { WidgetRenderer } from './types';
 
 const REGISTRY = new Map<WidgetType, WidgetRenderer>();
 
-export const registerWidget = (
-  type: WidgetType,
-  render: WidgetRenderer
-): void => {
+export const registerWidget = (type: WidgetType, render: WidgetRenderer): void => {
   REGISTRY.set(type, render);
 };
 

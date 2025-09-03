@@ -1,5 +1,8 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 import { paginationCss } from './styles';
 import type { PaginationProps } from './type';
+import { getPaginationElements } from './utils';
 
 export const Pagination = (props: PaginationProps) => {
   const { currentPage, totalPages, onPageChange } = props;
@@ -7,8 +10,6 @@ export const Pagination = (props: PaginationProps) => {
   if (totalPages <= 1) {
     return null;
   }
-
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div css={paginationCss.container}>
@@ -18,22 +19,34 @@ export const Pagination = (props: PaginationProps) => {
           disabled={currentPage === 1}
           css={paginationCss.button}
         >
-          이전
+          <ChevronLeft size={24} />
         </button>
 
         <div css={paginationCss.numberButtonContainer}>
-          {pages.map((page) => (
-            <button
-              key={page}
-              onClick={() => onPageChange(page)}
-              css={[
-                paginationCss.numberButton,
-                page === currentPage && paginationCss.numberButtonActive,
-              ]}
-            >
-              {page}
-            </button>
-          ))}
+          {getPaginationElements({ currentPage, totalPages }).map((e, idx) => {
+            if (e === 'ellipsis') {
+              return (
+                <span key={`e-${idx}`} css={paginationCss.ellipsis}>
+                  ...
+                </span>
+              );
+            }
+
+            const page = e as number;
+
+            return (
+              <button
+                key={page}
+                onClick={() => onPageChange(page)}
+                css={[
+                  paginationCss.numberButton,
+                  page === currentPage && paginationCss.numberButtonActive,
+                ]}
+              >
+                {page}
+              </button>
+            );
+          })}
         </div>
 
         <button
@@ -41,7 +54,7 @@ export const Pagination = (props: PaginationProps) => {
           disabled={currentPage === totalPages}
           css={paginationCss.button}
         >
-          다음
+          <ChevronRight size={24} />
         </button>
       </div>
     </div>

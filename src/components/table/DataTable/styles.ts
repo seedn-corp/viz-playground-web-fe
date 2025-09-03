@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 export const dataTableCss = {
   container: css({
     width: '100%',
+    whiteSpace: 'nowrap',
     overflowX: 'auto',
   }),
 
@@ -19,6 +20,10 @@ export const dataTableCss = {
     textTransform: 'uppercase',
     letterSpacing: '0.1em',
     cursor: 'pointer',
+    position: 'sticky',
+    top: 0,
+    zIndex: 2,
+    backgroundColor: '#f3f4f6',
 
     '&:hover': {
       backgroundColor: '#f3f4f6',
@@ -29,7 +34,6 @@ export const dataTableCss = {
     marginLeft: '0.25rem',
   }),
 
-  // className="divide-y divide-gray-200"
   tbody: css({
     borderTop: '1px solid #e5e7eb',
   }),

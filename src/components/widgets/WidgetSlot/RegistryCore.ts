@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+
 import type { WidgetType } from "@/atoms/dashboard";
 
 export type WidgetRenderer = (p: { onRemove: () => void }) => JSX.Element;

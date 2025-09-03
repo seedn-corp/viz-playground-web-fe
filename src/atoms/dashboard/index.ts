@@ -1,5 +1,5 @@
-import type { Layout, Layouts } from "react-grid-layout";
 import { atomWithStorage } from "jotai/utils";
+import type { Layout, Layouts } from "react-grid-layout";
 
 export type WidgetType = "excel" | "chart";
 

@@ -1,14 +1,26 @@
-import { useState } from "react";
-import { Header } from "@/components/common/Header";
-import { homeCss } from "@/pages/home/styles";
-import { DashboardGrid } from "@/components/dashboard/DashboardGrid";
-import { WidgetAddDialog } from "@/components/common/WidgetAddDialog";
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
+import { Header } from '@/components/common/Header';
+import { WidgetAddDialog } from '@/components/common/WidgetAddDialog';
+import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
+import { homeCss } from '@/pages/home/styles';
 
 export const Home = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleAddWidget = (widgetType: "chart" | "table") => {
-    console.log("위젯 추가:", widgetType);
+  const navigate = useNavigate();
+
+  const handleAddWidget = (widgetType: 'chart' | 'table') => {
+    if (widgetType === 'chart') {
+      navigate('/chart');
+    }
+
+    if (widgetType === 'table') {
+      navigate('/table');
+    }
+
+    console.log('위젯 추가:', widgetType);
     // TODO: 실제 위젯 추가 로직 구현
   };
 

@@ -9,6 +9,19 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
   const [rows, setRows] = useState<DataRow[]>([]);
 
   const [fileName, setFileName] = useState<string>('');
+  const [fileSize, setFileSize] = useState<number | null>(null);
+
+  const resetData = useCallback(() => {
+    setHeaders([]);
+    setRows([]);
+    setFileName('');
+    setFileSize(null);
+    setError('');
+    setCurrentPage(1);
+    setSelectedColumns([]);
+    setGroupingColumns([]);
+    setExpandedGroups(new Set());
+  }, []);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -37,6 +50,7 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
       setLoading(true);
       setError('');
       setFileName(file.name);
+      setFileSize(file.size ?? null);
 
       try {
         let records: Record<string, string>[] = [];
@@ -315,6 +329,7 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
     totalItems,
     totalPages,
     nestedData,
+    fileSize,
 
     setSearchTerm,
     setItemsPerPage,
@@ -326,6 +341,7 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
     handleDrop,
     handleDragOver,
     handleSort,
+    resetData,
 
     toggleColumnSelection,
     updateGroupingLevel,

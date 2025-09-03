@@ -1,14 +1,15 @@
-import { atomWithStorage } from "jotai/utils";
-import type { Layout, Layouts } from "react-grid-layout";
+import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
+import type { Layout, Layouts } from 'react-grid-layout';
 
-export type WidgetType = "excel" | "chart";
+export type WidgetType = 'excel' | 'chart';
 
 export interface Widget {
   id: string;
   type: WidgetType;
   props?: Record<string, unknown>;
 }
-export type BP = "lg" | "md" | "sm" | "xs" | "xxs";
+export type BP = 'lg' | 'md' | 'sm' | 'xs' | 'xxs';
 
 /** 반응형 그리드 설정 (원하면 cols를 더 촘촘하게: lg: 24 등) */
 export const BREAKPOINTS: Record<BP, number> = {
@@ -34,33 +35,20 @@ export const EMPTY_LAYOUTS: Layouts = {
   xxs: [],
 };
 
-const DEFAULT_SIZE: Record<WidgetType, Pick<Layout, "w" | "h">> = {
+const DEFAULT_SIZE: Record<WidgetType, Pick<Layout, 'w' | 'h'>> = {
   excel: { w: 6, h: 8 },
   chart: { w: 6, h: 8 },
 };
 
 /** ---- 아톰: 이 두 개면 끝 ---- */
-export const widgetsAtom = atomWithStorage<Widget[]>(
-  "dashboard_widgets_v1",
-  []
-);
-export const layoutsAtom = atomWithStorage<Layouts>(
-  "dashboard_layouts_v1",
-  EMPTY_LAYOUTS
-);
+export const widgetsAtom = atomWithStorage<Widget[]>('dashboard_widgets_v1', []);
+export const layoutsAtom = atomWithStorage<Layouts>('dashboard_layouts_v1', EMPTY_LAYOUTS);
 
 /** ----- 배치 유틸: 그리드 첫-맞춤(First-Fit) 빈칸 찾기 ----- */
-function firstFitPosition(
-  layout: Layout[],
-  cols: number,
-  w: number,
-  h: number
-) {
+function firstFitPosition(layout: Layout[], cols: number, w: number, h: number) {
   const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0);
   // occupancy[y][x] = true면 차있음
-  const occupancy: boolean[][] = Array.from({ length: maxY }, () =>
-    Array(cols).fill(false)
-  );
+  const occupancy: boolean[][] = Array.from({ length: maxY }, () => Array(cols).fill(false));
   for (const l of layout) {
     for (let yy = l.y; yy < l.y + l.h; yy++) {
       if (!occupancy[yy]) occupancy[yy] = Array(cols).fill(false);
@@ -87,11 +75,7 @@ function firstFitPosition(
   return { x: 0, y: maxY };
 }
 
-export function nextLayoutsAfterAdd(
-  cur: Layouts,
-  id: string,
-  type: WidgetType
-): Layouts {
+export function nextLayoutsAfterAdd(cur: Layouts, id: string, type: WidgetType): Layouts {
   const size = DEFAULT_SIZE[type];
   const next: Layouts = { ...cur };
   (Object.keys(BREAKPOINTS) as BP[]).forEach((bp) => {
@@ -109,3 +93,5 @@ export function nextLayoutsAfterRemove(cur: Layouts, id: string): Layouts {
   });
   return next;
 }
+
+export const lastDashboardIdAtom = atom<string | null>(null);

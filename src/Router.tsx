@@ -1,48 +1,47 @@
 import { createBrowserRouter, redirect } from 'react-router';
+import { Navigate } from 'react-router';
 
 import PrivateRoute from '@/components/common/routes/PrivateRoute';
 import PublicRoute from '@/components/common/routes/PublicRoute';
+import Chart from '@/pages/chart';
+import { DashboardIndex } from '@/pages/dashboard';
+import { DashboardDetail } from '@/pages/dashboard/detail';
+import { DashboardLayout } from '@/pages/dashboard/Layout';
+import SignIn from '@/pages/signIn';
+import { TableWidgetPage } from '@/pages/table';
 
-import Chart from './pages/chart';
-import { Home } from './pages/home';
-import SignIn from './pages/signIn';
-import { TableWidgetPage } from './pages/table';
+const ErrorEl = <div>에러가 발생했습니다.</div>;
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <PublicRoute />,
-    errorElement: <div>에러가 발생했습니다.</div>,
-    children: [
-      {
-        path: '/signin',
-        element: <SignIn />,
-      },
-    ],
+    errorElement: ErrorEl,
+    children: [{ path: '/signin', element: <SignIn /> }],
   },
+
   {
     path: '/',
     element: <PrivateRoute />,
-    errorElement: <div>에러가 발생했습니다.</div>,
+    errorElement: ErrorEl,
     children: [
+      { index: true, element: <Navigate to="/dashboards" replace /> },
+
       {
-        index: true,
-        loader: async () => redirect('/dashboard'),
+        path: '/dashboards',
+        element: <DashboardLayout />,
+        children: [
+          { index: true, element: <DashboardIndex /> },
+          { path: ':id', element: <DashboardDetail /> },
+        ],
       },
-      {
-        path: '/dashboard',
-        element: <Home />,
-      },
-      {
-        path: '/chart',
-        element: <Chart />,
-      },
-      {
-        path: '/table',
-        element: <TableWidgetPage />,
-      },
+
+      { path: '/chart', element: <Chart /> },
+      { path: '/table', element: <TableWidgetPage /> },
     ],
   },
+
+  { path: '*', loader: async () => redirect('/') },
 ]);
 
 export default router;

@@ -15,6 +15,11 @@ export const Home = () => {
     if (widgetType === 'chart') {
       navigate('/chart');
     }
+
+    if (widgetType === 'table') {
+      navigate('/table');
+    }
+
     console.log('위젯 추가:', widgetType);
     // TODO: 실제 위젯 추가 로직 구현
   };

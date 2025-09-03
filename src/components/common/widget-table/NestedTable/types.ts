@@ -1,4 +1,4 @@
-import type { Group } from '@/pages/widget-table/types';
+import type { Group } from '@/pages/table/types';
 
 export type NestedTableProps = {
   data: Group[];

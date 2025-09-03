@@ -1,4 +1,4 @@
-import type { DataRow } from '@/pages/widget-table/types';
+import type { DataRow } from '@/pages/table/types';
 
 export type DataTableProps = {
   selectedColumns: string[];

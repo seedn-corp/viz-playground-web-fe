@@ -1,7 +1,8 @@
-import type { GroupingSelectorProps } from './types';
-import { groupingSelectorCss } from './styles';
 import { Button, Text } from '@basiln/design-system';
 import { X } from 'lucide-react';
+
+import { groupingSelectorCss } from './styles';
+import type { GroupingSelectorProps } from './types';
 
 export const GroupingSelector = (props: GroupingSelectorProps) => {
   const {

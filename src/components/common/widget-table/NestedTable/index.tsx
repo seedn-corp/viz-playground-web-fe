@@ -1,9 +1,11 @@
-import { ChevronRight, ChevronDown } from 'lucide-react';
-import { DataTable } from '../DataTable';
-import type { NestedTableProps } from './types';
-import { nestedTableCss } from './styles';
-import type { DataRow, Group } from '@/pages/widget-table/types';
 import { Text } from '@basiln/design-system';
+import { ChevronRight, ChevronDown } from 'lucide-react';
+
+import type { DataRow, Group } from '@/pages/widget-table/types';
+
+import { DataTable } from '../DataTable';
+import { nestedTableCss } from './styles';
+import type { NestedTableProps } from './types';
 
 export const NestedTable = (props: NestedTableProps) => {
   const { data, selectedColumns, expandedGroups, onToggleGroup } = props;

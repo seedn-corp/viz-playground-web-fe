@@ -1,8 +1,9 @@
-import type { FileUploadAreaProps } from './types';
-import { fileUploadAreaCss } from './styles';
 import { Text } from '@basiln/design-system';
-import { RefreshCw, Upload } from 'lucide-react';
 import { useTheme } from '@emotion/react';
+import { RefreshCw, Upload } from 'lucide-react';
+
+import { fileUploadAreaCss } from './styles';
+import type { FileUploadAreaProps } from './types';
 
 export const FileUploadArea = (props: FileUploadAreaProps) => {
   const theme = useTheme();

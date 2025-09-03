@@ -1,8 +1,12 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import type { DataRow, Group } from './types';
+import { Button, Text } from '@basiln/design-system';
+import { Grid, Spacing } from '@basiln/utils';
+import { groupBy } from 'es-toolkit';
 import { ArrowLeft } from 'lucide-react';
 import Papa from 'papaparse';
-import { groupBy } from 'es-toolkit';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router';
+
 import {
   FileUploadArea,
   ColumnSelector,
@@ -12,12 +16,10 @@ import {
   NestedTable,
   Pagination,
 } from '@/components/common/widget-table';
-import { Grid, Spacing } from '@basiln/utils';
-import { Button, Text } from '@basiln/design-system';
-import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import { ViewModeSelector } from '@/components/common/widget-table/ViewModeSelector';
-import { useNavigate } from 'react-router';
-import toast from 'react-hot-toast';
+
+import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
+import type { DataRow, Group } from './types';
 
 export const TableWidgetPage = () => {
   const navigate = useNavigate();
@@ -51,9 +53,7 @@ export const TableWidgetPage = () => {
   const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
 
   const handleFileUpload = useCallback(
-    (
-      event: React.ChangeEvent<HTMLInputElement> | { target: { files: File[] } }
-    ) => {
+    (event: React.ChangeEvent<HTMLInputElement> | { target: { files: File[] } }) => {
       const file = event.target.files?.[0];
       if (!file) {
         return;
@@ -84,7 +84,7 @@ export const TableWidgetPage = () => {
           }
 
           const headerRow = (data[0] as DataRow).map((header) =>
-            typeof header === 'string' ? header.trim() : String(header)
+            typeof header === 'string' ? header.trim() : String(header),
           );
           setHeaders(headerRow);
           setSelectedColumns(headerRow);
@@ -92,9 +92,7 @@ export const TableWidgetPage = () => {
           const dataRows = data
             .slice(1)
             .filter((row: DataRow) =>
-              row.some(
-                (cell) => cell !== null && cell !== undefined && cell !== ''
-              )
+              row.some((cell) => cell !== null && cell !== undefined && cell !== ''),
             );
           setCsvData(dataRows);
           setCurrentPage(1);
@@ -108,7 +106,7 @@ export const TableWidgetPage = () => {
         encoding: 'UTF-8',
       });
     },
-    []
+    [],
   );
 
   const handleDrop = useCallback(
@@ -120,15 +118,12 @@ export const TableWidgetPage = () => {
         handleFileUpload(fakeEvent);
       }
     },
-    [handleFileUpload]
+    [handleFileUpload],
   );
 
-  const handleDragOver = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-    },
-    []
-  );
+  const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  }, []);
 
   // 선택된 컬럼만 필터링된 데이터
   const filteredByColumns = useMemo(() => {
@@ -149,8 +144,8 @@ export const TableWidgetPage = () => {
       row.some((cell) =>
         String(cell || '')
           .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
+          .includes(searchTerm.toLowerCase()),
+      ),
     );
   }, [filteredByColumns, searchTerm]);
 
@@ -165,10 +160,7 @@ export const TableWidgetPage = () => {
       .filter((idx) => idx !== -1);
 
     // 계층적 그룹핑 함수
-    function createNestedStructure(
-      data: DataRow[],
-      depth: number = 0
-    ): Group[] {
+    function createNestedStructure(data: DataRow[], depth: number = 0): Group[] {
       if (depth >= groupingIndices.length) {
         return data.map((row) => ({
           groupKey: '',
@@ -183,9 +175,7 @@ export const TableWidgetPage = () => {
       }
 
       const currentGroupIndex = groupingIndices[depth];
-      const grouped = groupBy(data, (row: DataRow) =>
-        String(row[currentGroupIndex])
-      );
+      const grouped = groupBy(data, (row: DataRow) => String(row[currentGroupIndex]));
 
       return Object.entries(grouped).map(([key, items]) => {
         const itemsArr = items as DataRow[];
@@ -196,17 +186,12 @@ export const TableWidgetPage = () => {
           groupValue: key,
           groupPath: groupingColumns
             .slice(0, depth + 1)
-            .map((_, idx) =>
-              itemsArr[0] ? String(itemsArr[0][groupingIndices[idx]]) : ''
-            )
+            .map((_, idx) => (itemsArr[0] ? String(itemsArr[0][groupingIndices[idx]]) : ''))
             .join(' → '),
           items: subGroups,
           isGroup: true,
           depth,
-          totalItems: subGroups.reduce(
-            (acc, item) => acc + (item.totalItems || 1),
-            0
-          ),
+          totalItems: subGroups.reduce((acc, item) => acc + (item.totalItems || 1), 0),
         };
       });
     }
@@ -216,9 +201,7 @@ export const TableWidgetPage = () => {
   // 정렬
   const sortedData = useMemo(() => {
     if (!sortConfig.key)
-      return viewMode === 'group'
-        ? (nestedData as Group[])
-        : (searchFilteredData as DataRow[]);
+      return viewMode === 'group' ? (nestedData as Group[]) : (searchFilteredData as DataRow[]);
 
     if (viewMode === 'group') {
       return [...(nestedData as Group[])].sort((a: Group, b: Group) => {
@@ -233,24 +216,21 @@ export const TableWidgetPage = () => {
     const columnIndex = selectedColumns.indexOf(sortConfig.key);
     if (columnIndex === -1) return searchFilteredData as DataRow[];
 
-    return [...(searchFilteredData as DataRow[])].sort(
-      (a: DataRow, b: DataRow) => {
-        const aVal = a[columnIndex] || '';
-        const bVal = b[columnIndex] || '';
-        if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
-        return 0;
-      }
-    );
+    return [...(searchFilteredData as DataRow[])].sort((a: DataRow, b: DataRow) => {
+      const aVal = a[columnIndex] || '';
+      const bVal = b[columnIndex] || '';
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
   }, [searchFilteredData, nestedData, sortConfig, selectedColumns, viewMode]);
 
   // 페이지네이션
   const totalItems =
     viewMode === 'group'
       ? (sortedData as Group[]).reduce(
-          (acc: number, group: Group) =>
-            acc + (group.isGroup ? group.items.length : 1),
-          0
+          (acc: number, group: Group) => acc + (group.isGroup ? group.items.length : 1),
+          0,
         )
       : (sortedData as DataRow[]).length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -260,17 +240,13 @@ export const TableWidgetPage = () => {
     if (viewMode === 'group') {
       return sortedData as Group[]; // 중첩 뷰에서는 전체 그룹 표시
     }
-    return (sortedData as DataRow[]).slice(
-      startIndex,
-      startIndex + itemsPerPage
-    );
+    return (sortedData as DataRow[]).slice(startIndex, startIndex + itemsPerPage);
   }, [sortedData, startIndex, itemsPerPage, viewMode]);
 
   const handleSort = (column: string) => {
     setSortConfig((prev) => ({
       key: column,
-      direction:
-        prev.key === column && prev.direction === 'asc' ? 'desc' : 'asc',
+      direction: prev.key === column && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
 
@@ -282,9 +258,7 @@ export const TableWidgetPage = () => {
 
       // 그룹핑 컬럼이 선택 해제되면 그룹핑에서도 제거
       if (!newSelection.includes(column)) {
-        setGroupingColumns((prevGrouping) =>
-          prevGrouping.filter((col) => col !== column)
-        );
+        setGroupingColumns((prevGrouping) => prevGrouping.filter((col) => col !== column));
       }
 
       return newSelection;
@@ -317,14 +291,8 @@ export const TableWidgetPage = () => {
         if (group.isGroup) {
           const groupId = `${parentPath}${group.groupValue}`;
           allIds.push(groupId);
-          if (
-            Array.isArray(group.items) &&
-            (group.items as Group[])[0]?.isGroup
-          ) {
-            allIds = [
-              ...allIds,
-              ...getAllGroupIds(group.items as Group[], `${groupId}_`),
-            ];
+          if (Array.isArray(group.items) && (group.items as Group[])[0]?.isGroup) {
+            allIds = [...allIds, ...getAllGroupIds(group.items as Group[], `${groupId}_`)];
           }
         }
       });
@@ -408,11 +376,7 @@ export const TableWidgetPage = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={addWidget}
-          disabled={
-            headers.length === 0 ||
-            csvData.length === 0 ||
-            selectedColumns.length === 0
-          }
+          disabled={headers.length === 0 || csvData.length === 0 || selectedColumns.length === 0}
         >
           <Text color="white">저장하기</Text>
         </Button>
@@ -423,11 +387,7 @@ export const TableWidgetPage = () => {
           <label htmlFor="file-name" css={widgetTableCss.tableNameContainer}>
             <Text css={widgetTableCss.fieldTitle}>테이블 제목</Text>
 
-            <input
-              id="file-name"
-              css={widgetTableCss.tableNameInput}
-              placeholder="새 테이블"
-            />
+            <input id="file-name" css={widgetTableCss.tableNameInput} placeholder="새 테이블" />
           </label>
 
           <Spacing size={20} />

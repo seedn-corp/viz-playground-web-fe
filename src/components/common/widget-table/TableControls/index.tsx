@@ -1,6 +1,7 @@
-import type { TableControlsProps } from './types';
 import { Text } from '@basiln/design-system';
 import { Spacing } from '@basiln/utils';
+
+import type { TableControlsProps } from './types';
 
 export const TableControls = (props: TableControlsProps) => {
   const { fileName, rowCount, colCount } = props;

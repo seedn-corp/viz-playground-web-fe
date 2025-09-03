@@ -1,6 +1,7 @@
 import { Button } from '@basiln/design-system';
 import { useTheme } from '@emotion/react';
 import { Plus, Minus } from 'lucide-react';
+
 import { viewModeSelectorCss } from './styles';
 import type { ViewModeSelectorProps } from './types';
 

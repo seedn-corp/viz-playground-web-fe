@@ -3,7 +3,7 @@ import { Text } from '@basiln/design-system';
 import { Spacing } from '@basiln/utils';
 
 export const TableControls = (props: TableControlsProps) => {
-  const { fileName, rowCount, colCount, groupingColumns } = props;
+  const { fileName, rowCount, colCount } = props;
 
   return (
     <div>

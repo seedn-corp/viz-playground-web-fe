@@ -34,7 +34,7 @@ any) => {
         >
           <span css={[{ width: 80 }, ellipsis]}>{entry.name}</span>
           <span>
-            {typeof entry.value === 'number' ? Number(entry.value).toFixed(2) : entry.value}
+            {typeof Number(entry.value) === 'number' ? Number(entry.value).toFixed(2) : entry.value}
           </span>
         </div>
       ))}

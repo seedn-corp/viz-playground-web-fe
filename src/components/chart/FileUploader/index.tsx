@@ -1,4 +1,9 @@
-import { isCSV, parseCsvFileToJson } from '@/pages/chart/utils';
+import {
+  isCSV,
+  isExcel,
+  parseCsvFileToJson,
+  parseXlsxFileToJson,
+} from '@/pages/chart/utils';
 import { Upload } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -25,11 +30,13 @@ const FileUploader = ({
 
   const handleFile = async (file: File) => {
     try {
-      if (!isCSV(file)) {
-        toast.error('CSV 파일만 업로드 가능합니다.');
+      if (!isCSV(file) && !isExcel(file)) {
+        toast.error('CSV 또는 Excel 파일만 업로드 가능합니다.');
         return;
       }
-      const data = await parseCsvFileToJson(file);
+      const data = isCSV(file)
+        ? await parseCsvFileToJson(file)
+        : await parseXlsxFileToJson(file);
       onChangeChartData(data);
     } catch {
       toast.error('파일 처리 중 오류가 발생했습니다.');

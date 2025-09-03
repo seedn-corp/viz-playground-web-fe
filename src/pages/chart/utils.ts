@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+
 /**
  * CSV 파일을 JSON으로 파싱하는 함수
  */
@@ -33,6 +35,42 @@ export async function parseCsvFileToJson(
   });
 }
 
+export async function parseXlsxFileToJson(
+  file: File
+): Promise<Record<string, string>[]> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        // 첫 번째 시트 가져오기
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        // 시트를 JSON으로 변환
+        const jsonData: Record<string, string>[] = XLSX.utils.sheet_to_json(
+          worksheet,
+          { defval: '' } // 값이 없을 때 빈 문자열로 처리
+        );
+
+        resolve(jsonData);
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(file); // 엑셀은 ArrayBuffer로 읽어야 함
+  });
+}
+
 export const isCSV = (file: File) => {
   return file.name.endsWith('.csv');
+};
+
+export const isExcel = (file: File) => {
+  return file.name.endsWith('.xlsx');
 };

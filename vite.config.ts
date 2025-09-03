@@ -11,6 +11,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['recharts'],
+    include: ['recharts', 'xlsx'],
   },
 });

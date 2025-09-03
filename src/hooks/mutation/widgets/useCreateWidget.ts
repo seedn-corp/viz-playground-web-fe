@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { widgetsQueries } from '@/queries/widgets';
 import { createWidget } from '@/apis/widgets';
+import { widgetsQueries } from '@/queries/widgets';
 
 export const useCreateWidget = () => {
   const queryClient = useQueryClient();

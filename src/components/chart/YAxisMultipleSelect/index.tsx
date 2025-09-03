@@ -8,7 +8,7 @@ import { selectCss } from '@/components/chart/Select/styles';
 
 import type { YAxisMultipleSelectProps } from './types';
 
-const YAxisMultipleSelect = ({ name, onChange, items, disabledItem }: YAxisMultipleSelectProps) => {
+const YAxisMultipleSelect = ({ name, onChange, items, disabledItem, placeholder }: YAxisMultipleSelectProps) => {
   const theme = useTheme();
 
   const onToggleItem = (item: string) => {
@@ -23,7 +23,7 @@ const YAxisMultipleSelect = ({ name, onChange, items, disabledItem }: YAxisMulti
     <Popover>
       <Popover.Trigger asChild={false} css={[selectCss.trigger, { width: '100%' }]}>
         <Text color={name.length ? 'black' : 'gray_060'} css={ellipsis}>
-          {name.length ? name.join(', ') : 'Y축 항목을 선택하세요.'}
+          {name.length ? name.join(', ') : placeholder || 'Y축 항목을 선택하세요.'}
         </Text>
         <Spacing size="auto" css={{ flex: 1 }} />
         <ChevronDownIcon width={18} />

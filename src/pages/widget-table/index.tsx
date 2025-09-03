@@ -16,8 +16,12 @@ import { Grid, Spacing } from '@basiln/utils';
 import { Button, Text } from '@basiln/design-system';
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import { ViewModeSelector } from '@/components/common/widget-table/ViewModeSelector';
+import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 export const TableWidgetPage = () => {
+  const navigate = useNavigate();
+
   const [headers, setHeaders] = useState<string[]>([]);
   const [csvData, setCsvData] = useState<DataRow[]>([]);
 
@@ -347,6 +351,18 @@ export const TableWidgetPage = () => {
     });
   };
 
+  const addWidget = () => {
+    console.log({
+      columns: headers,
+      rows: csvData,
+      filterFields: selectedColumns,
+      grouping: groupingColumns,
+    });
+
+    toast.success('위젯이 추가되었습니다.');
+    navigate('/');
+  };
+
   useEffect(() => {
     if (groupingColumns.length === 0 && viewMode === 'group') {
       setViewMode('table');
@@ -377,6 +393,7 @@ export const TableWidgetPage = () => {
             leftAddon={<ArrowLeft size={14} />}
             radius="small"
             variant="ghost"
+            onClick={() => navigate(-1)}
           >
             <Text color="black" size="btn-medium">
               돌아가기
@@ -385,7 +402,12 @@ export const TableWidgetPage = () => {
 
           <Text size="body-large">테이블 만들기</Text>
         </div>
-        <Button display="inline" gutter="20px" radius="small">
+        <Button
+          display="inline"
+          gutter="20px"
+          radius="small"
+          onClick={addWidget}
+        >
           저장
         </Button>
       </header>

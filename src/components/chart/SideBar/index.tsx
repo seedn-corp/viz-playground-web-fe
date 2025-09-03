@@ -4,7 +4,6 @@ import { Download } from 'lucide-react';
 
 import type { ChartType } from '@/pages/chart/types';
 
-
 import FileUploader from '../FileUploader';
 import Select from '../Select';
 import { sideBarCss } from './styles';
@@ -28,6 +27,9 @@ const SideBar = (props: SideBarProps) => {
     setChartType,
   } = props;
 
+  const stringValueKeys = chartDataKeys.filter((key) => isNaN(Number(chartData?.[0][key])));
+  const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
+
   return (
     <>
       <Flex align="start" direction="column">
@@ -47,11 +49,7 @@ const SideBar = (props: SideBarProps) => {
       <Spacing size={20} />
 
       <If condition={!!chartData}>
-        <Separator
-          orientation="horizontal"
-          css={{ width: '100%' }}
-          color="gray_050"
-        />
+        <Separator orientation="horizontal" css={{ width: '100%' }} color="gray_050" />
 
         <Spacing size={20} />
 
@@ -69,10 +67,7 @@ const SideBar = (props: SideBarProps) => {
 
         <Flex align="start" direction="column">
           <Text>차트 유형 선택</Text>
-          <Select
-            value={chartType}
-            onValueChange={(value) => setChartType(value as ChartType)}
-          >
+          <Select value={chartType} onValueChange={(value) => setChartType(value as ChartType)}>
             <Select.Trigger css={{ width: '100%' }}>{chartType}</Select.Trigger>
             <Select.Content>
               <Select.Item value="line">line</Select.Item>
@@ -87,13 +82,10 @@ const SideBar = (props: SideBarProps) => {
 
         <Flex align="start" direction="column" css={{ width: '100%' }}>
           <Text>X축</Text>
-          <Select
-            value={xAxisKey}
-            onValueChange={(value) => setXAxisKey(value)}
-          >
+          <Select value={xAxisKey} onValueChange={(value) => setXAxisKey(value)}>
             <Select.Trigger css={{ width: '100%' }}>{xAxisKey}</Select.Trigger>
             <Select.Content>
-              {chartDataKeys.map((key) => (
+              {stringValueKeys.map((key) => (
                 <Select.Item key={key} value={key}>
                   {key}
                 </Select.Item>
@@ -107,20 +99,11 @@ const SideBar = (props: SideBarProps) => {
         {chartType === 'pie' ? (
           <Flex align="start" direction="column" css={{ width: '100%' }}>
             <Text>Y축</Text>
-            <Select
-              value={yAxisKeys[0]}
-              onValueChange={(value) => setYAxisKeys([value])}
-            >
-              <Select.Trigger css={{ width: '100%' }}>
-                {yAxisKeys[0]}
-              </Select.Trigger>
+            <Select value={yAxisKeys[0]} onValueChange={(value) => setYAxisKeys([value])}>
+              <Select.Trigger css={{ width: '100%' }}>{yAxisKeys[0]}</Select.Trigger>
               <Select.Content>
-                {chartDataKeys.map((key) => (
-                  <Select.Item
-                    key={key}
-                    value={key}
-                    disabled={key === xAxisKey}
-                  >
+                {numberValueKeys.map((key) => (
+                  <Select.Item key={key} value={key} disabled={key === xAxisKey}>
                     {key}
                   </Select.Item>
                 ))}
@@ -133,7 +116,7 @@ const SideBar = (props: SideBarProps) => {
             <YAxisMultipleSelect
               name={yAxisKeys}
               onChange={setYAxisKeys}
-              items={chartDataKeys}
+              items={numberValueKeys}
               disabledItem={xAxisKey}
             />
           </Flex>

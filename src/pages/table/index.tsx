@@ -1,5 +1,6 @@
 import { Button, Text } from '@basiln/design-system';
 import { Grid, If, Spacing } from '@basiln/utils';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -15,7 +16,10 @@ import {
   Pagination,
   ViewModeSelector,
 } from '@/components/table';
+import { useCreateWidget } from '@/hooks/mutation/widgets/useCreateWidget';
 import { useTableData } from '@/hooks/table/useTableData';
+import { widgetsQueries } from '@/queries/widgets';
+import { computeNextPosition } from '@/utils/computeNextPosition';
 
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import type { DataRow, Group } from './types';
@@ -60,17 +64,47 @@ export const TableWidgetPage = () => {
     toggleGroupExpansion,
   } = useTableData({ initialItemsPerPage: 10, viewMode });
 
-  const addWidget = () => {
+  const { mutate, isPending } = useCreateWidget();
+  const { data, error: widgetsError } = useQuery(
+    widgetsQueries.all('d3985fd6-327b-4ab6-8720-0fa6e63b916b'),
+  );
+
+  const handleAddWidget = () => {
+    if (widgetsError) {
+      toast.error('위젯 정보를 불러오지 못해 위젯을 추가할 수 없습니다.');
+      return;
+    }
+
+    const nextPosition = computeNextPosition(data);
+
     console.log({
       name: tableName || '새 테이블',
       type: 'table',
       processed_data: JSON.stringify({ columns: headers, rows: csvData }),
       config: JSON.stringify({ filterFields: selectedColumns, grouping: groupingColumns }),
-      position: {},
+      position: nextPosition,
     });
 
-    toast.success('위젯이 추가되었습니다.');
-    navigate('/');
+    mutate(
+      {
+        dashboardId: 'd3985fd6-327b-4ab6-8720-0fa6e63b916b',
+
+        name: tableName || '새 테이블',
+        type: 'table',
+        processed_data: JSON.stringify({ columns: headers, rows: csvData }),
+        config: JSON.stringify({ filterFields: selectedColumns, grouping: groupingColumns }),
+        position: nextPosition,
+      },
+      {
+        onSuccess: () => {
+          toast.success('위젯이 추가되었습니다.');
+          navigate('/');
+        },
+        onError: (error) => {
+          toast.error(`위젯 추가에 실패했습니다: ${error.message}`);
+        },
+      },
+    );
   };
 
   useEffect(() => {
@@ -103,7 +137,8 @@ export const TableWidgetPage = () => {
           gutter="20px"
           radius="small"
           css={{ height: 36 }}
-          onClick={addWidget}
+          onClick={handleAddWidget}
+          isLoading={isPending}
           disabled={headers.length === 0 || csvData.length === 0 || selectedColumns.length === 0}
         >
           <Text color="white">저장하기</Text>

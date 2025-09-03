@@ -25,6 +25,8 @@ export type WidgetDetailResponse = {
 };
 
 export type CreateWidgetParams = {
+  dashboardId: number;
+
   name: string;
   type: WidgetType;
   processed_data: string;

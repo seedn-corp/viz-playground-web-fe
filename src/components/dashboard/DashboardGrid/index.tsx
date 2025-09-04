@@ -103,10 +103,11 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
     const widget = widgets?.find((w) => w.id === id);
     if (!widget) return;
 
+    const widgetType = widget.type === 'table' ? widget.type : 'chart';
     const storageKey = `${dashboardId.slice(0, 8)}-${widget.id.slice(0, 8)}`;
 
     // 위젯 수정 페이지로 이동
-    navigate(`/${widget.type}/${storageKey}`);
+    navigate(`/${widgetType}/${storageKey}`);
 
     localStorage.setItem(
       storageKey,

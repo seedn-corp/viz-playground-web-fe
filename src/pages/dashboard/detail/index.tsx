@@ -1,5 +1,5 @@
-import { Text } from '@basiln/design-system';
-import { Spacing } from '@basiln/utils';
+import { Spinner, Text } from '@basiln/design-system';
+import { Flex, Spacing } from '@basiln/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -26,14 +26,19 @@ export const DashboardDetail = () => {
   }, [id, setLastId]);
 
   if (!id) return <div>잘못된 접근입니다.</div>;
-  if (isLoading) return <div>불러오는 중...</div>;
+  if (isLoading)
+    return (
+      <Flex css={{ height: '100%' }}>
+        <Spinner color="seedn_key" />
+      </Flex>
+    );
   if (isError || !dashboard) return <div>대시보드를 불러오지 못했습니다.</div>;
 
   return (
     <div>
       <Text size="title-large">{dashboard.name}</Text>
       <Spacing size={12} />
-      <DashboardGrid onOpenDialog={openWidgetDialog} />
+      <DashboardGrid widgets={dashboard.widgets} onOpenDialog={openWidgetDialog} />
     </div>
   );
 };

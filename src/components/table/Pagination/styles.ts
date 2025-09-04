@@ -66,4 +66,41 @@ export const paginationCss = {
     justifyContent: 'center',
     color: '#6b7280',
   }),
+
+  compactCenter: css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    minWidth: 0,
+  }),
+
+  compactJump: css({
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+    padding: 0,
+    borderRadius: 6,
+    background: 'transparent',
+    border: '1px solid transparent',
+    color: '#374151',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#e5e7eb',
+    },
+  }),
+
+  compactSeparator: css({
+    color: '#6b7280',
+    fontSize: 14,
+  }),
+
+  compactTotal: css({
+    color: '#6b7280',
+    fontSize: 14,
+    minWidth: 24,
+    textAlign: 'center',
+  }),
 };

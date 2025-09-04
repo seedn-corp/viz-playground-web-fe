@@ -1,6 +1,6 @@
 import { If } from '@basiln/utils';
-import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 
 import { sidebarPinnedAtom } from '@/atoms/dashboard';
@@ -14,7 +14,7 @@ import { layoutCss } from './styles';
 export const DashboardLayout = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
-  const isPinned = useAtomValue(sidebarPinnedAtom);
+  const [isPinned, setIsPinned] = useAtom(sidebarPinnedAtom);
   const navigate = useNavigate();
 
   const [editOpen, setEditOpen] = useState(false);
@@ -44,6 +44,18 @@ export const DashboardLayout = () => {
     setEditOpen(false);
     setEditing(null);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
+        event.preventDefault();
+        setIsPinned(prev => !prev);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [setIsPinned]);
 
   return (
     <>

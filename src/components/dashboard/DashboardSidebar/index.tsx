@@ -106,7 +106,7 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
             size="small"
             icon={isPinned ? <Pin size={16} /> : <PinOff size={16} />}
             onClick={() => setIsPinned(!isPinned)}
-            title={isPinned ? '사이드바 고정 해제' : '사이드바 고정'}
+            title={isPinned ? '사이드바 고정 해제 (⌘B)' : '사이드바 고정 (⌘B)'}
             disabled={isMutating}
           />
         </div>

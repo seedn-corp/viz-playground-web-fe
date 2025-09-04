@@ -31,8 +31,14 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
     tableConfig = undefined;
   }
 
-  const columns = tableData && Array.isArray(tableData.columns) ? tableData.columns : [];
+  const allColumns = tableData && Array.isArray(tableData.columns) ? tableData.columns : [];
   const rows = tableData && Array.isArray(tableData.rows) ? tableData.rows : [];
+
+  const filterFields = tableConfig?.filterFields;
+  const displayedColumns =
+    Array.isArray(filterFields) && filterFields.length > 0
+      ? filterFields.filter((f) => allColumns.includes(f))
+      : allColumns;
 
   const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -45,7 +51,7 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
 
   const sortedRows = useMemo(() => {
     if (!sortConfig.key) return rows;
-    const idx = columns.indexOf(sortConfig.key);
+    const idx = allColumns.indexOf(sortConfig.key as string);
     if (idx === -1) return rows;
 
     const copy = [...rows];
@@ -53,12 +59,10 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
       const va = a?.[idx];
       const vb = b?.[idx];
 
-      // handle null/undefined
       if (va == null && vb == null) return 0;
       if (va == null) return sortConfig.direction === 'asc' ? -1 : 1;
       if (vb == null) return sortConfig.direction === 'asc' ? 1 : -1;
 
-      // numeric compare when possible
       const na = typeof va === 'number' ? va : Number(va);
       const nb = typeof vb === 'number' ? vb : Number(vb);
       const bothNumbers = !Number.isNaN(na) && !Number.isNaN(nb);
@@ -66,19 +70,25 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
         return sortConfig.direction === 'asc' ? na - nb : nb - na;
       }
 
-      // fallback to string compare
       const sa = String(va);
       const sb = String(vb);
       return sortConfig.direction === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
     });
 
     return copy;
-  }, [rows, sortConfig, columns]);
+  }, [rows, sortConfig, allColumns]);
 
   const totalPages = Math.max(1, Math.ceil(sortedRows.length / itemsPerPage));
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
-    return sortedRows.slice(start, start + itemsPerPage) as DataRow[];
+    const pageRows = sortedRows.slice(start, start + itemsPerPage) as DataRow[];
+
+    if (displayedColumns.length === allColumns.length) {
+      return pageRows;
+    }
+
+    const colIndices = displayedColumns.map((c) => allColumns.indexOf(c));
+    return pageRows.map((r) => colIndices.map((i) => (i >= 0 ? r[i] : undefined)));
   }, [sortedRows, currentPage, itemsPerPage]);
 
   const groupingCols = tableConfig?.grouping || [];
@@ -149,7 +159,7 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
   };
 
   const nestedData =
-    groupingCols.length > 0 ? buildGroupedData(rows, columns, groupingCols) : ([] as Group[]);
+    groupingCols.length > 0 ? buildGroupedData(rows, allColumns, groupingCols) : ([] as Group[]);
 
   const handleSort = (column: string) => {
     if (sortConfig.key === column)
@@ -195,12 +205,12 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
 
       <Spacing size={10} />
 
-      {columns.length > 0 && (
+      {displayedColumns.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ flex: 1, overflow: 'auto' }}>
             {viewMode === 'table' ? (
               <DataTable
-                selectedColumns={columns}
+                selectedColumns={displayedColumns}
                 paginatedData={paginatedData}
                 sortConfig={sortConfig}
                 onSort={handleSort}
@@ -208,7 +218,7 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
             ) : (
               <NestedTable
                 data={nestedData}
-                selectedColumns={columns}
+                selectedColumns={displayedColumns}
                 expandedGroups={expandedGroups}
                 onToggleGroup={onToggleGroup}
               />

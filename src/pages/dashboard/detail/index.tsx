@@ -1,5 +1,5 @@
 import { Spinner, Text } from '@basiln/design-system';
-import { Flex, Spacing } from '@basiln/utils';
+import { Flex, If, Spacing } from '@basiln/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -52,9 +52,16 @@ export const DashboardDetail = () => {
 
   return (
     <div>
-      <Text size="title-large">{dashboard.name}</Text>
+      <Flex justify="flex-start" align="baseline" gap={15}>
+        <Text size="title-large">{dashboard?.name}</Text>
+        <If condition={!!dashboard.description}>
+          <Text size="sub-small" color="gray_080">
+            [{dashboard?.description}]
+          </Text>
+        </If>
+      </Flex>
       <Spacing size={12} />
-      <DashboardGrid widgets={dashboard.widgets} onOpenDialog={openWidgetDialog} />
+      <DashboardGrid widgets={dashboard?.widgets} onOpenDialog={openWidgetDialog} />
     </div>
   );
 };

@@ -208,7 +208,7 @@ const Chart = () => {
         <Separator css={{ height: '100%' }} color="gray_050" />
 
         {/* 차트 영역 */}
-        {isLoadingWidgetDetail ? (
+        {!!routeIds?.widgetId && isLoadingWidgetDetail ? (
           <Flex css={{ flex: 1 }}>
             <Spinner color="seedn_key" />
           </Flex>

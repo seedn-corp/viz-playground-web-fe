@@ -36,8 +36,13 @@ const router = createBrowserRouter([
         ],
       },
 
-      { path: '/chart', element: <Chart /> },
-      { path: '/table', element: <TableWidgetPage /> },
+      { path: '/chart', element: <Chart />, children: [{ path: ':id', element: <Chart /> }] },
+
+      {
+        path: '/table',
+        element: <TableWidgetPage />,
+        children: [{ path: ':id', element: <TableWidgetPage /> }],
+      },
     ],
   },
 

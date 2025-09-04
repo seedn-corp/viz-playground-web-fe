@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 
 import { Header } from '@/components/common/Header';
 import { WidgetAddDialog } from '@/components/common/WidgetAddDialog';
@@ -25,9 +25,11 @@ export const DashboardLayout = () => {
   const closeWidgetDialog = () => setIsDialogOpen(false);
   const navigate = useNavigate();
 
+  const { pathname } = useLocation();
+  const dashboardId = pathname.split('/')[2];
+
   const handleAddWidget = (widgetType: 'chart' | 'table') => {
-    if (widgetType === 'chart') navigate('/chart');
-    if (widgetType === 'table') navigate('/table');
+    navigate(`/${widgetType}/${dashboardId}`);
     closeWidgetDialog();
   };
 

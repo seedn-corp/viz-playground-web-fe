@@ -11,6 +11,7 @@ export const widgetsQueries = {
     queryOptions({
       queryKey: [...queryKeyPrefix, 'all', id],
       queryFn: () => getAllWidget(id),
+      enabled: !!id,
     }),
   detail: (id: string) =>
     queryOptions({

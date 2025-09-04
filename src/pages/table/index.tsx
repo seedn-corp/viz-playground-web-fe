@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router';
 
+import { Breadcrumb } from '@/components/common/Breadcrumb/Breadcrumb';
 import { LoadingOverlay } from '@/components/common/LoadingOverlay';
 import {
   FileUploadArea,
@@ -19,6 +20,7 @@ import {
 } from '@/components/table';
 import { useCreateWidget, useUpdateWidget } from '@/hooks/mutation/widgets';
 import { useTableData } from '@/hooks/table/useTableData';
+import { dashboardQueries } from '@/queries/dashboard';
 import { widgetsQueries } from '@/queries/widgets';
 import { computeNextPosition } from '@/utils/computeNextPosition';
 import { LocalStorage } from '@/utils/LocalStorage';
@@ -48,6 +50,16 @@ export const TableWidgetPage = () => {
 
   const { mutate: createWidget, isPending: isCreating } = useCreateWidget();
   const { mutate: updateWidget, isPending: isUpdating } = useUpdateWidget();
+
+  // 대시보드 이름 표시용 상세 조회
+  const { data: dashboardDetail, isPending: isLoadingDashboardDetail } = useQuery(
+    dashboardQueries.detail(routeIds?.dashboardId ?? ''),
+  );
+
+  const breadcrumbItems = [
+    { label: '대시보드' },
+    { label: dashboardDetail?.name ?? routeIds?.dashboardId ?? '대시보드' },
+  ];
 
   const [tableName, setTableName] = useState('새 테이블');
   const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
@@ -193,12 +205,15 @@ export const TableWidgetPage = () => {
     }
   }, [widgetDetail, setHeaders, setRows, setSelectedColumns, setGroupingColumns]);
 
-  if (isLoadingAllWidget || (routeIds?.widgetId && isLoadingWidgetDetail)) {
-    return <LoadingOverlay visible={true} />;
-  }
-
   return (
     <>
+      <LoadingOverlay
+        visible={
+          isLoadingAllWidget ||
+          (routeIds?.widgetId && isLoadingWidgetDetail) ||
+          isLoadingDashboardDetail
+        }
+      />
       <header css={widgetTablePageHeaderCss.self}>
         <div css={widgetTablePageHeaderCss.buttonContainer}>
           <Button
@@ -214,7 +229,10 @@ export const TableWidgetPage = () => {
             </Text>
           </Button>
 
-          <Text size="body-large">{routeIds?.widgetId ? '테이블 편집' : '테이블 만들기'}</Text>
+          <Breadcrumb
+            items={breadcrumbItems}
+            pageTitle={routeIds?.widgetId ? '테이블 편집' : '테이블 만들기'}
+          />
         </div>
         <Button
           display="inline"

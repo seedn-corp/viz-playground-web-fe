@@ -32,7 +32,11 @@ const convertDashboardWidgetToWidgetDetail = (widget: DashboardWidget): WidgetDe
   updated_at: widget.updated_at,
 });
 
-export const DashboardGrid = ({ widgets, onOpenDialog, renderEditModeControls }: DashboardGridProps) => {
+export const DashboardGrid = ({
+  widgets,
+  onOpenDialog,
+  renderEditModeControls,
+}: DashboardGridProps) => {
   const { mutate: updateWidget } = useUpdateWidget();
   const queryClient = useQueryClient();
 
@@ -131,7 +135,7 @@ export const DashboardGrid = ({ widgets, onOpenDialog, renderEditModeControls }:
 
   if (widgets) {
     return (
-      <div css={styles.grid}>
+      <div css={styles.grid} data-edit-mode={isEditMode ? 'true' : 'false'}>
         <If condition={widgets && widgets.length > 0}>
           <Choose>
             <Choose.When condition={!!renderEditModeControls}>

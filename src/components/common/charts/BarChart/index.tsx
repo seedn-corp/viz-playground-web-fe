@@ -25,7 +25,13 @@ const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
         <Tooltip content={<CustomTooltip />} />
         <Legend {...LEGEND_STYLE} />
         {yAxisKeys.map((item, index) => (
-          <Bar key={item} type="monotone" dataKey={item} fill={COLORS[index % COLORS.length]} />
+          <Bar
+            key={item}
+            type="monotone"
+            dataKey={item}
+            fill={COLORS[index % COLORS.length]}
+            barSize={50}
+          />
         ))}
       </RechartsBarChart>
     </ResponsiveContainer>

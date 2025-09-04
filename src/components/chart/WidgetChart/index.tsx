@@ -7,9 +7,21 @@ import PieChart from '@/components/common/charts/PieChart';
 import type { ChartProps } from '@/components/common/charts/types';
 
 import type { WidgetChartProps } from './types';
+import { useMemo } from 'react';
 
-const WidgetChart = ({ chartData, chartType, xAxisKey, yAxisKeys }: WidgetChartProps) => {
-  const chartProps: ChartProps = { chartData, xAxisKey, yAxisKeys };
+const WidgetChart = ({ chartData, chartType, xAxisKey, yAxisKeys, filters }: WidgetChartProps) => {
+  const filteredData = useMemo(
+    () =>
+      chartData?.filter((item) => {
+        return Object.entries(filters || {}).every(([filterColumn, filterValues]) => {
+          return filterValues.length === 0 || filterValues.includes(item[filterColumn]);
+        });
+      }),
+    [chartData, filters],
+  );
+
+  const chartProps: ChartProps = { chartData: filteredData, xAxisKey, yAxisKeys, filters };
+
   return (
     <Choose>
       <Choose.When condition={chartType === 'line'}>

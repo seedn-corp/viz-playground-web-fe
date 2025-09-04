@@ -158,7 +158,7 @@ export const DashboardGrid = ({
 
   if (widgets) {
     return (
-      <div css={styles.grid}>
+      <div css={styles.grid} data-edit-mode={isEditMode ? 'true' : 'false'}>
         <If condition={widgets && widgets.length > 0}>
           <Choose>
             <Choose.When condition={!!renderEditModeControls}>

@@ -9,9 +9,7 @@ import {
 
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
-import { LEGEND_STYLE } from '../utils';
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+import { COLORS, LEGEND_STYLE } from '../utils';
 
 const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
   const pieChartData: { name: string; value: number }[] = Object.values(

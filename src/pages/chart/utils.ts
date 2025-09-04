@@ -73,3 +73,34 @@ export const isExcel = (file: File) => {
     file.name.toLocaleLowerCase().endsWith('.xls')
   );
 };
+
+type Difference<T> = {
+  [K in keyof T]?: T[K];
+};
+
+function areArraysEqual(arr1: (string | number)[], arr2: (string | number)[]) {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((value, index) => value === arr2[index]);
+}
+
+export function getDifferentKeys<T extends Record<string, unknown>>(
+  data: T,
+  form: T,
+): Difference<T> {
+  const result: Partial<T> = {};
+
+  for (const key in data) {
+    const val1 = data[key];
+    const val2 = form[key];
+
+    if (Array.isArray(val1) && Array.isArray(val2)) {
+      if (!areArraysEqual(val1, val2)) {
+        result[key] = val2;
+      }
+    } else if (val1 !== val2) {
+      result[key] = val2;
+    }
+  }
+
+  return Object.values(result).filter((i) => i).length ? result : {};
+}

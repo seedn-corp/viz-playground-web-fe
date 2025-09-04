@@ -99,7 +99,6 @@ export const nestedTableCss = {
   }),
   notSubGroupTableContainer: css({
     backgroundColor: '#fff',
-    border: '1px solid #eee',
     borderRadius: '6px',
     overflow: 'auto',
     flex: 1,

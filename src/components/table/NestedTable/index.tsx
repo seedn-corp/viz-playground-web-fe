@@ -8,7 +8,7 @@ import { nestedTableCss } from './styles';
 import type { NestedTableProps } from './types';
 
 export const NestedTable = (props: NestedTableProps) => {
-  const { data, selectedColumns, expandedGroups, onToggleGroup } = props;
+  const { data, selectedColumns, expandedGroups, onToggleGroup, allColumns } = props;
 
   const renderNestedGroup = (group: Group, groupIndex: number, parentPath: string = '') => {
     if (!group.isGroup) return null;
@@ -32,12 +32,16 @@ export const NestedTable = (props: NestedTableProps) => {
 
       if (isLeafLevel) {
         const combinedItems = subGroups.flatMap((sg) => (sg.items as DataRow[]) || []);
+
+        const colIndices = selectedColumns.map((c) => allColumns.indexOf(c));
+        const mapped = combinedItems.map((r) => colIndices.map((i) => (i >= 0 ? r[i] : undefined)));
+
         return (
           <div css={nestedTableCss.notSubGroupContainer}>
             <div css={nestedTableCss.notSubGroupTableContainer}>
               <DataTable
                 selectedColumns={selectedColumns}
-                paginatedData={combinedItems}
+                paginatedData={mapped}
                 sortConfig={{ key: null, direction: 'asc' }}
                 onSort={() => {}}
               />
@@ -91,12 +95,22 @@ export const NestedTable = (props: NestedTableProps) => {
             ) : (
               <div css={nestedTableCss.notSubGroupContainer}>
                 <div css={nestedTableCss.notSubGroupTableContainer}>
-                  <DataTable
-                    selectedColumns={selectedColumns}
-                    paginatedData={group.items as DataRow[]}
-                    sortConfig={{ key: null, direction: 'asc' }}
-                    onSort={() => {}}
-                  />
+                  {(() => {
+                    const items = group.items as DataRow[];
+                    const colIndices = selectedColumns.map((c) => allColumns.indexOf(c));
+                    const mapped = items.map((r) =>
+                      colIndices.map((i) => (i >= 0 ? r[i] : undefined)),
+                    );
+
+                    return (
+                      <DataTable
+                        selectedColumns={selectedColumns}
+                        paginatedData={mapped}
+                        sortConfig={{ key: null, direction: 'asc' }}
+                        onSort={() => {}}
+                      />
+                    );
+                  })()}
                 </div>
               </div>
             )}

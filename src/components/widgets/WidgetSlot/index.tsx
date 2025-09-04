@@ -36,10 +36,7 @@ export const WidgetSlot = ({ widget, onRemove, onEdit }: WidgetSlotProps) => {
           <WidgetChart
             chartType={widget.type.replace('_chart', '') as ChartType}
             chartData={JSON.parse(widget.processed_data)}
-            {...(JSON.parse(widget.config) as {
-              xAxisKey: string;
-              yAxisKeys: string[];
-            })}
+            {...JSON.parse(widget.config)}
           />
         </WidgetShell>
       </Choose.When>

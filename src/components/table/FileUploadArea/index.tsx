@@ -79,22 +79,6 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
       ]}
       onDrop={onDrop}
       onDragOver={onDragOver}
-      onClick={() => {
-        if (isLoading) {
-          return;
-        }
-        inputRef.current?.click();
-      }}
-      onKeyDown={(e) => {
-        if (isLoading) {
-          return;
-        }
-
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-          e.preventDefault();
-          inputRef.current?.click();
-        }
-      }}
       role="button"
       tabIndex={0}
       {...restProps}
@@ -108,7 +92,13 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
       {renderContent}
 
       {uploadedFileName && type === 'compact' && (
-        <button onClick={onRemove} css={fileUploadAreaCss.clearButton}>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove?.();
+          }}
+          css={fileUploadAreaCss.clearButton}
+        >
           <CircleX size={20} fill={theme.colors.승인오류} color={theme.colors.white} />
         </button>
       )}

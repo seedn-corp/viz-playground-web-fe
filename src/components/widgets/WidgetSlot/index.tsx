@@ -20,11 +20,11 @@ const EmptyWidgetState = ({ widget }: { widget: WidgetSlotProps['widget'] }) => 
   );
 };
 
-export const WidgetSlot = ({ widget, onRemove }: WidgetSlotProps) => {
+export const WidgetSlot = ({ widget, onRemove, onEdit }: WidgetSlotProps) => {
   return (
     <Choose>
       <Choose.When condition={widget.type === 'table'}>
-        <WidgetShell title={widget.name} onRemove={onRemove}>
+        <WidgetShell title={widget.name} onRemove={onRemove} onEdit={onEdit}>
           <TablePreview processed_data={widget.processed_data} config={widget.config} />
         </WidgetShell>
       </Choose.When>
@@ -33,7 +33,7 @@ export const WidgetSlot = ({ widget, onRemove }: WidgetSlotProps) => {
 
       </Choose.When> */}
       <Choose.Otherwise>
-        <WidgetShell title={widget.name || `${widget.type} 위젯`} onRemove={onRemove}>
+        <WidgetShell title={widget.name || `${widget.type} 위젯`} onRemove={onRemove} onEdit={onEdit}>
           <EmptyWidgetState widget={widget} />
         </WidgetShell>
       </Choose.Otherwise>

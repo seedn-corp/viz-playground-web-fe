@@ -6,5 +6,6 @@ export type WidgetRenderer = (p: { onRemove: () => void }) => JSX.Element;
 
 export type WidgetSlotProps = {
   onRemove: () => void;
+  onEdit?: () => void;
   widget: WidgetDetailResponse;
 };

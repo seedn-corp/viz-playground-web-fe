@@ -1,11 +1,11 @@
 import { If } from '@basiln/utils';
-import { GripVertical, Trash2 } from 'lucide-react';
+import { GripVertical, Trash2, Edit3 } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 
 import { styles } from './styles';
 import type { WidgetShellProps } from './types';
 
-export const WidgetShell = ({ title, onRemove, children }: PropsWithChildren<WidgetShellProps>) => {
+export const WidgetShell = ({ title, onRemove, onEdit, children }: PropsWithChildren<WidgetShellProps>) => {
   return (
     <div css={styles.card}>
       <div css={styles.header}>
@@ -16,6 +16,16 @@ export const WidgetShell = ({ title, onRemove, children }: PropsWithChildren<Wid
           <h3 css={styles.title}>{title}</h3>
         </div>
         <div css={styles.actions}>
+          <If condition={!!onEdit}>
+            <button
+              css={styles.editBtn}
+              onClick={onEdit}
+              aria-label="edit widget"
+              title="위젯 수정"
+            >
+              <Edit3 size={14} />
+            </button>
+          </If>
           <If condition={!!onRemove}>
             <button
               css={styles.deleteBtn}

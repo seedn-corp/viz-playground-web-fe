@@ -3,7 +3,7 @@ import { Flex, Spacing } from '@basiln/utils';
 import { ArrowLeftIcon, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 import ChartArea from '@/components/chart/ChartArea';
 import Separator from '@/components/chart/Separator';
@@ -33,7 +33,10 @@ const Chart = () => {
   const chartDataKeys = useMemo(() => (chartData ? Object.keys(chartData?.[0]) : []), [chartData]);
   const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
 
-  const { data } = useQuery(widgetsQueries.all('d3985fd6-327b-4ab6-8720-0fa6e63b916b'));
+  const { pathname } = useLocation();
+  const dashboardId = pathname.split('/')[2];
+
+  const { data } = useQuery(widgetsQueries.all(dashboardId));
 
   const { mutate, isPending } = useCreateWidget();
 
@@ -152,7 +155,8 @@ const Chart = () => {
           <Flex direction="column" css={chartPageCss.placeholderContainer}>
             <Upload css={{ width: 36, height: 36, opacity: 0.5 }} />
             <Text size="body-medium" color="gray_080">
-              차트 미리보기를 위해 <br /> CSV 파일을 업로드하세요
+              차트 미리보기를 위해 <br />
+              파일을 업로드하세요
             </Text>
           </Flex>
         )}

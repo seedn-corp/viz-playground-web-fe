@@ -7,7 +7,7 @@ export const loadingOverlayCss = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'rgba(255,255,255,0.7)',
+    background: 'rgba(255,255,255,0.9)',
     zIndex: 40,
   }),
 };

@@ -4,7 +4,7 @@ import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
 import { Pin, PinOff, Trash2 } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom, sidebarPinnedAtom } from '@/atoms/dashboard';
@@ -117,9 +117,8 @@ export const DashboardSidebar = () => {
                 variant="ghost"
                 size="small"
                 icon={<Trash2 color={theme.colors.gray_060} />}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
+                onClick={(e) => onDelete(e, d.id)}
+                disabled={deletingId === d.id && deleteMutation.isPending}
               />
             </div>
           ))}

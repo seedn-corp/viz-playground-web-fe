@@ -66,7 +66,7 @@ const Chart = () => {
   const addWidget = () => {
     mutate(
       {
-        dashboardId: 'd3985fd6-327b-4ab6-8720-0fa6e63b916b',
+        dashboardId,
         name: chartName || '새 차트',
         type: (chartType + '_chart') as WidgetType,
         processed_data: JSON.stringify(chartData),

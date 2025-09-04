@@ -1,6 +1,6 @@
 import { Button, Text } from '@basiln/design-system';
 import { Flex, If, Spacing, Choose } from '@basiln/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Edit3, Check, X } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -23,11 +23,13 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
   const { id = '' } = useParams();
   const { data: widgets } = useQuery(widgetsQueries.all(id));
   const { mutate: updateWidget } = useUpdateWidget();
+  const queryClient = useQueryClient();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [pendingUpdates, setPendingUpdates] = useState<
     Record<string, { x: number; y: number; width: number; height: number }>
   >({});
+  const [gridKey, setGridKey] = useState(0);
 
   const isInitialRender = useRef(true);
 
@@ -85,6 +87,8 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
   const handleCancelEdit = () => {
     setIsEditMode(false);
     setPendingUpdates({});
+    setGridKey((prev) => prev + 1);
+    queryClient.invalidateQueries({ queryKey: widgetsQueries.allKey });
   };
 
   const handleRemove = (id: string) => {
@@ -156,6 +160,7 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
         </If>
 
         <ResponsiveGridLayout
+          key={gridKey}
           className="layout"
           layouts={convertedLayouts}
           breakpoints={BREAKPOINTS}

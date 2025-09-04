@@ -85,7 +85,7 @@ export const styles = {
     borderRadius: 3,
   }),
   body: css({
-    padding: 24,
+    padding: 8,
     flex: 1,
     minHeight: 0,
     overflow: 'auto',
@@ -119,7 +119,7 @@ export const styles = {
     cursor: 'pointer',
     color: '#dc3545',
     transition: 'all 0.2s ease',
-    ':hover': { 
+    ':hover': {
       background: '#f8f9fa',
       borderColor: '#dc3545',
       color: '#dc3545',

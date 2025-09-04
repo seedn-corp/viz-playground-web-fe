@@ -1,10 +1,10 @@
 import { Button, Text } from '@basiln/design-system';
 import { Flex, If, Spacing, Choose } from '@basiln/utils';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Edit3, Check, X } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { useParams, useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -12,6 +12,7 @@ import { BREAKPOINTS, COLS } from '@/atoms/dashboard';
 import { WidgetSlot } from '@/components/widgets/WidgetSlot';
 import { useUpdateWidget } from '@/hooks/mutation/widgets/useUpdateWidget';
 import { widgetsQueries } from '@/queries/widgets';
+import type { DashboardWidget } from '@/types/dashboard';
 import type { WidgetDetailResponse } from '@/types/widgets';
 
 import { styles } from './styles';
@@ -19,9 +20,19 @@ import type { DashboardGridProps } from './types';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: DashboardGridProps) => {
-  const { id = '' } = useParams();
-  const { data: widgets } = useQuery(widgetsQueries.all(id));
+const convertDashboardWidgetToWidgetDetail = (widget: DashboardWidget): WidgetDetailResponse => ({
+  id: widget.id,
+  dashboard_id: widget.dashboard_id,
+  name: widget.name,
+  type: widget.type as WidgetDetailResponse['type'],
+  processed_data: widget.processed_data || '',
+  config: (typeof widget.config === 'string' ? widget.config : JSON.stringify(widget.config)) || '',
+  position: widget.position,
+  created_at: widget.created_at,
+  updated_at: widget.updated_at,
+});
+
+export const DashboardGrid = ({ widgets, onOpenDialog, renderEditModeControls }: DashboardGridProps) => {
   const { mutate: updateWidget } = useUpdateWidget();
   const queryClient = useQueryClient();
 
@@ -58,7 +69,7 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
 
     Object.keys(BREAKPOINTS).forEach((breakpoint) => {
       const bp = breakpoint as keyof typeof BREAKPOINTS;
-      newLayouts[bp] = widgets.map((widget: WidgetDetailResponse) => ({
+      newLayouts[bp] = widgets.map((widget: DashboardWidget) => ({
         i: widget.id,
         x: widget.position.x,
         y: widget.position.y,
@@ -212,7 +223,7 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
           {widgets?.map((widget) => (
             <div key={widget.id}>
               <WidgetSlot
-                widget={widget}
+                widget={convertDashboardWidgetToWidgetDetail(widget)}
                 onRemove={() => handleRemove(widget.id)}
                 onEdit={() => handleEdit(widget.id)}
               />

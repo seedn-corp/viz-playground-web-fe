@@ -66,10 +66,10 @@ const SideBar = (props: SideBarProps) => {
 
         <Spacing size={6} />
 
-        <button css={sideBarCss.sampleDownloadButton} onClick={() => {}}>
+        <a href="/excel/sample.xlsx" download="sample.xlsx" css={sideBarCss.sampleDownloadButton}>
           <Download css={{ width: 14, height: 14 }} />
           <Text>샘플 데이터 다운로드</Text>
-        </button>
+        </a>
       </Flex>
 
       <Spacing size={20} />

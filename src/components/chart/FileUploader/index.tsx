@@ -71,7 +71,7 @@ const FileUploader = ({
         <Upload css={[fileUploaderCss.uploadIcon, { marginBottom: 8 }]} />
         <Text>데이터 파일 업로드</Text>
         <Text size="caption-regular" color="gray_080">
-          CSV 파일 지원
+          CSV, Excel 파일 지원
         </Text>
         <input
           css={fileUploaderCss.fileInput}

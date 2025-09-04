@@ -8,7 +8,7 @@ import { sidebarPinnedAtom } from '@/atoms/dashboard';
 import { Header } from '@/components/common/Header';
 import { WidgetAddDialog } from '@/components/common/WidgetAddDialog';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
-import { Z_INDEX } from '@/constants/zIndex';
+import { Z_INDEX } from '@/constants';
 
 const layoutCss = {
   wrap: css({

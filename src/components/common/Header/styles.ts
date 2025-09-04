@@ -1,7 +1,7 @@
 import { theme } from '@basiln/design-system';
 import { css } from '@emotion/react';
 
-import { Z_INDEX } from '@/constants/zIndex';
+import { Z_INDEX } from '@/constants';
 
 export const headerCss = {
   container: css({

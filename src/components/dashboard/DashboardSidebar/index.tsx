@@ -1,4 +1,3 @@
-// src/components/dashboard/DashboardSidebar/index.tsx
 import { Button, IconButton, Spinner, Text } from '@basiln/design-system';
 import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
@@ -9,6 +8,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom, sidebarPinnedAtom } from '@/atoms/dashboard';
+import { ConfirmDeleteDialog } from '@/components/common/ConfirmDeleteDialog';
 import { useCreateDashboard } from '@/hooks/mutation/dashboard/useCreateDashboard';
 import { useDeleteDashboard } from '@/hooks/mutation/dashboard/useDeleteDashboard';
 import { dashboardQueries } from '@/queries/dashboard';
@@ -25,6 +25,9 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
   const createMutation = useCreateDashboard();
   const deleteMutation = useDeleteDashboard();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmTarget, setConfirmTarget] = useState<{ id: string; name: string } | null>(null);
 
   const setLastId = useSetAtom(lastDashboardIdAtom);
   const [isPinned, setIsPinned] = useAtom(sidebarPinnedAtom);
@@ -50,8 +53,16 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
     );
   };
 
-  const onDelete = (e: React.MouseEvent, id: string) => {
+  const openDeleteConfirm = (e: React.MouseEvent, id: string, name: string) => {
     e.stopPropagation();
+    setConfirmTarget({ id, name });
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!confirmTarget) return;
+
+    const { id } = confirmTarget;
 
     const idx = items.findIndex((d) => d.id === id);
     const nextIdCandidate = items[idx + 1]?.id ?? items[idx - 1]?.id ?? null;
@@ -69,7 +80,11 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
           }
         }
       },
-      onSettled: () => setDeletingId(null),
+      onSettled: () => {
+        setDeletingId(null);
+        setConfirmOpen(false);
+        setConfirmTarget(null);
+      },
     });
   };
 
@@ -150,7 +165,7 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
                   variant="ghost"
                   size="small"
                   icon={<Trash2 color={theme.colors.gray_060} />}
-                  onClick={(e) => onDelete(e, d.id)}
+                  onClick={(e) => openDeleteConfirm(e, d.id, d.name)}
                   disabled={isMutating || (deletingId === d.id && deleteMutation.isPending)}
                   title="대시보드 삭제"
                 />
@@ -159,6 +174,13 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
           ))}
         </div>
       </If>
+
+      <ConfirmDeleteDialog
+        isOpen={confirmOpen}
+        onCancel={() => !deleteMutation.isPending && setConfirmOpen(false)}
+        onConfirm={handleConfirmDelete}
+        isLoading={deleteMutation.isPending}
+      />
     </aside>
   );
 };

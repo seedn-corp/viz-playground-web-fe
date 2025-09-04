@@ -9,7 +9,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { aggregateChartData } from '../../../chart/ChartArea/utils';
+import { aggregateChartData } from '../../../chart/WidgetChart/utils';
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
 import { COLORS, LEGEND_STYLE } from '../utils';
@@ -21,7 +21,7 @@ const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
       <RechartsAreaChart data={aggregatedData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} tick={{ fill: '#666', fontSize: 12 }} />
-        <YAxis tick={{ fill: '#666', fontSize: 12 }} />
+        <YAxis tick={{ fill: '#666', fontSize: 12 }} axisLine={false} tickLine={false} width={30} />
         <Tooltip content={<CustomTooltip />} />
         <Legend {...LEGEND_STYLE} />
         {yAxisKeys.map((item, index) => (

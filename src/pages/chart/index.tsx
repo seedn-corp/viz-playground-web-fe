@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router';
 
-import ChartArea from '@/components/chart/ChartArea';
+import WidgetChart from '@/components/chart/WidgetChart';
 import Separator from '@/components/chart/Separator';
 import SideBar from '@/components/chart/SideBar';
 
@@ -144,12 +144,14 @@ const Chart = () => {
             <Text size="body-large" css={{ position: 'absolute', top: 20, left: 20 }}>
               미리보기
             </Text>
-            <ChartArea
-              chartData={filteredData || chartData}
-              chartType={chartType}
-              xAxisKey={xAxisKey}
-              yAxisKeys={yAxisKeys}
-            />
+            <div css={{ width: '100%', height: 300 }}>
+              <WidgetChart
+                chartData={filteredData || chartData}
+                chartType={chartType}
+                xAxisKey={xAxisKey}
+                yAxisKeys={yAxisKeys}
+              />
+            </div>
           </Flex>
         ) : (
           <Flex direction="column" css={chartPageCss.placeholderContainer}>

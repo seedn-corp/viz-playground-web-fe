@@ -6,6 +6,8 @@ import { WidgetShell } from '@/components/widgets/WidgetShell';
 import { WIDGET_META } from './constants';
 import { styles } from './styles';
 import type { WidgetSlotProps } from './types';
+import WidgetChart from '@/components/chart/WidgetChart';
+import type { ChartType } from '@/pages/chart/types';
 
 // 차트 연결전 임시 컴포넌트
 const EmptyWidgetState = ({ widget }: { widget: WidgetSlotProps['widget'] }) => {
@@ -28,12 +30,26 @@ export const WidgetSlot = ({ widget, onRemove, onEdit }: WidgetSlotProps) => {
           <TablePreview processed_data={widget.processed_data} config={widget.config} />
         </WidgetShell>
       </Choose.When>
-      {/* TODO: 차트 연결 */}
-      {/* <Choose.When>
 
-      </Choose.When> */}
+      <Choose.When condition={widget.type.includes('chart')}>
+        <WidgetShell title={widget.name} onRemove={onRemove} onEdit={onEdit}>
+          <WidgetChart
+            chartType={widget.type.replace('_chart', '') as ChartType}
+            chartData={JSON.parse(widget.processed_data)}
+            {...(JSON.parse(widget.config) as {
+              xAxisKey: string;
+              yAxisKeys: string[];
+            })}
+          />
+        </WidgetShell>
+      </Choose.When>
+
       <Choose.Otherwise>
-        <WidgetShell title={widget.name || `${widget.type} 위젯`} onRemove={onRemove} onEdit={onEdit}>
+        <WidgetShell
+          title={widget.name || `${widget.type} 위젯`}
+          onRemove={onRemove}
+          onEdit={onEdit}
+        >
           <EmptyWidgetState widget={widget} />
         </WidgetShell>
       </Choose.Otherwise>

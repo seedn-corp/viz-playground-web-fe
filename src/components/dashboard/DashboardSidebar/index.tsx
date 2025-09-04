@@ -1,5 +1,5 @@
 import { Button, IconButton, Spinner, Text } from '@basiln/design-system';
-import { If } from '@basiln/utils';
+import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
@@ -31,6 +31,8 @@ export const DashboardSidebar = () => {
   const hasDashboards = items.length > 0;
 
   const showInitialLoading = !dashboards && isLoading;
+
+  const isMutating = createMutation.isPending || deleteMutation.isPending;
 
   const onCreate = () => {
     createMutation.mutate(
@@ -81,29 +83,35 @@ export const DashboardSidebar = () => {
             icon={isPinned ? <Pin size={16} /> : <PinOff size={16} />}
             onClick={() => setIsPinned(!isPinned)}
             title={isPinned ? '사이드바 고정 해제' : '사이드바 고정'}
+            disabled={isMutating}
           />
         </div>
+
+        <Spacing size={5} />
+
         <Button
-          size="small"
-          display="inline"
+          size="regular-2"
           radius="small"
-          gutter="4px"
           onClick={onCreate}
           isLoading={createMutation.isPending}
+          disabled={isMutating}
         >
           + 새로 만들기
         </Button>
       </div>
 
-      <If condition={showInitialLoading}>
-        <Spinner />
+      <If condition={showInitialLoading || isMutating}>
+        <Spacing size={300} />
+        <Flex>
+          <Spinner color="seedn_key" />
+        </Flex>
       </If>
 
-      <If condition={!showInitialLoading && !hasDashboards}>
+      <If condition={!showInitialLoading && !isMutating && !hasDashboards}>
         <div css={sidebarCss.empty}>아직 대시보드가 없습니다.</div>
       </If>
 
-      <If condition={!showInitialLoading && hasDashboards}>
+      <If condition={!showInitialLoading && !isMutating && hasDashboards}>
         <div css={sidebarCss.list}>
           {items.map((d) => (
             <div
@@ -121,10 +129,9 @@ export const DashboardSidebar = () => {
                 variant="ghost"
                 size="small"
                 icon={<Trash2 color={theme.colors.gray_060} />}
-                onClick={(e) => {
-                  onDelete(e, d.id);
-                }}
-                disabled={deletingId === d.id && deleteMutation.isPending}
+                onClick={(e) => onDelete(e, d.id)}
+                disabled={isMutating || (deletingId === d.id && deleteMutation.isPending)}
+                title="대시보드 삭제"
               />
             </div>
           ))}

@@ -11,11 +11,13 @@ import {
   BREAKPOINTS,
   COLS,
   nextLayoutsAfterRemove,
+  type Widget,
 } from '@/atoms/dashboard';
 import { WidgetSlot } from '@/components/widgets/WidgetSlot';
 
 import { styles } from './styles';
 import type { DashboardGridProps } from './types';
+import { useLocation, useNavigate } from 'react-router';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -27,6 +29,25 @@ export const DashboardGrid = ({ onOpenDialog }: DashboardGridProps) => {
   const handleRemove = (id: string) => {
     setWidgets((prev) => prev.filter((w) => w.id !== id));
     setLayouts((prev) => nextLayoutsAfterRemove(prev, id));
+  };
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const dashboardId = pathname.split('/')[2];
+
+  const handleClickWidget = (widget: Widget) => {
+    const type = widget.type === 'excel' ? 'table' : widget.type;
+    const storageKey = `${dashboardId.slice(0, 8)}-${widget.id.slice(0, 8)}`;
+    // 위젯 수정 페이지로 이동
+    navigate(`/${type}/${storageKey}`);
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        dashboardId,
+        widgetId: widget.id,
+      }),
+    );
   };
 
   return (
@@ -45,7 +66,7 @@ export const DashboardGrid = ({ onOpenDialog }: DashboardGridProps) => {
         onLayoutChange={(_cur, all) => setLayouts(all)}
       >
         {widgets.map((w) => (
-          <div key={w.id}>
+          <div key={w.id} onClick={() => handleClickWidget(w)}>
             <WidgetSlot type={w.type} props={w.props} onRemove={() => handleRemove(w.id)} />
           </div>
         ))}

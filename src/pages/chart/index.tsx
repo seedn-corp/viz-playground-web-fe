@@ -153,7 +153,7 @@ const Chart = () => {
     );
   };
 
-  const isLoading = isLoadingWidgetDetail || createMutation.isPending || updateMutation.isPending;
+  const isLoading = !!routeIds?.widgetId && isLoadingWidgetDetail;
 
   return (
     <div css={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -176,7 +176,14 @@ const Chart = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={routeIds?.widgetId ? updateWidget : addWidget}
-          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey || isLoading}
+          disabled={
+            !chartData ||
+            yAxisKeys.length === 0 ||
+            !xAxisKey ||
+            createMutation.isPending ||
+            updateMutation.isPending ||
+            isLoading
+          }
           isLoading={createMutation.isPending || updateMutation.isPending}
         >
           <Text color="white">저장하기</Text>
@@ -208,7 +215,7 @@ const Chart = () => {
         <Separator css={{ height: '100%' }} color="gray_050" />
 
         {/* 차트 영역 */}
-        {!!routeIds?.widgetId && isLoadingWidgetDetail ? (
+        {isLoading ? (
           <Flex css={{ flex: 1 }}>
             <Spinner color="seedn_key" />
           </Flex>

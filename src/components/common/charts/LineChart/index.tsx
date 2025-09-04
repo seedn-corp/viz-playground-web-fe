@@ -21,7 +21,7 @@ const LineChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
       <RechartsLineChart data={aggregatedData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xAxisKey} tick={{ fill: '#666', fontSize: 12 }} />
-        <YAxis tick={{ fill: '#666', fontSize: 12 }} />
+        <YAxis tick={{ fill: '#666', fontSize: 12 }} axisLine={false} tickLine={false} width={30} />
         <Tooltip content={<CustomTooltip />} />
         <Legend {...LEGEND_STYLE} />
         {yAxisKeys.map((item, index) => (

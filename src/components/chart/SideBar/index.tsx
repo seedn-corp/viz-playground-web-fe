@@ -11,7 +11,7 @@ import { selectCss } from '../Select/styles';
 import YAxisMultipleSelect from '../YAxisMultipleSelect';
 import type { SideBarProps } from './types';
 import Separator from '../Separator';
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 
 const SideBar = (props: SideBarProps) => {
   const {
@@ -26,10 +26,9 @@ const SideBar = (props: SideBarProps) => {
     setYAxisKeys,
     chartType,
     setChartType,
-    onFilterChange,
+    filters,
+    setFilters,
   } = props;
-
-  const [filters, setFilters] = useState<Record<string, string[]>>({});
 
   const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
 
@@ -55,15 +54,6 @@ const SideBar = (props: SideBarProps) => {
       [column]: selectedValues,
     };
     setFilters(newFilters);
-
-    if (chartData && onFilterChange) {
-      const filteredData = chartData.filter((item) => {
-        return Object.entries(newFilters).every(([filterColumn, filterValues]) => {
-          return filterValues.length === 0 || filterValues.includes(item[filterColumn]);
-        });
-      });
-      onFilterChange(filteredData);
-    }
   };
 
   return (
@@ -160,30 +150,34 @@ const SideBar = (props: SideBarProps) => {
 
         <Spacing size={20} />
 
+        {filterableColumns.length > 0 && (
+          <>
+            <Flex align="start" direction="column" css={{ width: '100%' }}>
+              <Text>필터</Text>
+              <Spacing size={8} />
+
+              {filterableColumns.map((column) => (
+                <div key={column} css={{ width: '100%', marginBottom: 16 }}>
+                  <Text size="body-small" css={{ marginBottom: 6 }}>
+                    {column}
+                  </Text>
+                  <YAxisMultipleSelect
+                    name={filters[column] || []}
+                    onChange={(values) => handleFilterChange(column, values)}
+                    items={getFilterOptions(column)}
+                    placeholder={`${column} 선택`}
+                  />
+                </div>
+              ))}
+            </Flex>
+
+            <Spacing size={20} />
+          </>
+        )}
+
         <Separator orientation="horizontal" css={{ width: '100%' }} color="gray_050" />
 
         <Spacing size={20} />
-
-        {filterableColumns.length > 0 && (
-          <Flex align="start" direction="column" css={{ width: '100%' }}>
-            <Text>필터</Text>
-            <Spacing size={8} />
-
-            {filterableColumns.map((column) => (
-              <div key={column} css={{ width: '100%', marginBottom: 16 }}>
-                <Text size="body-small" css={{ marginBottom: 6 }}>
-                  {column}
-                </Text>
-                <YAxisMultipleSelect
-                  name={filters[column] || []}
-                  onChange={(values) => handleFilterChange(column, values)}
-                  items={getFilterOptions(column)}
-                  placeholder={`${column} 선택`}
-                />
-              </div>
-            ))}
-          </Flex>
-        )}
       </If>
     </>
   );

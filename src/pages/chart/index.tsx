@@ -24,7 +24,6 @@ const Chart = () => {
   const [chartName, setChartName] = useState('새 차트');
   const [chartType, setChartType] = useState<ChartType>('line');
   const [chartData, setChartData] = useState<Record<string, string>[]>();
-  const [filteredData, setFilteredData] = useState<Record<string, string>[]>();
   const [filters, setFilters] = useState<Record<string, string[]>>({});
 
   const [xAxisKey, setXAxisKey] = useState('');
@@ -46,10 +45,6 @@ const Chart = () => {
       setYAxisKeys(numberValueKeys.slice(1, 3));
     }
   }, [chartDataKeys]);
-
-  useEffect(() => {
-    setFilteredData(chartData);
-  }, [chartData]);
 
   useEffect(() => {
     if (chartType === 'pie') {
@@ -129,7 +124,6 @@ const Chart = () => {
               setChartType,
               chartName,
               setChartName,
-              onFilterChange: setFilteredData,
               filters,
               setFilters,
             }}
@@ -146,10 +140,11 @@ const Chart = () => {
             </Text>
             <div css={{ width: '100%', height: 300 }}>
               <WidgetChart
-                chartData={filteredData || chartData}
+                chartData={chartData}
                 chartType={chartType}
                 xAxisKey={xAxisKey}
                 yAxisKeys={yAxisKeys}
+                filters={filters}
               />
             </div>
           </Flex>

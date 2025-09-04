@@ -12,7 +12,6 @@ export type SideBarProps = {
   setChartType: React.Dispatch<React.SetStateAction<ChartType>>;
   chartName: string;
   setChartName: React.Dispatch<React.SetStateAction<string>>;
-  onFilterChange?: (filteredData: Record<string, string>[]) => void;
   filters: Record<string, string[]>;
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
 };

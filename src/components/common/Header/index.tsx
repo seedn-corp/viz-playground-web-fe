@@ -2,6 +2,7 @@ import { Button, Text } from '@basiln/design-system';
 import { Flex } from '@basiln/utils';
 import { useNavigate } from 'react-router';
 
+import logoImage from '@/assets/icons/logo.png';
 import { headerCss } from '@/components/common/Header/styles';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useLogout } from '@/hooks/mutation/auth/useLogout';
@@ -30,7 +31,7 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
 
   return (
     <Flex justify="space-between" css={headerCss.container}>
-      <Text size="title-large">나만의 운영 대시보드</Text>
+      <img src={logoImage} css={{ width: 100 }} />
       <Flex gap={20} align="center">
         {user && (
           <Text size="body-medium" color="gray_060">

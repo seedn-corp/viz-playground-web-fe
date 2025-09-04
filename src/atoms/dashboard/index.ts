@@ -95,3 +95,4 @@ export function nextLayoutsAfterRemove(cur: Layouts, id: string): Layouts {
 }
 
 export const lastDashboardIdAtom = atom<string | null>(null);
+export const sidebarPinnedAtom = atomWithStorage('sidebar_pinned', true);

@@ -8,6 +8,7 @@ import { DashboardIndex } from '@/pages/dashboard';
 import { DashboardDetail } from '@/pages/dashboard/detail';
 import { DashboardLayout } from '@/pages/dashboard/Layout';
 import SignIn from '@/pages/signIn';
+import SignUp from '@/pages/signUp';
 import { TableWidgetPage } from '@/pages/table';
 
 const ErrorEl = <div>에러가 발생했습니다.</div>;
@@ -17,7 +18,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <PublicRoute />,
     errorElement: ErrorEl,
-    children: [{ path: '/signin', element: <SignIn /> }],
+    children: [
+      { path: '/signin', element: <SignIn /> },
+      { path: '/signup', element: <SignUp /> },
+    ],
   },
 
   {

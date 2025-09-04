@@ -38,7 +38,9 @@ export const DashboardGrid = ({ onOpenDialog }: DashboardGridProps) => {
   const handleClickWidget = (widget: Widget) => {
     const type = widget.type === 'excel' ? 'table' : widget.type;
     const storageKey = `${dashboardId.slice(0, 8)}-${widget.id.slice(0, 8)}`;
+    // 위젯 수정 페이지로 이동
     navigate(`/${type}/${storageKey}`);
+
     localStorage.setItem(
       storageKey,
       JSON.stringify({

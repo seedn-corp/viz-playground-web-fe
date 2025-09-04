@@ -162,7 +162,7 @@ const SideBar = (props: SideBarProps) => {
                     {column}
                   </Text>
                   <YAxisMultipleSelect
-                    name={filters[column] || []}
+                    name={filters?.[column] || []}
                     onChange={(values) => handleFilterChange(column, values)}
                     items={getFilterOptions(column)}
                     placeholder={`${column} 선택`}

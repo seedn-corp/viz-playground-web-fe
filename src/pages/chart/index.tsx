@@ -1,9 +1,9 @@
-import { Button, Text } from '@basiln/design-system';
+import { Button, Spinner, Text } from '@basiln/design-system';
 import { Flex, Spacing } from '@basiln/utils';
 import { ArrowLeftIcon, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import WidgetChart from '@/components/chart/WidgetChart';
 import Separator from '@/components/chart/Separator';
@@ -17,6 +17,10 @@ import type { WidgetType } from '@/types/widgets';
 import { useQuery } from '@tanstack/react-query';
 import { widgetsQueries } from '@/queries/widgets';
 import { computeNextPosition } from '@/utils/computeNextPosition';
+import type { RouteIds } from '../table/types';
+import { LocalStorage } from '@/utils/LocalStorage';
+import { useUpdateWidget } from '@/hooks/mutation/widgets';
+import { getDifferentKeys } from './utils';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -32,12 +36,46 @@ const Chart = () => {
   const chartDataKeys = useMemo(() => (chartData ? Object.keys(chartData?.[0]) : []), [chartData]);
   const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
 
-  const { pathname } = useLocation();
-  const dashboardId = pathname.split('/')[2];
+  const createMutation = useCreateWidget();
+  const updateMutation = useUpdateWidget();
 
-  const { data } = useQuery(widgetsQueries.all(dashboardId));
+  const { id: dashboardId } = useParams();
 
-  const { mutate, isPending } = useCreateWidget();
+  const [routeIds, setRouteIds] = useState<RouteIds>();
+
+  useEffect(() => {
+    if (dashboardId?.length === 17) {
+      const id = LocalStorage.getItem(`${dashboardId}`);
+      const { dashboardId: _dashboardId, widgetId } = JSON.parse(id || '{}');
+      setRouteIds({ dashboardId: _dashboardId, widgetId });
+    } else {
+      setRouteIds({ dashboardId: dashboardId ?? '', widgetId: undefined });
+    }
+  }, [dashboardId]);
+
+  // 위젯 전체 정보 받아오기 (position 계산용)
+  const { data: widgets, error: widgetsError } = useQuery({
+    ...widgetsQueries.all(routeIds?.dashboardId ?? ''),
+    enabled: !!routeIds?.dashboardId && !routeIds?.widgetId,
+  });
+
+  // 위젯 상세 정보 받아오기 (수정 모드일 때)
+  const { data: widgetDetail, isPending: isLoadingWidgetDetail } = useQuery(
+    widgetsQueries.detail(routeIds?.widgetId ?? ''),
+  );
+
+  useEffect(() => {
+    if (widgetDetail) {
+      const { processed_data, config, type, name } = widgetDetail;
+      const { xAxisKey, yAxisKeys, filters } = JSON.parse(config);
+      setChartName(name);
+      setChartType(type.replace('_chart', '') as ChartType);
+      setChartData(JSON.parse(processed_data));
+      setXAxisKey(xAxisKey);
+      setYAxisKeys(yAxisKeys);
+      setFilters(filters);
+    }
+  }, [widgetDetail]);
 
   useEffect(() => {
     if (chartDataKeys.length > 0) {
@@ -59,14 +97,17 @@ const Chart = () => {
   }, [xAxisKey, yAxisKeys]);
 
   const addWidget = () => {
-    mutate(
+    if (widgetsError || !widgets) {
+      return;
+    }
+    createMutation.mutate(
       {
-        dashboardId,
+        dashboardId: routeIds?.dashboardId || '',
         name: chartName || '새 차트',
         type: (chartType + '_chart') as WidgetType,
         processed_data: JSON.stringify(chartData),
         config: JSON.stringify({ xAxisKey, yAxisKeys, filters }),
-        position: computeNextPosition(data),
+        position: computeNextPosition(widgets),
       },
       {
         onSuccess: () => {
@@ -80,6 +121,40 @@ const Chart = () => {
     );
   };
 
+  const updateWidget = () => {
+    const mutationData = getDifferentKeys(
+      {
+        name: widgetDetail?.name,
+        type: widgetDetail?.type,
+        processed_data: widgetDetail?.processed_data,
+        config: widgetDetail?.config,
+      },
+      {
+        name: chartName || '새 차트',
+        type: (chartType + '_chart') as WidgetType,
+        processed_data: JSON.stringify(chartData),
+        config: JSON.stringify({ xAxisKey, yAxisKeys, filters }),
+      },
+    );
+    updateMutation.mutate(
+      {
+        id: routeIds?.widgetId || '',
+        ...mutationData,
+      },
+      {
+        onSuccess: () => {
+          toast.success('위젯이 수정되었습니다.');
+          navigate('/');
+        },
+        onError: (error) => {
+          toast.error(`위젯 수정에 실패했습니다: ${error.message}`);
+        },
+      },
+    );
+  };
+
+  const isLoading = isLoadingWidgetDetail || createMutation.isPending || updateMutation.isPending;
+
   return (
     <div css={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* 헤더 */}
@@ -91,7 +166,7 @@ const Chart = () => {
 
         <Spacing direction="horizontal" size={14} />
 
-        <Text size="title-small">차트 만들기</Text>
+        <Text size="title-small">{!routeIds?.widgetId ? '차트 만들기' : '차트 편집'}</Text>
 
         <Spacing direction="horizontal" size="auto" css={{ flex: 1 }} />
 
@@ -100,9 +175,9 @@ const Chart = () => {
           gutter="20px"
           radius="small"
           css={{ height: 36 }}
-          onClick={addWidget}
-          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey || isPending}
-          isLoading={isPending}
+          onClick={routeIds?.widgetId ? updateWidget : addWidget}
+          disabled={!chartData || yAxisKeys.length === 0 || !xAxisKey || isLoading}
+          isLoading={createMutation.isPending || updateMutation.isPending}
         >
           <Text color="white">저장하기</Text>
         </Button>
@@ -133,7 +208,11 @@ const Chart = () => {
         <Separator css={{ height: '100%' }} color="gray_050" />
 
         {/* 차트 영역 */}
-        {chartData ? (
+        {isLoadingWidgetDetail ? (
+          <Flex css={{ flex: 1 }}>
+            <Spinner color="seedn_key" />
+          </Flex>
+        ) : chartData ? (
           <Flex direction="column" css={chartPageCss.chartContainer}>
             <Text size="body-large" css={{ position: 'absolute', top: 20, left: 20 }}>
               미리보기

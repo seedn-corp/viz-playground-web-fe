@@ -1,13 +1,13 @@
 import { Choose } from '@basiln/utils';
 
+import WidgetChart from '@/components/chart/WidgetChart';
 import { TablePreview } from '@/components/widgets/TablePreview';
 import { WidgetShell } from '@/components/widgets/WidgetShell';
+import type { ChartType } from '@/pages/chart/types';
 
 import { WIDGET_META } from './constants';
 import { styles } from './styles';
 import type { WidgetSlotProps } from './types';
-import WidgetChart from '@/components/chart/WidgetChart';
-import type { ChartType } from '@/pages/chart/types';
 
 // 차트 연결전 임시 컴포넌트
 const EmptyWidgetState = ({ widget }: { widget: WidgetSlotProps['widget'] }) => {

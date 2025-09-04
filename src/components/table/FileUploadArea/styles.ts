@@ -18,6 +18,12 @@ export const fileUploadAreaCss = {
     },
   }),
 
+  loadingView: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '8px',
+  }),
   isLoading: css({
     border: '2px solid #0000001a',
     borderRadius: '6px',

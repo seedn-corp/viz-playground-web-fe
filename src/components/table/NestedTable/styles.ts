@@ -2,17 +2,17 @@ import { css } from '@emotion/react';
 
 export const nestedTableCss = {
   self: css({
-    padding: '1rem',
+    whiteSpace: 'nowrap',
   }),
 
   groupDepthContainer: css({
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem',
-    padding: '0.75rem 1rem',
+    gap: '7px',
+    padding: '8px 12px',
     cursor: 'pointer',
     transition: 'background-color 0.2s ease-in-out, border 0.2s ease-in-out',
-    borderRadius: '0.5rem',
+    borderRadius: '6px',
   }),
 
   groupDepth: [
@@ -83,14 +83,14 @@ export const nestedTableCss = {
   }),
 
   groupRow: css({
-    padding: '0.5rem 1rem',
-    fontSize: '0.875rem',
+    padding: '8px 12px',
+    fontSize: '12px',
     color: '#111827',
     display: 'inline-block',
   }),
 
   subGroupContainer: css({
-    marginTop: '0.5rem',
+    marginTop: '8px',
   }),
 
   notSubGroupContainer: css({
@@ -100,7 +100,7 @@ export const nestedTableCss = {
   notSubGroupTableContainer: css({
     backgroundColor: '#fff',
     border: '1px solid #eee',
-    borderRadius: '0.375rem',
+    borderRadius: '6px',
     overflow: 'auto',
     flex: 1,
   }),
@@ -115,9 +115,9 @@ export const nestedTableCss = {
   }),
 
   notSubGroupTh: css({
-    padding: '0.5rem 1rem',
+    padding: '8px 12px',
     textAlign: 'left',
-    fontSize: '0.75rem',
+    fontSize: '12px',
     fontWeight: 500,
     color: '#6b7280',
     textTransform: 'uppercase',
@@ -133,9 +133,9 @@ export const nestedTableCss = {
       },
 
       '& td': {
-        padding: '0.5rem 1rem',
+        padding: '8px 12px',
         textAlign: 'left',
-        fontSize: '0.875rem',
+        fontSize: '12px',
         color: '#111827',
       },
     },

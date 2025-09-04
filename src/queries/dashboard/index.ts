@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 
 import { listDashboards, getDashboard } from '@/apis/dashboard';
 import type { DashboardDetail, DashboardDetailUI, DashboardSummary } from '@/types/dashboard';
@@ -14,8 +14,12 @@ export const dashboardQueries = {
       queryKey: [...keyPrefix, 'list'],
       queryFn: listDashboards,
       select: (res) => res.dashboards as DashboardSummary[],
-      staleTime: 30 * 1000,
-      retry: 3,
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      placeholderData: keepPreviousData,
+      retry: 0,
     }),
 
   detailRaw: (id: string, opts?: { enabled?: boolean }) =>

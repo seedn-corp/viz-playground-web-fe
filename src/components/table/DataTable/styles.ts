@@ -13,9 +13,9 @@ export const dataTableCss = {
   }),
 
   th: css({
-    padding: '0.75rem 1rem',
+    padding: '8px 12px',
     textAlign: 'left',
-    fontSize: '0.75rem',
+    fontSize: '12px',
     fontWeight: '500',
     textTransform: 'uppercase',
     letterSpacing: '0.1em',
@@ -31,7 +31,7 @@ export const dataTableCss = {
   }),
 
   sortIcon: css({
-    marginLeft: '0.25rem',
+    marginLeft: '4px',
   }),
 
   tbody: css({
@@ -46,8 +46,8 @@ export const dataTableCss = {
   }),
 
   td: css({
-    padding: '0.5rem 1rem',
-    fontSize: '0.875rem',
+    padding: '8px 12px',
+    fontSize: '12px',
     color: '#374151',
   }),
 };

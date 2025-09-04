@@ -1,4 +1,6 @@
-export type ViewModeSelectorProps = {
+import type { HTMLAttributes } from 'react';
+
+export type ViewModeSelectorProps = HTMLAttributes<HTMLDivElement> & {
   type: 'group' | 'table';
   onTypeChange: (type: 'group' | 'table') => void;
   itemsPerPage: number;

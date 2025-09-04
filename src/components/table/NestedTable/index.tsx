@@ -59,8 +59,8 @@ export const NestedTable = (props: NestedTableProps) => {
       <div
         key={groupIndex}
         css={{
-          marginBottom: '0.5rem',
-          ...(group.depth > 0 ? { marginLeft: '1.5rem' } : {}),
+          marginBottom: '7px',
+          ...(group.depth > 0 ? { marginLeft: '14px' } : {}),
         }}
       >
         <div
@@ -85,7 +85,7 @@ export const NestedTable = (props: NestedTableProps) => {
         </div>
 
         {isExpanded && (
-          <div css={[{ marginTop: '7px', marginLeft: group.depth > 0 ? '16px' : '0' }]}>
+          <div css={[{ marginTop: '7px' }]}>
             {hasSubGroups ? (
               renderSubGroups(group.items as Group[], groupId)
             ) : (

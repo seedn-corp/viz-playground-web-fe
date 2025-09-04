@@ -10,3 +10,8 @@ export type Group = {
   depth: number;
   totalItems: number;
 };
+
+export type RouteIds = {
+  dashboardId?: string;
+  widgetId?: string;
+};

@@ -11,20 +11,8 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
   const [fileName, setFileName] = useState<string>('');
   const [fileSize, setFileSize] = useState<number | null>(null);
 
-  const resetData = useCallback(() => {
-    setHeaders([]);
-    setRows([]);
-    setFileName('');
-    setFileSize(null);
-    setError('');
-    setCurrentPage(1);
-    setSelectedColumns([]);
-    setGroupingColumns([]);
-    setExpandedGroups(new Set());
-  }, []);
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [fileUploadLoading, setFileUploadLoading] = useState<boolean>(false);
+  const [fileUploadError, setFileUploadError] = useState<string>('');
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -47,8 +35,8 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      setLoading(true);
-      setError('');
+      setFileUploadLoading(true);
+      setFileUploadError('');
       setFileName(file.name);
       setFileSize(file.size ?? null);
 
@@ -60,14 +48,14 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
         } else if (isExcel(file)) {
           records = await parseXlsxFileToJson(file);
         } else {
-          setError('CSV 또는 Excel(.xls/.xlsx) 파일만 업로드할 수 있습니다.');
-          setLoading(false);
+          setFileUploadError('CSV 또는 Excel(.xls/.xlsx) 파일만 업로드할 수 있습니다.');
+          setFileUploadLoading(false);
           return;
         }
 
         if (!records || records.length === 0) {
-          setError('빈 파일입니다.');
-          setLoading(false);
+          setFileUploadError('빈 파일입니다.');
+          setFileUploadLoading(false);
           return;
         }
 
@@ -93,9 +81,9 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
         setExpandedGroups(new Set());
       } catch (err) {
         console.error(err);
-        setError('파일을 읽는 중 오류가 발생했습니다.');
+        setFileUploadError('파일을 읽는 중 오류가 발생했습니다.');
       } finally {
-        setLoading(false);
+        setFileUploadLoading(false);
       }
     },
     [],
@@ -311,12 +299,24 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
     });
   };
 
+  const resetData = () => {
+    setHeaders([]);
+    setRows([]);
+    setFileName('');
+    setFileSize(null);
+    setFileUploadError('');
+    setCurrentPage(1);
+    setSelectedColumns([]);
+    setGroupingColumns([]);
+    setExpandedGroups(new Set());
+  };
+
   return {
     headers,
     rows,
     fileName,
-    loading,
-    error,
+    fileUploadLoading,
+    fileUploadError,
     searchTerm,
     currentPage,
     itemsPerPage,
@@ -348,5 +348,7 @@ export function useTableData({ initialItemsPerPage = 10, viewMode = 'table' }) {
     expandAllGroups,
     collapseAllGroups,
     toggleGroupExpansion,
+    setHeaders,
+    setRows,
   };
 }

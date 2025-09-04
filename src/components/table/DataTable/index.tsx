@@ -1,3 +1,5 @@
+import { ChevronUp, ChevronDown } from 'lucide-react';
+
 import { dataTableCss } from './styles';
 import type { DataTableProps } from './types';
 
@@ -11,11 +13,26 @@ export const DataTable = (props: DataTableProps) => {
           {selectedColumns.map((header, index) => (
             <th key={index} css={dataTableCss.th} onClick={() => onSort(header)}>
               {header}
-              {sortConfig.key === header && (
-                <span css={dataTableCss.sortIcon}>
-                  {sortConfig.direction === 'asc' ? '▲' : '▼'}
-                </span>
-              )}
+              <span css={dataTableCss.sortIcon} aria-hidden>
+                <ChevronUp
+                  size={12}
+                  css={[
+                    dataTableCss.sortArrow,
+                    sortConfig.key === header &&
+                      sortConfig.direction === 'asc' &&
+                      dataTableCss.sortActive,
+                  ]}
+                />
+                <ChevronDown
+                  size={12}
+                  css={[
+                    dataTableCss.sortArrow,
+                    sortConfig.key === header &&
+                      sortConfig.direction === 'desc' &&
+                      dataTableCss.sortActive,
+                  ]}
+                />
+              </span>
             </th>
           ))}
         </tr>

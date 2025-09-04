@@ -47,6 +47,8 @@ export const ViewModeSelector = (props: ViewModeSelectorProps) => {
           >
             <Select.Trigger css={{ width: '85px' }}>{itemsPerPage}개씩</Select.Trigger>
             <Select.Content css={{ width: '85px' }}>
+              <Select.Item value={'3'}>3개씩</Select.Item>
+              <Select.Item value={'5'}>5개씩</Select.Item>
               <Select.Item value={'10'}>10개씩</Select.Item>
               <Select.Item value={'25'}>25개씩</Select.Item>
               <Select.Item value={'50'}>50개씩</Select.Item>

@@ -23,8 +23,15 @@ export const styles = {
     '.react-grid-item:has(.react-resizable-handle:hover) > *': {
       borderColor: 'rgba(99, 102, 241, 0.4) !important',
     },
+
+    '&[data-edit-mode="true"]': {
+      userSelect: 'none',
+      '-webkit-user-select': 'none',
+      '-moz-user-select': 'none',
+      '-ms-user-select': 'none',
+    },
   }),
-  
+
   editControls: css({
     position: 'fixed',
     bottom: 40,
@@ -38,7 +45,7 @@ export const styles = {
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
     border: '1px solid rgba(0, 0, 0, 0.08)',
   }),
-  
+
   cancelBtn: css({
     display: 'flex',
     alignItems: 'center',
@@ -56,7 +63,7 @@ export const styles = {
       color: '#ef4444',
     },
   }),
-  
+
   editBtn: css({
     display: 'flex',
     alignItems: 'center',
@@ -75,7 +82,7 @@ export const styles = {
       color: '#3b82f6',
     },
   }),
-  
+
   editBtnActive: css({
     background: '#3b82f6',
     color: 'white',
@@ -85,7 +92,7 @@ export const styles = {
       color: 'white',
     },
   }),
-  
+
   editBtnInactive: css({
     padding: '8px',
   }),

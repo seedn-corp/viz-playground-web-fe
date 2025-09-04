@@ -1,9 +1,10 @@
+// src/components/dashboard/DashboardSidebar/index.tsx
 import { Button, IconButton, Spinner, Text } from '@basiln/design-system';
 import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
-import { Pin, PinOff, Trash2 } from 'lucide-react';
+import { Edit2, Pin, PinOff, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -13,8 +14,9 @@ import { useDeleteDashboard } from '@/hooks/mutation/dashboard/useDeleteDashboar
 import { dashboardQueries } from '@/queries/dashboard';
 
 import { sidebarCss } from './styles';
+import type { DashboardSidebarProps } from './types';
 
-export const DashboardSidebar = () => {
+export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { id: activeId } = useParams<{ id: string }>();
@@ -31,7 +33,6 @@ export const DashboardSidebar = () => {
   const hasDashboards = items.length > 0;
 
   const showInitialLoading = !dashboards && isLoading;
-
   const isMutating = createMutation.isPending || deleteMutation.isPending;
 
   const onCreate = () => {
@@ -70,6 +71,14 @@ export const DashboardSidebar = () => {
       },
       onSettled: () => setDeletingId(null),
     });
+  };
+
+  const onEdit = (
+    e: React.MouseEvent,
+    d: { id: string; name: string; description: string | null },
+  ) => {
+    e.stopPropagation();
+    onRequestEdit(d);
   };
 
   return (
@@ -125,14 +134,27 @@ export const DashboardSidebar = () => {
               aria-label={`open-dashboard-${d.name}`}
             >
               <Text size="body-medium">{d.name}</Text>
-              <IconButton
-                variant="ghost"
-                size="small"
-                icon={<Trash2 color={theme.colors.gray_060} />}
-                onClick={(e) => onDelete(e, d.id)}
-                disabled={isMutating || (deletingId === d.id && deleteMutation.isPending)}
-                title="대시보드 삭제"
-              />
+
+              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                <IconButton
+                  variant="ghost"
+                  size="small"
+                  icon={<Edit2 color={theme.colors.gray_060} />}
+                  onClick={(e) =>
+                    onEdit(e, { id: d.id, name: d.name, description: d.description ?? null })
+                  }
+                  title="대시보드 수정"
+                  disabled={isMutating}
+                />
+                <IconButton
+                  variant="ghost"
+                  size="small"
+                  icon={<Trash2 color={theme.colors.gray_060} />}
+                  onClick={(e) => onDelete(e, d.id)}
+                  disabled={isMutating || (deletingId === d.id && deleteMutation.isPending)}
+                  title="대시보드 삭제"
+                />
+              </div>
             </div>
           ))}
         </div>

@@ -12,7 +12,7 @@ export const Pagination = (props: PaginationProps) => {
   }
 
   return (
-    <div css={paginationCss.container}>
+    <div>
       <div css={paginationCss.buttonContainer}>
         <button
           onClick={() => onPageChange(Math.max(currentPage - 1, 1))}

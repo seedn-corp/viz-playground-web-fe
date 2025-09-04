@@ -1,10 +1,6 @@
 import { css } from '@emotion/react';
 
 export const paginationCss = {
-  container: css({
-    backgroundColor: '#fff',
-  }),
-
   buttonContainer: css({
     display: 'flex',
     alignItems: 'center',

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Edit3, Check, X } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { useParams } from 'react-router';
+import { useParams, useLocation, useNavigate } from 'react-router';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -91,8 +91,26 @@ export const DashboardGrid = ({ onOpenDialog, renderEditModeControls }: Dashboar
     console.log('Remove widget:', id);
   };
 
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const dashboardId = pathname.split('/')[2];
+
   const handleEdit = (id: string) => {
-    console.log('Edit widget:', id);
+    const widget = widgets?.find((w) => w.id === id);
+    if (!widget) return;
+
+    const storageKey = `${dashboardId.slice(0, 8)}-${widget.id.slice(0, 8)}`;
+
+    // 위젯 수정 페이지로 이동
+    navigate(`/${widget.type}/${storageKey}`);
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        dashboardId,
+        widgetId: widget.id,
+      }),
+    );
   };
 
   if (widgets) {

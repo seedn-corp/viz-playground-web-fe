@@ -8,13 +8,13 @@ import { useLocation, useNavigate } from 'react-router';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-import { BREAKPOINTS, COLS } from '@/atoms/dashboard';
 import { WidgetSlot } from '@/components/widgets/WidgetSlot';
 import { useUpdateWidget } from '@/hooks/mutation/widgets/useUpdateWidget';
 import { widgetsQueries } from '@/queries/widgets';
 import type { DashboardWidget } from '@/types/dashboard';
 import type { WidgetDetailResponse } from '@/types/widgets';
 
+import { BREAKPOINTS, COLS } from './constants';
 import { styles } from './styles';
 import type { DashboardGridProps } from './types';
 
@@ -32,7 +32,11 @@ const convertDashboardWidgetToWidgetDetail = (widget: DashboardWidget): WidgetDe
   updated_at: widget.updated_at,
 });
 
-export const DashboardGrid = ({ widgets, onOpenDialog, renderEditModeControls }: DashboardGridProps) => {
+export const DashboardGrid = ({
+  widgets,
+  onOpenDialog,
+  renderEditModeControls,
+}: DashboardGridProps) => {
   const { mutate: updateWidget } = useUpdateWidget();
   const queryClient = useQueryClient();
 

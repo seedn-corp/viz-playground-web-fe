@@ -4,7 +4,7 @@ import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
-import { Edit2, Pin, PinOff, Trash2 } from 'lucide-react';
+import { Pin, PinOff, Trash2, FilePenLine } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -135,11 +135,11 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
             >
               <Text size="body-medium">{d.name}</Text>
 
-              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+              <Flex gap={2}>
                 <IconButton
                   variant="ghost"
                   size="small"
-                  icon={<Edit2 color={theme.colors.gray_060} />}
+                  icon={<FilePenLine color={theme.colors.gray_060} />}
                   onClick={(e) =>
                     onEdit(e, { id: d.id, name: d.name, description: d.description ?? null })
                   }
@@ -154,7 +154,7 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
                   disabled={isMutating || (deletingId === d.id && deleteMutation.isPending)}
                   title="대시보드 삭제"
                 />
-              </div>
+              </Flex>
             </div>
           ))}
         </div>

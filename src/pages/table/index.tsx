@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router';
 
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
 import {
   FileUploadArea,
   ColumnSelector,
@@ -16,15 +17,14 @@ import {
   Pagination,
   ViewModeSelector,
 } from '@/components/table';
-import { useCreateWidget } from '@/hooks/mutation/widgets';
-// import { useUpdateWidget } from '@/hooks/mutation/widgets/useUpdateWidget';
+import { useCreateWidget, useUpdateWidget } from '@/hooks/mutation/widgets';
 import { useTableData } from '@/hooks/table/useTableData';
-import { dashboardQueries } from '@/queries/dashboard';
 import { widgetsQueries } from '@/queries/widgets';
 import { computeNextPosition } from '@/utils/computeNextPosition';
+import { LocalStorage } from '@/utils/LocalStorage';
 
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
-import type { DataRow, Group } from './types';
+import type { DataRow, Group, RouteIds } from './types';
 
 export const TableWidgetPage = () => {
   const navigate = useNavigate();
@@ -32,19 +32,22 @@ export const TableWidgetPage = () => {
   const params = useParams();
   const dashboardId = params?.id;
 
-  const { data: dashboardInfo } = useQuery(
-    dashboardQueries.detailRaw('d3985fd6-327b-4ab6-8720-0fa6e63b916b'),
+  const [routeIds, setRouteIds] = useState<RouteIds>();
+
+  // 위젯 전체 정보 받아오기 (position 계산용)
+  const {
+    data: allWidget,
+    isPending: isLoadingAllWidget,
+    error: widgetsError,
+  } = useQuery(widgetsQueries.all(routeIds?.dashboardId ?? ''));
+
+  // 위젯 상세 정보 받아오기 (수정 모드일 때)
+  const { data: widgetDetail, isPending: isLoadingWidgetDetail } = useQuery(
+    widgetsQueries.detail(routeIds?.widgetId ?? ''),
   );
 
-  console.log({ dashboardInfo });
-
-  const { data: allWidget, error: widgetsError } = useQuery(widgetsQueries.all(dashboardId ?? ''));
   const { mutate: createWidget, isPending: isCreating } = useCreateWidget();
-
-  // const { data: widgetDetail, isPending: isLoadingWidgetDetail } = useQuery(
-  //   widgetsQueries.detail(widgetId ?? ''),
-  // );
-  // const { mutate: updateWidget, isPending: isUpdating } = useUpdateWidget();
+  const { mutate: updateWidget, isPending: isUpdating } = useUpdateWidget();
 
   const [tableName, setTableName] = useState('새 테이블');
   const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
@@ -53,8 +56,8 @@ export const TableWidgetPage = () => {
     headers,
     rows: csvData,
     fileName,
-    loading,
-    error,
+    fileUploadLoading,
+    fileUploadError,
     fileSize,
     currentPage,
     itemsPerPage,
@@ -81,6 +84,9 @@ export const TableWidgetPage = () => {
     expandAllGroups,
     collapseAllGroups,
     toggleGroupExpansion,
+
+    setHeaders,
+    setRows,
   } = useTableData({ initialItemsPerPage: 10, viewMode });
 
   const handleAddWidget = () => {
@@ -89,41 +95,41 @@ export const TableWidgetPage = () => {
       return;
     }
 
-    if (dashboardId == null) {
+    if (routeIds?.dashboardId == null) {
       toast.error('대시보드 정보를 불러오지 못해 위젯을 추가할 수 없습니다.');
       return;
     }
 
     const payload = {
-      dashboardId: dashboardId,
       name: tableName || '새 테이블',
       type: 'table',
       processed_data: JSON.stringify({ columns: headers, rows: csvData }),
       config: JSON.stringify({ filterFields: selectedColumns, grouping: groupingColumns }),
     } as const;
 
-    // if (widgetId && widgetDetail) {
-    //   updateWidget(
-    //     { id: widgetId, ...payload, position: widgetDetail.position },
-    //     {
-    //       onSuccess: () => {
-    //         toast.success('위젯이 업데이트되었습니다.');
-    //         navigate('/');
-    //       },
-    //       onError: (error: unknown) => {
-    //         const msg = error instanceof Error ? error.message : String(error);
-    //         toast.error(`위젯 업데이트에 실패했습니다: ${msg}`);
-    //       },
-    //     },
-    //   );
-    //   return;
-    // }
+    if (routeIds?.widgetId && widgetDetail) {
+      updateWidget(
+        { id: routeIds.widgetId, ...payload, position: widgetDetail.position },
+        {
+          onSuccess: () => {
+            toast.success('위젯이 업데이트되었습니다.');
+            navigate('/');
+          },
+          onError: (error: unknown) => {
+            const msg = error instanceof Error ? error.message : String(error);
+            toast.error(`위젯 업데이트에 실패했습니다: ${msg}`);
+          },
+        },
+      );
+      return;
+    }
 
     const nextPosition = computeNextPosition(allWidget);
 
     createWidget(
       {
         ...payload,
+        dashboardId: routeIds.dashboardId,
         position: nextPosition,
       },
       {
@@ -145,6 +151,52 @@ export const TableWidgetPage = () => {
     }
   }, [groupingColumns, viewMode]);
 
+  useEffect(() => {
+    if (dashboardId?.length === 17) {
+      const id = LocalStorage.getItem(`${dashboardId}`);
+      const { dashboardId: _dashboardId, widgetId } = JSON.parse(id || '{}');
+
+      setRouteIds({ dashboardId: _dashboardId, widgetId });
+    } else {
+      setRouteIds({ dashboardId: dashboardId ?? '', widgetId: undefined });
+    }
+  }, [dashboardId]);
+
+  useEffect(() => {
+    if (!widgetDetail) {
+      return;
+    }
+
+    setTableName(widgetDetail.name ?? '새 테이블');
+
+    try {
+      const pd = widgetDetail.processed_data ? JSON.parse(widgetDetail.processed_data) : null;
+      if (pd) {
+        const parsedHeaders = Array.isArray(pd.columns) ? pd.columns : [];
+        const parsedRows = Array.isArray(pd.rows) ? pd.rows : [];
+
+        setHeaders(parsedHeaders);
+        setRows(parsedRows as DataRow[]);
+      }
+    } catch (err) {
+      console.error('processed_data parse error', err);
+    }
+
+    try {
+      const cfg = widgetDetail.config ? JSON.parse(widgetDetail.config) : null;
+      if (cfg) {
+        if (Array.isArray(cfg.filterFields)) setSelectedColumns(cfg.filterFields);
+        if (Array.isArray(cfg.grouping)) setGroupingColumns(cfg.grouping);
+      }
+    } catch (err) {
+      console.error('config parse error', err);
+    }
+  }, [widgetDetail, setHeaders, setRows, setSelectedColumns, setGroupingColumns]);
+
+  if (isLoadingAllWidget || (routeIds?.widgetId && isLoadingWidgetDetail)) {
+    return <LoadingOverlay visible={true} />;
+  }
+
   return (
     <>
       <header css={widgetTablePageHeaderCss.self}>
@@ -162,8 +214,7 @@ export const TableWidgetPage = () => {
             </Text>
           </Button>
 
-          <Text size="body-large">{`${dashboardInfo?.name} > 테이블 만들기`} </Text>
-          {/* <Text size="body-large">{widgetId ? '테이블 편집' : '테이블 만들기'}</Text> */}
+          <Text size="body-large">{routeIds?.widgetId ? '테이블 편집' : '테이블 만들기'}</Text>
         </div>
         <Button
           display="inline"
@@ -171,10 +222,7 @@ export const TableWidgetPage = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={handleAddWidget}
-          isLoading={
-            isCreating
-            // || isUpdating
-          }
+          isLoading={isCreating || isUpdating}
           disabled={
             headers.length === 0 ||
             csvData.length === 0 ||
@@ -211,7 +259,7 @@ export const TableWidgetPage = () => {
             onFileUpload={handleFileUpload}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
-            isLoading={loading}
+            isLoading={fileUploadLoading}
             uploadedFileName={fileName || null}
             uploadedFileSize={fileSize}
             onRemove={() => {
@@ -219,13 +267,13 @@ export const TableWidgetPage = () => {
               toast.success('파일이 제거되었습니다.');
             }}
           />
-          {error && (
+          {fileUploadError && (
             <Text
               size="caption-regular"
               color="승인오류"
               css={{ position: 'absolute', marginTop: '2px' }}
             >
-              {error}
+              {fileUploadError}
             </Text>
           )}
 
@@ -327,7 +375,7 @@ export const TableWidgetPage = () => {
                 onFileUpload={handleFileUpload}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                isLoading={loading}
+                isLoading={fileUploadLoading}
                 uploadedFileName={fileName || null}
                 uploadedFileSize={fileSize}
                 onRemove={() => {

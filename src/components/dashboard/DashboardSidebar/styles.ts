@@ -50,5 +50,6 @@ export const sidebarCss = {
     color: '#868e96',
     lineHeight: 1.6,
     fontSize: 13,
+    textAlign: 'center',
   }),
 };

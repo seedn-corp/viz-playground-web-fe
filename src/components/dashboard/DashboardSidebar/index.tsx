@@ -1,4 +1,4 @@
-import { Button, IconButton, Text } from '@basiln/design-system';
+import { Button, IconButton, Spinner, Text } from '@basiln/design-system';
 import { If } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
@@ -27,20 +27,21 @@ export const DashboardSidebar = () => {
   const setLastId = useSetAtom(lastDashboardIdAtom);
   const [isPinned, setIsPinned] = useAtom(sidebarPinnedAtom);
 
-  const hasDashboards = (dashboards?.length ?? 0) > 0;
-
   const items = useMemo(() => dashboards ?? [], [dashboards]);
+  const hasDashboards = items.length > 0;
+
+  const showInitialLoading = !dashboards && isLoading;
 
   const onCreate = () => {
     createMutation.mutate(
       { name: '새로운 대시보드' },
       {
         onSuccess: (res) => {
-          const newId =
-            ('dashboard' in res ? res.dashboard : undefined)?.id ??
-            res.dashboard?.id ??
-            res?.dashboard?.id;
-          if (newId) navigate(`/dashboards/${newId}`);
+          const newId = ('dashboard' in res ? res.dashboard : undefined)?.id ?? res.dashboard?.id;
+          if (newId) {
+            setLastId(newId);
+            navigate(`/dashboards/${newId}`);
+          }
         },
       },
     );
@@ -48,15 +49,24 @@ export const DashboardSidebar = () => {
 
   const onDelete = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+
+    const idx = items.findIndex((d) => d.id === id);
+    const nextIdCandidate = items[idx + 1]?.id ?? items[idx - 1]?.id ?? null;
+
     setDeletingId(id);
     deleteMutation.mutate(id, {
-      onSettled: () => setDeletingId(null),
       onSuccess: () => {
-        setLastId(null);
         if (activeId === id) {
-          navigate('/dashboards');
+          if (nextIdCandidate) {
+            setLastId(nextIdCandidate);
+            navigate(`/dashboards/${nextIdCandidate}`);
+          } else {
+            setLastId(null);
+            navigate('/dashboards');
+          }
         }
       },
+      onSettled: () => setDeletingId(null),
     });
   };
 
@@ -85,21 +95,15 @@ export const DashboardSidebar = () => {
         </Button>
       </div>
 
-      <If condition={isLoading}>
-        <div css={sidebarCss.empty}>불러오는 중...</div>
+      <If condition={showInitialLoading}>
+        <Spinner />
       </If>
 
-      <If condition={!isLoading && !hasDashboards}>
-        <div css={sidebarCss.empty}>
-          아직 대시보드가 없습니다.
-          <br />
-          <Button size="small" display="inline" radius="small" onClick={onCreate}>
-            첫 번째 대시보드 만들기
-          </Button>
-        </div>
+      <If condition={!showInitialLoading && !hasDashboards}>
+        <div css={sidebarCss.empty}>아직 대시보드가 없습니다.</div>
       </If>
 
-      <If condition={!isLoading && hasDashboards}>
+      <If condition={!showInitialLoading && hasDashboards}>
         <div css={sidebarCss.list}>
           {items.map((d) => (
             <div
@@ -117,7 +121,9 @@ export const DashboardSidebar = () => {
                 variant="ghost"
                 size="small"
                 icon={<Trash2 color={theme.colors.gray_060} />}
-                onClick={(e) => onDelete(e, d.id)}
+                onClick={(e) => {
+                  onDelete(e, d.id);
+                }}
                 disabled={deletingId === d.id && deleteMutation.isPending}
               />
             </div>

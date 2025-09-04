@@ -1,3 +1,4 @@
+import { theme } from '@basiln/design-system';
 import { css } from '@emotion/react';
 
 export const dataTableCss = {
@@ -50,6 +51,21 @@ export const dataTableCss = {
   sortIcon: css({
     marginLeft: '6px',
     fontSize: 12,
+  }),
+
+  sortArrow: css({
+    display: 'inline-block',
+    lineHeight: 1,
+    marginLeft: 4,
+    marginRight: 2,
+    color: '#9ca3af',
+    fontSize: 10,
+    transition: 'color 0.12s ease, transform 0.12s ease',
+  }),
+
+  sortActive: css({
+    color: theme.colors.seedn_key,
+    fontWeight: 700,
   }),
 
   tbody: css({

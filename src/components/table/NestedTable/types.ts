@@ -5,4 +5,5 @@ export type NestedTableProps = {
   selectedColumns: string[];
   expandedGroups: Set<string>;
   onToggleGroup: (groupKey: string) => void;
+  allColumns: string[];
 };

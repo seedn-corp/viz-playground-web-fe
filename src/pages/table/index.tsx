@@ -350,6 +350,7 @@ export const TableWidgetPage = () => {
                           selectedColumns={selectedColumns}
                           expandedGroups={expandedGroups}
                           onToggleGroup={toggleGroupExpansion}
+                          allColumns={headers}
                         />
                       )}
                     </div>

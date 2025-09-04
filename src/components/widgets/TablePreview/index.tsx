@@ -118,7 +118,6 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
         const path = parentPath ? `${parentPath}_${groupValue}` : String(groupValue);
         const items = buildLevel(groupRows, level + 1, path, depth + 1);
 
-        // Compute totalItems robustly
         let totalItems = 0;
         if (Array.isArray(items)) {
           if (items.length === 0) {
@@ -221,6 +220,7 @@ export const TablePreview = ({ processed_data, config }: TablePreviewProps) => {
                 selectedColumns={displayedColumns}
                 expandedGroups={expandedGroups}
                 onToggleGroup={onToggleGroup}
+                allColumns={allColumns}
               />
             )}
           </div>

@@ -1,7 +1,7 @@
 import { Text } from '@basiln/design-system';
 import { useTheme } from '@emotion/react';
 import { CircleX, RefreshCw, Upload } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useId } from 'react';
 
 import { fileUploadAreaCss } from './styles';
 import type { FileUploadAreaProps } from './types';
@@ -11,6 +11,7 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
   const theme = useTheme();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const uniqueId = useId();
 
   const {
     type = 'compact',
@@ -27,14 +28,7 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
   const renderContent = (() => {
     if (isLoading) {
       return (
-        <div
-          css={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
+        <div css={fileUploadAreaCss.loadingView}>
           <RefreshCw color={theme.colors.gray_060} />
           <Text size="caption-regular" color="gray_060">
             파일을 처리하고 있습니다...
@@ -57,7 +51,7 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
     }
 
     return (
-      <label htmlFor="csv-upload" css={fileUploadAreaCss.label}>
+      <label htmlFor={`csv-upload-${uniqueId}`} css={fileUploadAreaCss.label}>
         <Upload size="14px" color={theme.colors.gray_060} />
         <Text as="p" color="gray_080" size="body-medium">
           데이터 파일 업로드
@@ -67,9 +61,9 @@ export const FileUploadArea = (props: FileUploadAreaProps) => {
         </Text>
         <input
           ref={inputRef}
-          id="csv-upload"
+          id={`csv-upload-${uniqueId}`}
           type="file"
-          accept=".csv,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          accept=".csv,.xls,.xlsx"
           onChange={onFileUpload}
           css={fileUploadAreaCss.input}
         />

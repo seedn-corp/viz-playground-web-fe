@@ -1,22 +1,6 @@
 import { css } from '@emotion/react';
 
 export const editDialogCss = {
-  overlay: css({
-    position: 'fixed',
-    inset: 0,
-    background: 'rgba(0,0,0,0.3)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-  }),
-  dialog: css({
-    width: 420,
-    background: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
-  }),
   row: css({
     width: '100%',
   }),

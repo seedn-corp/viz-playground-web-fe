@@ -8,7 +8,9 @@ import { useLocation, useNavigate } from 'react-router';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
+import { ConfirmDeleteDialog } from '@/components/common/ConfirmDeleteDialog';
 import { WidgetSlot } from '@/components/widgets/WidgetSlot';
+import { useDeleteWidget } from '@/hooks/mutation/widgets/useDeleteWidget';
 import { useUpdateWidget } from '@/hooks/mutation/widgets/useUpdateWidget';
 import { widgetsQueries } from '@/queries/widgets';
 import type { DashboardWidget } from '@/types/dashboard';
@@ -38,6 +40,7 @@ export const DashboardGrid = ({
   renderEditModeControls,
 }: DashboardGridProps) => {
   const { mutate: updateWidget } = useUpdateWidget();
+  const { mutate: deleteWidget, isPending: isDeleting } = useDeleteWidget(); // ⬅️ 추가
   const queryClient = useQueryClient();
 
   const [isEditMode, setIsEditMode] = useState(false);
@@ -46,6 +49,7 @@ export const DashboardGrid = ({
   >({});
   const [gridKey, setGridKey] = useState(0);
 
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null); // ⬅️ 추가
   const isInitialRender = useRef(true);
 
   const convertedLayouts = React.useMemo(() => {
@@ -107,7 +111,26 @@ export const DashboardGrid = ({
   };
 
   const handleRemove = (id: string) => {
-    console.log('Remove widget:', id);
+    setDeleteTargetId(id);
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTargetId) return;
+
+    deleteWidget(
+      { id: deleteTargetId, dashboardId },
+      {
+        onSuccess: () => {
+          setPendingUpdates((prev) => {
+            const rest = { ...prev };
+            delete rest[deleteTargetId];
+            return rest;
+          });
+          setDeleteTargetId(null);
+        },
+        onError: () => setDeleteTargetId(null),
+      },
+    );
   };
 
   const navigate = useNavigate();
@@ -255,6 +278,13 @@ export const DashboardGrid = ({
             </Button>
           </Flex>
         </If>
+
+        <ConfirmDeleteDialog
+          isOpen={!!deleteTargetId}
+          onCancel={() => setDeleteTargetId(null)}
+          onConfirm={confirmDelete}
+          isLoading={isDeleting}
+        />
       </div>
     );
   }

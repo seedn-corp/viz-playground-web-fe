@@ -1,4 +1,9 @@
-import type { CreateWidgetParams, UpdateWidgetParams, WidgetDetailResponse } from '@/types/widgets';
+import type {
+  CreateWidgetParams,
+  UpdateWidgetParams,
+  WidgetDetailResponse,
+  DeleteWidgetResponse,
+} from '@/types/widgets';
 
 import client from '../client';
 
@@ -21,4 +26,9 @@ export const getAllWidget = async (dashboardId: string): Promise<WidgetDetailRes
   const { data } = await client.get(`/api/dashboards/${dashboardId}/widgets`);
 
   return data.widgets;
+};
+
+export const deleteWidget = async (id: string): Promise<DeleteWidgetResponse> => {
+  const { data } = await client.delete<DeleteWidgetResponse>(`/api/widgets/${id}`);
+  return data;
 };

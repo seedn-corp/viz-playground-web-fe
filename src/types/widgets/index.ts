@@ -53,3 +53,8 @@ export type UpdateWidgetParams = {
   };
   config?: string;
 };
+
+export type DeleteWidgetResponse = {
+  success: boolean;
+  message?: string;
+};

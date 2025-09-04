@@ -1,6 +1,6 @@
 import type { ChartType } from '@/pages/chart/types';
 
-export type ChartAreaProps = {
+export type WidgetChartProps = {
   chartData: Record<string, string>[];
   chartType: ChartType;
   xAxisKey: string;

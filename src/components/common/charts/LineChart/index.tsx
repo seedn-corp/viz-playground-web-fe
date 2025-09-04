@@ -9,7 +9,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { aggregateChartData } from '../../../chart/ChartArea/utils';
+import { aggregateChartData } from '../../../chart/WidgetChart/utils';
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
 import { COLORS, LEGEND_STYLE } from '../utils';

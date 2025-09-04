@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import {
   FileUploadArea,
@@ -16,18 +16,35 @@ import {
   Pagination,
   ViewModeSelector,
 } from '@/components/table';
-import { useCreateWidget } from '@/hooks/mutation/widgets/useCreateWidget';
+import { useCreateWidget } from '@/hooks/mutation/widgets';
+// import { useUpdateWidget } from '@/hooks/mutation/widgets/useUpdateWidget';
 import { useTableData } from '@/hooks/table/useTableData';
+import { dashboardQueries } from '@/queries/dashboard';
 import { widgetsQueries } from '@/queries/widgets';
 import { computeNextPosition } from '@/utils/computeNextPosition';
 
 import { widgetTableCss, widgetTablePageHeaderCss } from './styles';
 import type { DataRow, Group } from './types';
 
-const TEST_DASHBOARD_ID = 'd3985fd6-327b-4ab6-8720-0fa6e63b916b';
-
 export const TableWidgetPage = () => {
   const navigate = useNavigate();
+
+  const params = useParams();
+  const dashboardId = params?.id;
+
+  const { data: dashboardInfo } = useQuery(
+    dashboardQueries.detailRaw('d3985fd6-327b-4ab6-8720-0fa6e63b916b'),
+  );
+
+  console.log({ dashboardInfo });
+
+  const { data: allWidget, error: widgetsError } = useQuery(widgetsQueries.all(dashboardId ?? ''));
+  const { mutate: createWidget, isPending: isCreating } = useCreateWidget();
+
+  // const { data: widgetDetail, isPending: isLoadingWidgetDetail } = useQuery(
+  //   widgetsQueries.detail(widgetId ?? ''),
+  // );
+  // const { mutate: updateWidget, isPending: isUpdating } = useUpdateWidget();
 
   const [tableName, setTableName] = useState('새 테이블');
   const [viewMode, setViewMode] = useState<'table' | 'group'>('table');
@@ -66,33 +83,47 @@ export const TableWidgetPage = () => {
     toggleGroupExpansion,
   } = useTableData({ initialItemsPerPage: 10, viewMode });
 
-  const { mutate, isPending } = useCreateWidget();
-  const { data, error: widgetsError } = useQuery(widgetsQueries.all(TEST_DASHBOARD_ID));
-
   const handleAddWidget = () => {
     if (widgetsError) {
       toast.error('위젯 정보를 불러오지 못해 위젯을 추가할 수 없습니다.');
       return;
     }
 
-    const nextPosition = computeNextPosition(data);
+    if (dashboardId == null) {
+      toast.error('대시보드 정보를 불러오지 못해 위젯을 추가할 수 없습니다.');
+      return;
+    }
 
-    console.log({
+    const payload = {
+      dashboardId: dashboardId,
       name: tableName || '새 테이블',
       type: 'table',
       processed_data: JSON.stringify({ columns: headers, rows: csvData }),
       config: JSON.stringify({ filterFields: selectedColumns, grouping: groupingColumns }),
-      position: nextPosition,
-    });
+    } as const;
 
-    mutate(
+    // if (widgetId && widgetDetail) {
+    //   updateWidget(
+    //     { id: widgetId, ...payload, position: widgetDetail.position },
+    //     {
+    //       onSuccess: () => {
+    //         toast.success('위젯이 업데이트되었습니다.');
+    //         navigate('/');
+    //       },
+    //       onError: (error: unknown) => {
+    //         const msg = error instanceof Error ? error.message : String(error);
+    //         toast.error(`위젯 업데이트에 실패했습니다: ${msg}`);
+    //       },
+    //     },
+    //   );
+    //   return;
+    // }
+
+    const nextPosition = computeNextPosition(allWidget);
+
+    createWidget(
       {
-        dashboardId: TEST_DASHBOARD_ID,
-
-        name: tableName || '새 테이블',
-        type: 'table',
-        processed_data: JSON.stringify({ columns: headers, rows: csvData }),
-        config: JSON.stringify({ filterFields: selectedColumns, grouping: groupingColumns }),
+        ...payload,
         position: nextPosition,
       },
       {
@@ -100,8 +131,9 @@ export const TableWidgetPage = () => {
           toast.success('위젯이 추가되었습니다.');
           navigate('/');
         },
-        onError: (error) => {
-          toast.error(`위젯 추가에 실패했습니다: ${error.message}`);
+        onError: (error: unknown) => {
+          const msg = error instanceof Error ? error.message : String(error);
+          toast.error(`위젯 추가에 실패했습니다: ${msg}`);
         },
       },
     );
@@ -130,7 +162,8 @@ export const TableWidgetPage = () => {
             </Text>
           </Button>
 
-          <Text size="body-large">테이블 만들기</Text>
+          <Text size="body-large">{`${dashboardInfo?.name} > 테이블 만들기`} </Text>
+          {/* <Text size="body-large">{widgetId ? '테이블 편집' : '테이블 만들기'}</Text> */}
         </div>
         <Button
           display="inline"
@@ -138,8 +171,16 @@ export const TableWidgetPage = () => {
           radius="small"
           css={{ height: 36 }}
           onClick={handleAddWidget}
-          isLoading={isPending}
-          disabled={headers.length === 0 || csvData.length === 0 || selectedColumns.length === 0}
+          isLoading={
+            isCreating
+            // || isUpdating
+          }
+          disabled={
+            headers.length === 0 ||
+            csvData.length === 0 ||
+            selectedColumns.length === 0 ||
+            !!widgetsError
+          }
         >
           <Text color="white">저장하기</Text>
         </Button>
@@ -239,6 +280,7 @@ export const TableWidgetPage = () => {
                 onCurrentPageChange={setCurrentPage}
                 onExpandAllGroups={expandAllGroups}
                 onCollapseAllGroups={collapseAllGroups}
+                css={{ marginRight: '20px' }}
               />
 
               <Spacing size={10} />
@@ -246,7 +288,7 @@ export const TableWidgetPage = () => {
               {selectedColumns.length > 0 && (
                 <>
                   <div css={widgetTableCss.previewTableContainer}>
-                    <div css={{ flex: 1, overflow: 'auto' }}>
+                    <div css={{ flex: 1, overflow: 'auto', paddingRight: '20px' }}>
                       {viewMode === 'table' ? (
                         <DataTable
                           selectedColumns={selectedColumns}
@@ -265,7 +307,7 @@ export const TableWidgetPage = () => {
                     </div>
 
                     {viewMode === 'table' && totalPages > 1 && (
-                      <div css={{ marginTop: '12px' }}>
+                      <div css={{ marginTop: '12px', paddingRight: '20px' }}>
                         <Pagination
                           currentPage={currentPage}
                           totalPages={totalPages}
@@ -280,6 +322,7 @@ export const TableWidgetPage = () => {
 
             <If condition={csvData.length === 0}>
               <FileUploadArea
+                css={{ marginRight: '20px', width: 'auto !important' }}
                 type="full"
                 onFileUpload={handleFileUpload}
                 onDrop={handleDrop}

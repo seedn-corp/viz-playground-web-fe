@@ -31,6 +31,7 @@ export const widgetTableCss = {
   left: css({
     borderRight: '1px solid #0000001a',
     padding: '20px',
+    overflow: 'auto',
   }),
 
   tableNameContainer: css({
@@ -59,7 +60,7 @@ export const widgetTableCss = {
   previewContainer: css({
     border: '1px solid #0000001a',
     borderRadius: '6px',
-    padding: '20px',
+    padding: '20px 0 20px 20px',
     height: 'calc(100vh - 100px)',
     width: 'calc(100vw - 300px)',
     display: 'flex',

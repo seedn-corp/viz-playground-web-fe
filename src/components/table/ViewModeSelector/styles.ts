@@ -8,6 +8,18 @@ export const viewModeSelectorCss = {
     alignContent: 'center',
   }),
 
+  selectContainer: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    width: '100%',
+    flex: 1,
+
+    '& > div': {
+      width: 'auto',
+    },
+  }),
+
   groupTypeButtonContainer: css({
     display: 'flex',
     gap: '8px',

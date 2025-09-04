@@ -2,23 +2,31 @@ import { theme } from '@basiln/design-system';
 import { css } from '@emotion/react';
 
 export const sidebarCss = {
-  wrap: css({
-    width: 260,
-    minWidth: 260,
-    height: 'calc(100vh - 60px)',
-    borderRight: `1px solid ${theme.colors.gray_050}`,
-    background: theme.colors.white,
-    padding: '12px 10px',
-    position: 'sticky',
-    top: 60,
-    overflowY: 'auto',
-  }),
-  header: css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '6px 4px 10px',
-  }),
+  wrap: () =>
+    css({
+      width: 260,
+      minWidth: 260,
+      height: 'calc(100vh - 60px)',
+      borderRight: `1px solid ${theme.colors.gray_050}`,
+      background: theme.colors.white,
+      padding: '16px 10px',
+      position: 'sticky',
+      top: 60,
+      overflowY: 'auto',
+    }),
+  header: () =>
+    css({
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 8,
+      padding: '0 4px 10px',
+    }),
+  titleRow: () =>
+    css({
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    }),
   list: css({
     display: 'flex',
     flexDirection: 'column',

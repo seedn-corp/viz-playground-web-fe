@@ -3,9 +3,9 @@ import { Flex, Spacing } from '@basiln/utils';
 import { ArrowLeftIcon, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 
-import ChartArea from '@/components/chart/ChartArea';
+import WidgetChart from '@/components/chart/WidgetChart';
 import Separator from '@/components/chart/Separator';
 import SideBar from '@/components/chart/SideBar';
 
@@ -33,7 +33,10 @@ const Chart = () => {
   const chartDataKeys = useMemo(() => (chartData ? Object.keys(chartData?.[0]) : []), [chartData]);
   const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
 
-  const { data } = useQuery(widgetsQueries.all('d3985fd6-327b-4ab6-8720-0fa6e63b916b'));
+  const { pathname } = useLocation();
+  const dashboardId = pathname.split('/')[2];
+
+  const { data } = useQuery(widgetsQueries.all(dashboardId));
 
   const { mutate, isPending } = useCreateWidget();
 
@@ -63,7 +66,7 @@ const Chart = () => {
   const addWidget = () => {
     mutate(
       {
-        dashboardId: 'd3985fd6-327b-4ab6-8720-0fa6e63b916b',
+        dashboardId,
         name: chartName || '새 차트',
         type: (chartType + '_chart') as WidgetType,
         processed_data: JSON.stringify(chartData),
@@ -141,18 +144,21 @@ const Chart = () => {
             <Text size="body-large" css={{ position: 'absolute', top: 20, left: 20 }}>
               미리보기
             </Text>
-            <ChartArea
-              chartData={filteredData || chartData}
-              chartType={chartType}
-              xAxisKey={xAxisKey}
-              yAxisKeys={yAxisKeys}
-            />
+            <div css={{ width: '100%', height: 300 }}>
+              <WidgetChart
+                chartData={filteredData || chartData}
+                chartType={chartType}
+                xAxisKey={xAxisKey}
+                yAxisKeys={yAxisKeys}
+              />
+            </div>
           </Flex>
         ) : (
           <Flex direction="column" css={chartPageCss.placeholderContainer}>
             <Upload css={{ width: 36, height: 36, opacity: 0.5 }} />
             <Text size="body-medium" color="gray_080">
-              차트 미리보기를 위해 <br /> CSV 파일을 업로드하세요
+              차트 미리보기를 위해 <br />
+              파일을 업로드하세요
             </Text>
           </Flex>
         )}

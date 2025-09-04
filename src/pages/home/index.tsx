@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 
 import { Header } from '@/components/common/Header';
 import { WidgetAddDialog } from '@/components/common/WidgetAddDialog';
-import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
 import { homeCss } from '@/pages/home/styles';
 
 export const Home = () => {
@@ -28,7 +27,8 @@ export const Home = () => {
     <div>
       <Header onOpenDialog={() => setIsDialogOpen(true)} />
       <div css={homeCss.container}>
-        <DashboardGrid onOpenDialog={() => setIsDialogOpen(true)} />
+        {/* 페이지 제거 예정 임시 주석 처리 */}
+        {/* <DashboardGrid widgets={} onOpenDialog={() => setIsDialogOpen(true)} /> */}
       </div>
 
       <WidgetAddDialog

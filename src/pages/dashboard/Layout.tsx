@@ -1,7 +1,7 @@
 import { If } from '@basiln/utils';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 
 import { sidebarPinnedAtom } from '@/atoms/dashboard';
 import { Header } from '@/components/common/Header';
@@ -27,9 +27,11 @@ export const DashboardLayout = () => {
   const openWidgetDialog = () => setIsDialogOpen(true);
   const closeWidgetDialog = () => setIsDialogOpen(false);
 
+  const { pathname } = useLocation();
+  const dashboardId = pathname.split('/')[2];
+
   const handleAddWidget = (widgetType: 'chart' | 'table') => {
-    if (widgetType === 'chart') navigate('/chart');
-    if (widgetType === 'table') navigate('/table');
+    navigate(`/${widgetType}/${dashboardId}`);
     closeWidgetDialog();
   };
 

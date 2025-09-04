@@ -1,30 +1,58 @@
+import { Choose } from '@basiln/utils';
+
+import { TablePreview } from '@/components/widgets/TablePreview';
 import { WidgetShell } from '@/components/widgets/WidgetShell';
 
+import { WIDGET_META } from './constants';
+import { styles } from './styles';
 import type { WidgetSlotProps } from './types';
+import WidgetChart from '@/components/chart/WidgetChart';
+import type { ChartType } from '@/pages/chart/types';
 
-export const WidgetSlot = ({ type, onRemove, props }: WidgetSlotProps) => {
-  switch (type) {
-    case 'excel':
-      return (
-        <WidgetShell title="📊 Excel 위젯" onRemove={onRemove}>
-          {/* TODO: 실제 Excel 렌더러로 교체 */}
-          준비 중입니다. props: <pre>{JSON.stringify(props, null, 2)}</pre>
-        </WidgetShell>
-      );
+// 차트 연결전 임시 컴포넌트
+const EmptyWidgetState = ({ widget }: { widget: WidgetSlotProps['widget'] }) => {
+  const meta = WIDGET_META[widget.type] || { icon: '📊', label: widget.type };
 
-    case 'chart':
-      return (
-        <WidgetShell title="📈 차트 위젯" onRemove={onRemove}>
-          {/* TODO: 실제 차트 렌더러로 교체 */}
-          준비 중입니다. props: <pre>{JSON.stringify(props, null, 2)}</pre>
-        </WidgetShell>
-      );
+  return (
+    <div css={styles.emptyState}>
+      <div css={styles.iconContainer}>{meta.icon}</div>
+      <div css={styles.title}>{meta.label}</div>
+      <div css={styles.badge}>준비 중</div>
+    </div>
+  );
+};
 
-    default:
-      return (
-        <WidgetShell title={`❓ 미등록 타입: ${type}`} onRemove={onRemove}>
-          이 타입은 아직 렌더러가 연결되지 않았습니다.
+export const WidgetSlot = ({ widget, onRemove, onEdit }: WidgetSlotProps) => {
+  return (
+    <Choose>
+      <Choose.When condition={widget.type === 'table'}>
+        <WidgetShell title={widget.name} onRemove={onRemove} onEdit={onEdit}>
+          <TablePreview processed_data={widget.processed_data} config={widget.config} />
         </WidgetShell>
-      );
-  }
+      </Choose.When>
+
+      <Choose.When condition={widget.type.includes('chart')}>
+        <WidgetShell title={widget.name} onRemove={onRemove} onEdit={onEdit}>
+          <WidgetChart
+            chartType={widget.type.replace('_chart', '') as ChartType}
+            chartData={JSON.parse(widget.processed_data)}
+            {...(JSON.parse(widget.config) as {
+              xAxisKey: string;
+              yAxisKeys: string[];
+            })}
+          />
+        </WidgetShell>
+      </Choose.When>
+
+      <Choose.Otherwise>
+        <WidgetShell
+          title={widget.name || `${widget.type} 위젯`}
+          onRemove={onRemove}
+          onEdit={onEdit}
+        >
+          <EmptyWidgetState widget={widget} />
+        </WidgetShell>
+      </Choose.Otherwise>
+    </Choose>
+  );
 };

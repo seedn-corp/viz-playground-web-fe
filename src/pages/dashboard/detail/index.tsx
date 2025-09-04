@@ -42,13 +42,19 @@ export const DashboardDetail = () => {
   }
 
   if (!id) return <div>잘못된 접근입니다.</div>;
+  if (isLoading)
+    return (
+      <Flex css={{ height: '100%' }}>
+        <Spinner color="seedn_key" />
+      </Flex>
+    );
   if (isError || !dashboard) return <div>대시보드를 불러오지 못했습니다.</div>;
 
   return (
     <div>
       <Text size="title-large">{dashboard.name}</Text>
       <Spacing size={12} />
-      <DashboardGrid onOpenDialog={openWidgetDialog} />
+      <DashboardGrid widgets={dashboard.widgets} onOpenDialog={openWidgetDialog} />
     </div>
   );
 };

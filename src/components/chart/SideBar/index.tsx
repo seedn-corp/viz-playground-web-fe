@@ -9,6 +9,7 @@ import Select from '../Select';
 import { sideBarCss } from './styles';
 import { selectCss } from '../Select/styles';
 import YAxisMultipleSelect from '../YAxisMultipleSelect';
+import ComposedYAxisSelect from '../ComposedYAxisSelect';
 import type { SideBarProps } from './types';
 import Separator from '../Separator';
 import { useMemo } from 'react';
@@ -28,6 +29,8 @@ const SideBar = (props: SideBarProps) => {
     setChartType,
     filters,
     setFilters,
+    composedConfig,
+    setComposedConfig,
   } = props;
 
   const numberValueKeys = chartDataKeys.filter((key) => !isNaN(Number(chartData?.[0][key])));
@@ -96,6 +99,7 @@ const SideBar = (props: SideBarProps) => {
           <Select value={chartType} onValueChange={(value) => setChartType(value as ChartType)}>
             <Select.Trigger css={{ width: '100%' }}>{chartType}</Select.Trigger>
             <Select.Content>
+              <Select.Item value="composed">composed</Select.Item>
               <Select.Item value="line">line</Select.Item>
               <Select.Item value="bar">bar</Select.Item>
               <Select.Item value="area">area</Select.Item>
@@ -136,6 +140,29 @@ const SideBar = (props: SideBarProps) => {
               </Select.Content>
             </Select>
           </Flex>
+        ) : chartType === 'composed' ? (
+          <>
+            <Flex align="start" direction="column">
+              <Text>Y축</Text>
+              <YAxisMultipleSelect
+                name={yAxisKeys}
+                onChange={setYAxisKeys}
+                items={numberValueKeys}
+                disabledItem={xAxisKey}
+              />
+            </Flex>
+            
+            <Spacing size={20} />
+            
+            {yAxisKeys.length > 0 && composedConfig && setComposedConfig && (
+              <ComposedYAxisSelect
+                yAxisKeys={yAxisKeys}
+                composedConfig={composedConfig}
+                onComposedConfigChange={setComposedConfig}
+                disabledItem={xAxisKey}
+              />
+            )}
+          </>
         ) : (
           <Flex align="start" direction="column">
             <Text>Y축</Text>

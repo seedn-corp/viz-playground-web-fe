@@ -1,4 +1,4 @@
-import type { ChartType } from '@/pages/chart/types';
+import type { ChartType, ComposedChartConfig } from '@/pages/chart/types';
 
 export type SideBarProps = {
   chartData: Record<string, string>[] | undefined;
@@ -14,4 +14,6 @@ export type SideBarProps = {
   setChartName: React.Dispatch<React.SetStateAction<string>>;
   filters: Record<string, string[]>;
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+  composedConfig?: ComposedChartConfig;
+  setComposedConfig?: React.Dispatch<React.SetStateAction<ComposedChartConfig>>;
 };

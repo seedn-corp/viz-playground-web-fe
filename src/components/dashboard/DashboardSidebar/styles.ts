@@ -1,5 +1,7 @@
 import { css, type Theme } from '@emotion/react';
 
+const SIDE_GUTTER = 10;
+
 export const sidebarCss = {
   wrap: (theme: Theme) =>
     css({
@@ -8,7 +10,7 @@ export const sidebarCss = {
       height: 'calc(100vh - 60px)',
       borderRight: `1px solid ${theme.colors.gray_050}`,
       background: theme.colors.white,
-      padding: '16px 10px',
+      padding: `0 ${SIDE_GUTTER}px 16px`,
       position: 'sticky',
       top: 60,
       overflowY: 'auto',
@@ -27,25 +29,51 @@ export const sidebarCss = {
       },
       '::-webkit-scrollbar-track': { background: 'transparent' },
     }),
-  header: () =>
+
+  header: (theme: Theme, elevated = false) =>
     css({
+      marginInline: -SIDE_GUTTER,
+      padding: '16px 14px 10px',
+      position: 'sticky',
+      top: 0,
+      zIndex: 1,
+      flexShrink: 0,
       display: 'flex',
       flexDirection: 'column',
       gap: 8,
-      padding: '0 4px 10px',
+      background: theme.colors.white,
+
+      ...(elevated && {
+        boxShadow: `0 8px 16px -12px rgba(0,0,0,0.18), 0 1px 0 ${theme.colors.gray_050}`,
+      }),
+
+      ...(elevated && {
+        '::after': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 0,
+          pointerEvents: 'none',
+        },
+      }),
     }),
+
   titleRow: () =>
     css({
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
     }),
+
   list: css({
     display: 'flex',
     flexDirection: 'column',
     gap: 6,
     marginTop: 8,
   }),
+
   item: (active: boolean) =>
     css({
       padding: '8px 10px',
@@ -58,6 +86,7 @@ export const sidebarCss = {
       alignItems: 'center',
       justifyContent: 'space-between',
     }),
+
   empty: css({
     padding: '12px',
     color: '#868e96',
@@ -65,6 +94,7 @@ export const sidebarCss = {
     fontSize: 13,
     textAlign: 'center',
   }),
+
   create: (theme: Theme) =>
     css({
       display: 'flex',

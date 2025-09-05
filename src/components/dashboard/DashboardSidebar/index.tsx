@@ -4,7 +4,7 @@ import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
 import { Pin, PinOff, Trash2, FilePenLine, Plus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom, sidebarPinnedAtom } from '@/atoms/dashboard';
@@ -32,6 +32,9 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
   const [isPinned, setIsPinned] = useAtom(sidebarPinnedAtom);
 
   const [createOpen, setCreateOpen] = useState(false);
+
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [elevated, setElevated] = useState(false);
 
   const items = useMemo(() => dashboards ?? [], [dashboards]);
   const hasDashboards = items.length > 0;
@@ -82,9 +85,18 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
     onRequestEdit(d);
   };
 
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const onScroll = () => setElevated(el.scrollTop > 0);
+    onScroll();
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <aside css={sidebarCss.wrap}>
-      <div css={sidebarCss.header()}>
+    <aside ref={wrapRef} css={sidebarCss.wrap}>
+      <div css={sidebarCss.header(theme, elevated)}>
         <div css={sidebarCss.titleRow()}>
           <Text size="title-regular">대시보드 리스트</Text>
           <IconButton

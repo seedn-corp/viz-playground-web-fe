@@ -1,22 +1,23 @@
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 export const fileUploadAreaCss = {
-  dropZone: css({
-    border: '2px solid #0000001a',
-    borderRadius: '6px',
-    height: '112px',
-    padding: '0px 14px',
-    textAlign: 'center',
-    transition: 'border-color 0.2s ease',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+  dropZone: (theme: Theme) =>
+    css({
+      border: '2px solid #0000001a',
+      borderRadius: '6px',
+      height: '112px',
+      padding: '0px 14px',
+      textAlign: 'center',
+      transition: 'border-color 0.2s ease',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
 
-    '&:hover': {
-      borderColor: '#3b82f6',
-    },
-  }),
+      '&:hover': {
+        borderColor: theme.colors.seedn_key,
+      },
+    }),
 
   loadingView: css({
     display: 'flex',

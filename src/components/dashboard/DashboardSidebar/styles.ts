@@ -1,8 +1,7 @@
-import { theme } from '@basiln/design-system';
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 export const sidebarCss = {
-  wrap: () =>
+  wrap: (theme: Theme) =>
     css({
       width: 260,
       minWidth: 260,

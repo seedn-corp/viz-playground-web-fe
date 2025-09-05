@@ -97,7 +97,7 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
   };
 
   return (
-    <aside css={sidebarCss.wrap()}>
+    <aside css={sidebarCss.wrap}>
       <div css={sidebarCss.header()}>
         <div css={sidebarCss.titleRow()}>
           <Text size="title-regular">대시보드 리스트</Text>

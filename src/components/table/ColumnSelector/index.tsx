@@ -4,8 +4,7 @@ import { columnSelectorCss } from './style';
 import type { ColumnSelectorProps } from './types';
 
 export const ColumnSelector = (props: ColumnSelectorProps) => {
-  const { headers, selectedColumns, onToggleColumn, onSelectAll, onClearAll } =
-    props;
+  const { headers, selectedColumns, onToggleColumn, onSelectAll, onClearAll } = props;
 
   return (
     <div>
@@ -35,7 +34,6 @@ export const ColumnSelector = (props: ColumnSelectorProps) => {
             radius="small"
             onClick={onSelectAll}
             gutter="10px"
-            css={columnSelectorCss.button}
           >
             전체 선택
           </Button>
@@ -46,7 +44,6 @@ export const ColumnSelector = (props: ColumnSelectorProps) => {
             variant="stroke"
             onClick={onClearAll}
             gutter="10px"
-            css={columnSelectorCss.button}
           >
             전체 해제
           </Button>

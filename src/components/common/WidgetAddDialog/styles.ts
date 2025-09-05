@@ -1,5 +1,4 @@
-import { theme } from '@basiln/design-system';
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 export const widgetAddDialogCss = {
   content: css({
@@ -10,20 +9,21 @@ export const widgetAddDialogCss = {
     flex: 1,
   }),
 
-  widgetOption: css({
-    display: 'flex',
-    alignItems: 'center',
-    gap: 16,
-    padding: 16,
-    borderRadius: 8,
-    border: `2px solid ${theme.colors.gray_040}`,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    '&:hover': {
-      borderColor: theme.colors.gray_080,
-      backgroundColor: theme.colors.gray_040,
-    },
-  }),
+  widgetOption: (theme: Theme) =>
+    css({
+      display: 'flex',
+      alignItems: 'center',
+      gap: 16,
+      padding: 16,
+      borderRadius: 8,
+      border: `2px solid ${theme.colors.gray_040}`,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        borderColor: theme.colors.gray_080,
+        backgroundColor: theme.colors.gray_040,
+      },
+    }),
 
   widgetIcon: css({
     width: 48,
@@ -35,27 +35,29 @@ export const widgetAddDialogCss = {
     flexShrink: 0,
   }),
 
-  chartIcon: css({
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    backgroundColor: theme.colors.냉방,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 24,
-  }),
+  chartIcon: (theme: Theme) =>
+    css({
+      width: 48,
+      height: 48,
+      borderRadius: 8,
+      backgroundColor: theme.colors.냉방,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 24,
+    }),
 
-  tableIcon: css({
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    backgroundColor: theme.colors.송풍,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 24,
-  }),
+  tableIcon: (theme: Theme) =>
+    css({
+      width: 48,
+      height: 48,
+      borderRadius: 8,
+      backgroundColor: theme.colors.송풍,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 24,
+    }),
 
   widgetInfo: css({
     display: 'flex',

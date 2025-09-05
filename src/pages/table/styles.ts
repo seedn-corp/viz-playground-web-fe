@@ -1,4 +1,3 @@
-import { theme } from '@basiln/design-system';
 import { css, type Theme } from '@emotion/react';
 
 export const widgetTablePageHeaderCss = {
@@ -39,13 +38,14 @@ export const widgetTableCss = {
     flexDirection: 'column',
   }),
 
-  tableNameInput: css({
-    backgroundColor: theme.colors.gray_040,
-    border: 'none',
-    fontSize: '12px',
-    padding: '6px 10px',
-    borderRadius: '6px',
-  }),
+  tableNameInput: (theme: Theme) =>
+    css({
+      backgroundColor: theme.colors.gray_040,
+      border: 'none',
+      fontSize: '12px',
+      padding: '6px 10px',
+      borderRadius: '6px',
+    }),
 
   sampleDownloadButton: (theme: Theme) =>
     css({

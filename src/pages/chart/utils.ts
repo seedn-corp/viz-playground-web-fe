@@ -22,7 +22,10 @@ export async function parseCsvFileToJson(file: File): Promise<Record<string, str
           }, {} as Record<string, string>);
         });
 
-        resolve(data);
+        // 시간 데이터 변환 처리
+        const processedData = processTimeColumns(data);
+
+        resolve(processedData);
       } catch (error) {
         reject(error);
       }
@@ -30,6 +33,56 @@ export async function parseCsvFileToJson(file: File): Promise<Record<string, str
 
     reader.onerror = () => reject(reader.error);
     reader.readAsText(file);
+  });
+}
+
+/**
+ * 시간 문자열(HH:MM:SS)을 시간 단위 숫자로 변환하는 함수
+ * 예: "1:30:00" -> 1.5, "0:30:00" -> 0.5
+ */
+function convertTimeStringToHours(timeString: string): string {
+  if (!timeString || timeString.trim() === '') return '';
+  
+  // HH:MM:SS 형식 체크
+  const timePattern = /^\d{1,2}:\d{2}:\d{2}$/;
+  if (!timePattern.test(timeString)) return timeString;
+  
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+  const totalHours = hours + minutes / 60 + seconds / 3600;
+  
+  // 소수점 3자리까지 반올림
+  return totalHours.toFixed(3);
+}
+
+/**
+ * 시간 데이터가 포함된 컬럼을 감지하고 변환하는 함수
+ */
+function processTimeColumns(data: Record<string, string>[]): Record<string, string>[] {
+  if (!data || data.length === 0) return data;
+  
+  // 시간 컬럼 후보를 찾기 위한 키워드 (한국어/영어)
+  const timeKeywords = ['제어', 'control', '시간', 'time', '운영', 'operation'];
+  
+  return data.map((row) => {
+    const processedRow = { ...row };
+    
+    Object.keys(row).forEach((key) => {
+      const value = row[key];
+      
+      // 키워드가 포함되어 있고, HH:MM:SS 형식인지 확인
+      const containsTimeKeyword = timeKeywords.some(keyword => 
+        key.toLowerCase().includes(keyword.toLowerCase())
+      );
+      
+      if (containsTimeKeyword && value) {
+        const convertedValue = convertTimeStringToHours(value);
+        if (convertedValue !== value) {
+          processedRow[key] = convertedValue;
+        }
+      }
+    });
+    
+    return processedRow;
   });
 }
 
@@ -52,7 +105,10 @@ export async function parseXlsxFileToJson(file: File): Promise<Record<string, st
           raw: false, // 날짜/시간 값 string으로 변환
         });
 
-        resolve(jsonData);
+        // 시간 데이터 변환 처리
+        const processedData = processTimeColumns(jsonData);
+
+        resolve(processedData);
       } catch (error) {
         reject(error);
       }

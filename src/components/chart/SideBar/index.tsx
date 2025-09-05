@@ -35,12 +35,17 @@ const SideBar = (props: SideBarProps) => {
   const filterableColumns = useMemo(() => {
     if (!chartData) return [];
 
-    return chartDataKeys.filter((key) => {
+    const stringValueKeys = chartDataKeys.filter((key) => isNaN(Number(chartData?.[0][key])));
+
+    const uniqueKeys = chartDataKeys.filter((key) => {
       if (!chartData[0][key]) return false;
 
       const uniqueValues = [...new Set(chartData.map((item) => item[key]))];
+
       return uniqueValues.length > 1 && uniqueValues.length <= 20;
     });
+
+    return [...new Set([...stringValueKeys, ...uniqueKeys])];
   }, [chartData, chartDataKeys]);
 
   const getFilterOptions = (column: string) => {

@@ -24,6 +24,7 @@ import { getDifferentKeys } from './utils';
 import { LoadingOverlay } from '@/components/common/LoadingOverlay';
 import { dashboardQueries } from '@/queries/dashboard';
 import { Breadcrumb } from '@/components/common/Breadcrumb/Breadcrumb';
+import { ColorPicker } from '@/components/common/ColorPicker';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -194,6 +195,10 @@ const Chart = () => {
         />
 
         <Spacing direction="horizontal" size="auto" css={{ flex: 1 }} />
+
+        <ColorPicker />
+
+        <Spacing direction="horizontal" size={20} />
 
         <Button
           display="inline"

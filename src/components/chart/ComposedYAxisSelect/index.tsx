@@ -14,7 +14,6 @@ const ComposedYAxisSelect = ({
   yAxisKeys,
   composedConfig,
   onComposedConfigChange,
-  disabledItem,
 }: ComposedYAxisSelectProps) => {
   const handleChartTypeChange = (yAxisKey: string, chartType: 'line' | 'bar' | 'area') => {
     const newConfig = {
@@ -28,16 +27,21 @@ const ComposedYAxisSelect = ({
     <Flex align="start" direction="column" css={{ width: '100%' }}>
       <Text>Y축 및 차트 타입</Text>
       <Spacing size={8} />
-      
+
       {yAxisKeys.map((yAxisKey) => (
         <div key={yAxisKey} css={{ width: '100%', marginBottom: 12 }}>
           <Flex align="center" gap={8} css={{ width: '100%' }}>
-            <Text size="body-small" css={{ minWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <Text
+              size="body-small"
+              css={{ minWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
               {yAxisKey}
             </Text>
-            <Select 
-              value={composedConfig[yAxisKey] || 'line'} 
-              onValueChange={(value) => handleChartTypeChange(yAxisKey, value as 'line' | 'bar' | 'area')}
+            <Select
+              value={composedConfig[yAxisKey] || 'line'}
+              onValueChange={(value) =>
+                handleChartTypeChange(yAxisKey, value as 'line' | 'bar' | 'area')
+              }
             >
               <Select.Trigger css={{ width: 120 }}>
                 {composedConfig[yAxisKey] || 'line'}

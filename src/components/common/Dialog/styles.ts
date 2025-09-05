@@ -30,7 +30,7 @@ export const dialogCss = {
       overflow: 'hidden',
     }),
   header: css({
-    padding: '20px 24px 16px',
+    padding: '16px 24px',
     borderBottom: `1px solid ${theme.colors.gray_040}`,
     display: 'flex',
     alignItems: 'center',
@@ -61,7 +61,6 @@ export const dialogCss = {
   }),
   footer: css({
     padding: '12px 16px',
-    borderTop: `1px solid ${theme.colors.gray_040}`,
     display: 'flex',
     justifyContent: 'flex-end',
     gap: 8,

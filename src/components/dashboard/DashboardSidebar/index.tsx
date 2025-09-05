@@ -3,7 +3,7 @@ import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
-import { Pin, PinOff, Trash2, FilePenLine, Plus } from 'lucide-react';
+import { Pin, PinOff, Trash2, Pencil, Plus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -140,7 +140,7 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
                 <IconButton
                   variant="ghost"
                   size="small"
-                  icon={<FilePenLine color={theme.colors.gray_060} />}
+                  icon={<Pencil color={theme.colors.gray_060} />}
                   onClick={(e) =>
                     onEdit(e, { id: d.id, name: d.name, description: d.description ?? null })
                   }

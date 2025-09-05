@@ -4,4 +4,8 @@ export type ConfirmDeleteDialogProps = {
   onCancel: () => void;
   isLoading?: boolean;
   disableClose?: boolean;
+  titleText?: string;
+  descriptionText?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
 };

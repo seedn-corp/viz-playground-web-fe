@@ -11,15 +11,19 @@ export const ConfirmDeleteDialog = ({
   onCancel,
   isLoading = false,
   disableClose = true,
+  titleText = '삭제하시겠어요?',
+  descriptionText = '삭제 후에는 되돌릴 수 없습니다.',
+  confirmLabel = '삭제',
+  cancelLabel = '취소',
 }: ConfirmDeleteDialogProps) => {
   return (
     <Dialog
       isOpen={isOpen}
       onClose={onCancel}
-      title="삭제하시겠어요?"
+      title={titleText}
       size="sm"
       showClose={!disableClose}
-      closeOnOverlay={!disableClose ? true : false}
+      closeOnOverlay={!disableClose}
       closeOnEsc={!disableClose}
       footer={
         <div css={confirmDeleteCss.actions}>
@@ -31,7 +35,7 @@ export const ConfirmDeleteDialog = ({
             onClick={onCancel}
             disabled={isLoading}
           >
-            취소
+            {cancelLabel}
           </Button>
           <Button
             display="inline"
@@ -40,13 +44,13 @@ export const ConfirmDeleteDialog = ({
             onClick={onConfirm}
             isLoading={isLoading}
           >
-            삭제
+            {confirmLabel}
           </Button>
         </div>
       }
     >
       <div css={confirmDeleteCss.body}>
-        <Text size="body-medium">삭제 후에는 되돌릴 수 없습니다.</Text>
+        <Text size="body-medium">{descriptionText}</Text>
         <div css={confirmDeleteCss.hint}>이 작업은 취소할 수 없습니다.</div>
       </div>
     </Dialog>

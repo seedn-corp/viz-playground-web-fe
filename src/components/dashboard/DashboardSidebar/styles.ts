@@ -51,4 +51,13 @@ export const sidebarCss = {
     fontSize: 13,
     textAlign: 'center',
   }),
+  create: (theme: Theme) =>
+    css({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+      marginTop: 10,
+      color: theme.colors.gray_060,
+    }),
 };

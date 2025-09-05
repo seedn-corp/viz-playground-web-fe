@@ -1,9 +1,9 @@
-import { Button, IconButton, Spinner, Text } from '@basiln/design-system';
+import { IconButton, Spinner, Text } from '@basiln/design-system';
 import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
-import { Pin, PinOff, Trash2, FilePenLine } from 'lucide-react';
+import { Pin, PinOff, Trash2, FilePenLine, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -112,16 +112,6 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
         </div>
 
         <Spacing size={5} />
-
-        <Button
-          size="regular-2"
-          radius="small"
-          onClick={onCreate}
-          isLoading={createMutation.isPending}
-          disabled={isMutating}
-        >
-          + 새로 만들기
-        </Button>
       </div>
 
       <If condition={showInitialLoading || isMutating}>
@@ -172,6 +162,10 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
               </Flex>
             </div>
           ))}
+          <button type="button" onClick={onCreate} disabled={isMutating} css={sidebarCss.create}>
+            <Plus size={18} />
+            대시보드 추가
+          </button>
         </div>
       </If>
 

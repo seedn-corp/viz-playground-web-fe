@@ -9,6 +9,7 @@ import Select from '../Select';
 import { sideBarCss } from './styles';
 import { selectCss } from '../Select/styles';
 import YAxisMultipleSelect from '../YAxisMultipleSelect';
+import FilterMultiSelect from '../FilterMultiSelect';
 import type { SideBarProps } from './types';
 import Separator from '../Separator';
 import { useMemo } from 'react';
@@ -170,7 +171,7 @@ const SideBar = (props: SideBarProps) => {
                 <Text size="body-small" css={{ marginBottom: 6 }}>
                   {column}
                 </Text>
-                <YAxisMultipleSelect
+                <FilterMultiSelect
                   name={filters?.[column] || []}
                   onChange={(values) => handleFilterChange(column, values)}
                   items={getFilterOptions(column).sort(sortDateStrings)}

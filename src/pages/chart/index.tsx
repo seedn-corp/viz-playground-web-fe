@@ -10,7 +10,7 @@ import Separator from '@/components/chart/Separator';
 import SideBar from '@/components/chart/SideBar';
 
 import { chartPageCss } from './styles';
-import type { ChartType } from './types';
+import type { ChartType, ComposedChartConfig } from './types';
 
 import { useCreateWidget } from '@/hooks/mutation/widgets/useCreateWidget';
 import type { WidgetType } from '@/types/widgets';
@@ -29,6 +29,7 @@ const Chart = () => {
   const [chartType, setChartType] = useState<ChartType>('line');
   const [chartData, setChartData] = useState<Record<string, string>[]>();
   const [filters, setFilters] = useState<Record<string, string[]>>({});
+  const [composedConfig, setComposedConfig] = useState<ComposedChartConfig>({});
 
   const [xAxisKey, setXAxisKey] = useState('');
   const [yAxisKeys, setYAxisKeys] = useState<string[]>([]);
@@ -67,13 +68,14 @@ const Chart = () => {
   useEffect(() => {
     if (widgetDetail) {
       const { processed_data, config, type, name } = widgetDetail;
-      const { xAxisKey, yAxisKeys, filters } = JSON.parse(config);
+      const { xAxisKey, yAxisKeys, filters, composedConfig } = JSON.parse(config);
       setChartName(name);
       setChartType(type.replace('_chart', '') as ChartType);
       setChartData(JSON.parse(processed_data));
       setXAxisKey(xAxisKey);
       setYAxisKeys(yAxisKeys);
-      setFilters(filters);
+      setFilters(filters || {});
+      setComposedConfig(composedConfig || {});
     }
   }, [widgetDetail]);
 
@@ -103,13 +105,14 @@ const Chart = () => {
     if (widgetsError || !widgets) {
       return;
     }
+    const apiChartType = chartType === 'composed' ? 'composed_chart' : (chartType + '_chart');
     createMutation.mutate(
       {
         dashboardId: routeIds?.dashboardId || '',
         name: chartName || '새 차트',
-        type: (chartType + '_chart') as WidgetType,
+        type: apiChartType as WidgetType,
         processed_data: JSON.stringify(chartData),
-        config: JSON.stringify({ xAxisKey, yAxisKeys, filters }),
+        config: JSON.stringify({ xAxisKey, yAxisKeys, filters, composedConfig }),
         position: computeNextPosition(widgets),
       },
       {
@@ -125,6 +128,7 @@ const Chart = () => {
   };
 
   const updateWidget = () => {
+    const apiChartType = chartType === 'composed' ? 'composed_chart' : (chartType + '_chart');
     const mutationData = getDifferentKeys(
       {
         name: widgetDetail?.name,
@@ -134,9 +138,9 @@ const Chart = () => {
       },
       {
         name: chartName || '새 차트',
-        type: (chartType + '_chart') as WidgetType,
+        type: apiChartType as WidgetType,
         processed_data: JSON.stringify(chartData),
-        config: JSON.stringify({ xAxisKey, yAxisKeys, filters }),
+        config: JSON.stringify({ xAxisKey, yAxisKeys, filters, composedConfig }),
       },
     );
     updateMutation.mutate(
@@ -211,6 +215,8 @@ const Chart = () => {
               setChartName,
               filters,
               setFilters,
+              composedConfig,
+              setComposedConfig,
             }}
           />
         </div>
@@ -234,6 +240,7 @@ const Chart = () => {
                 xAxisKey={xAxisKey}
                 yAxisKeys={yAxisKeys}
                 filters={filters}
+                composedConfig={composedConfig}
               />
             </div>
           </Flex>

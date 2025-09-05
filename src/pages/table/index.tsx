@@ -274,17 +274,6 @@ export const TableWidgetPage = () => {
             데이터 업로드
           </Text>
 
-          <a
-            href="/excel/sample.xlsx"
-            download="sample.xlsx"
-            css={widgetTableCss.sampleDownloadButton}
-          >
-            <Download size={14} />
-            <Text>샘플 데이터 다운로드</Text>
-          </a>
-
-          <Spacing size={8} />
-
           <FileUploadArea
             type="compact"
             onFileUpload={handleFileUpload}
@@ -298,6 +287,18 @@ export const TableWidgetPage = () => {
               toast.success('파일이 제거되었습니다.');
             }}
           />
+
+          <Spacing size={8} />
+
+          <a
+            href="/excel/sample.xlsx"
+            download="sample.xlsx"
+            css={widgetTableCss.sampleDownloadButton}
+          >
+            <Download size={14} />
+            <Text>샘플 데이터 다운로드</Text>
+          </a>
+
           {fileUploadError && (
             <Text
               size="caption-regular"

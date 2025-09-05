@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 export const styles = {
   grid: css({
@@ -96,4 +96,21 @@ export const styles = {
   editBtnInactive: css({
     padding: '8px',
   }),
+
+  addBtn: (theme: Theme) =>
+    css({
+      backgroundColor: theme.colors.seedn_key,
+      position: 'fixed',
+      bottom: 100,
+      right: 24,
+      zIndex: 1000,
+      width: 50,
+      height: 50,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: theme.colors.white,
+      borderRadius: '12px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    }),
 };

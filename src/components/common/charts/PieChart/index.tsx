@@ -7,11 +7,14 @@ import {
   PieChart as RechartsPieChart,
 } from 'recharts';
 
+import { useChartColors } from '@/hooks/useChartColors';
+
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
-import { COLORS, LEGEND_STYLE } from '../utils';
+import { LEGEND_STYLE } from '../utils';
 
 const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
+  const colors = useChartColors();
   const pieChartData: { name: string; value: number }[] = Object.values(
     chartData.reduce((acc, cur) => {
       const name = cur[xAxisKey];
@@ -37,7 +40,7 @@ const PieChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
           fill="#8884d8"
         >
           {chartData.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
         </Pie>
         <Tooltip content={<CustomTooltip />} />

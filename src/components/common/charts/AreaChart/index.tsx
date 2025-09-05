@@ -9,12 +9,15 @@ import {
   YAxis,
 } from 'recharts';
 
+import { useChartColors } from '@/hooks/useChartColors';
+
 import { aggregateChartData } from '../../../chart/WidgetChart/utils';
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
-import { COLORS, LEGEND_STYLE } from '../utils';
+import { LEGEND_STYLE } from '../utils';
 
 const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
+  const colors = useChartColors();
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -29,8 +32,8 @@ const AreaChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
             key={item}
             type="monotone"
             dataKey={item}
-            stroke={COLORS[index % COLORS.length]}
-            fill={COLORS[index % COLORS.length]}
+            stroke={colors[index % colors.length]}
+            fill={colors[index % colors.length]}
             fillOpacity={0.3}
           />
         ))}

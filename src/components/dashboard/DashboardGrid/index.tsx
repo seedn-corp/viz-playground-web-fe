@@ -40,7 +40,7 @@ export const DashboardGrid = ({
   renderEditModeControls,
 }: DashboardGridProps) => {
   const { mutate: updateWidget } = useUpdateWidget();
-  const { mutate: deleteWidget, isPending: isDeleting } = useDeleteWidget(); // ⬅️ 추가
+  const { mutate: deleteWidget, isPending: isDeleting } = useDeleteWidget();
   const queryClient = useQueryClient();
 
   const [isEditMode, setIsEditMode] = useState(false);

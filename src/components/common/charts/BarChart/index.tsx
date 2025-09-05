@@ -9,12 +9,15 @@ import {
   YAxis,
 } from 'recharts';
 
+import { useChartColors } from '@/hooks/useChartColors';
+
 import { aggregateChartData } from '../../../chart/WidgetChart/utils';
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
-import { LEGEND_STYLE, COLORS } from '../utils';
+import { LEGEND_STYLE } from '../utils';
 
 const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
+  const colors = useChartColors();
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -29,7 +32,7 @@ const BarChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
             key={item}
             type="monotone"
             dataKey={item}
-            fill={COLORS[index % COLORS.length]}
+            fill={colors[index % colors.length]}
             barSize={50}
           />
         ))}

@@ -49,7 +49,7 @@ export const DashboardLayout = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
         event.preventDefault();
-        setIsPinned(prev => !prev);
+        setIsPinned((prev) => !prev);
       }
     };
 

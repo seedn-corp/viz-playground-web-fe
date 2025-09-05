@@ -1,6 +1,6 @@
 import { Choose } from '@basiln/utils';
 
-import WidgetChart from '@/components/chart/WidgetChart';
+import LazyWidgetChart from '@/components/chart/WidgetChart/LazyWidgetChart';
 import { TablePreview } from '@/components/widgets/TablePreview';
 import { WidgetShell } from '@/components/widgets/WidgetShell';
 import type { ChartType } from '@/pages/chart/types';
@@ -33,7 +33,7 @@ export const WidgetSlot = ({ widget, onRemove, onEdit }: WidgetSlotProps) => {
 
       <Choose.When condition={widget.type.includes('chart')}>
         <WidgetShell title={widget.name} onRemove={onRemove} onEdit={onEdit}>
-          <WidgetChart
+          <LazyWidgetChart
             chartType={widget.type.replace('_chart', '') as ChartType}
             chartData={JSON.parse(widget.processed_data)}
             {...JSON.parse(widget.config)}

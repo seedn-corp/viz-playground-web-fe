@@ -11,8 +11,8 @@ export const ConfirmDeleteDialog = ({
   onCancel,
   isLoading = false,
   disableClose = true,
-  titleText = '삭제하시겠어요?',
-  descriptionText = '삭제 후에는 되돌릴 수 없습니다.',
+  titleText = '삭제하시겠습니까?',
+  descriptionText = '삭제 후에는 복구할 수 없습니다.',
   confirmLabel = '삭제',
   cancelLabel = '취소',
 }: ConfirmDeleteDialogProps) => {
@@ -51,7 +51,6 @@ export const ConfirmDeleteDialog = ({
     >
       <div css={confirmDeleteCss.body}>
         <Text size="body-medium">{descriptionText}</Text>
-        <div css={confirmDeleteCss.hint}>이 작업은 취소할 수 없습니다.</div>
       </div>
     </Dialog>
   );

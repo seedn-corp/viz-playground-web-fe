@@ -21,6 +21,7 @@ import type { RouteIds } from '../table/types';
 import { LocalStorage } from '@/utils/LocalStorage';
 import { useUpdateWidget } from '@/hooks/mutation/widgets';
 import { getDifferentKeys } from './utils';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const Chart = () => {
     if (widgetsError || !widgets) {
       return;
     }
-    const apiChartType = chartType === 'composed' ? 'composed_chart' : (chartType + '_chart');
+    const apiChartType = chartType === 'composed' ? 'composed_chart' : chartType + '_chart';
     createMutation.mutate(
       {
         dashboardId: routeIds?.dashboardId || '',
@@ -128,7 +129,7 @@ const Chart = () => {
   };
 
   const updateWidget = () => {
-    const apiChartType = chartType === 'composed' ? 'composed_chart' : (chartType + '_chart');
+    const apiChartType = chartType === 'composed' ? 'composed_chart' : chartType + '_chart';
     const mutationData = getDifferentKeys(
       {
         name: widgetDetail?.name,
@@ -164,6 +165,8 @@ const Chart = () => {
 
   return (
     <div css={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <LoadingOverlay visible={isLoading} />
+
       {/* 헤더 */}
       <Flex justify="start" css={chartPageCss.header}>
         <Link to=".." css={chartPageCss.backLinkButton}>

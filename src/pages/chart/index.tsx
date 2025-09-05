@@ -22,6 +22,8 @@ import { LocalStorage } from '@/utils/LocalStorage';
 import { useUpdateWidget } from '@/hooks/mutation/widgets';
 import { getDifferentKeys } from './utils';
 import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+import { dashboardQueries } from '@/queries/dashboard';
+import { Breadcrumb } from '@/components/common/Breadcrumb/Breadcrumb';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -161,7 +163,17 @@ const Chart = () => {
     );
   };
 
-  const isLoading = !!routeIds?.widgetId && isLoadingWidgetDetail;
+  // 대시보드 이름 표시용 상세 조회
+  const { data: dashboardDetail, isPending: isLoadingDashboardDetail } = useQuery(
+    dashboardQueries.detail(routeIds?.dashboardId ?? ''),
+  );
+
+  const breadcrumbItems = [
+    { label: '대시보드' },
+    { label: dashboardDetail?.name ?? routeIds?.dashboardId ?? '대시보드' },
+  ];
+
+  const isLoading = (!!routeIds?.widgetId && isLoadingWidgetDetail) || isLoadingDashboardDetail;
 
   return (
     <div css={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -176,7 +188,10 @@ const Chart = () => {
 
         <Spacing direction="horizontal" size={14} />
 
-        <Text size="title-small">{!routeIds?.widgetId ? '차트 만들기' : '차트 편집'}</Text>
+        <Breadcrumb
+          items={breadcrumbItems}
+          pageTitle={!routeIds?.widgetId ? '차트 만들기' : '차트 편집'}
+        />
 
         <Spacing direction="horizontal" size="auto" css={{ flex: 1 }} />
 

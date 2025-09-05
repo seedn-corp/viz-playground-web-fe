@@ -1,4 +1,4 @@
-import { Button, Text } from '@basiln/design-system';
+import { Text } from '@basiln/design-system';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -49,11 +49,6 @@ export const Dialog = ({
             <div css={dialogCss.title}>
               {typeof title === 'string' ? <Text size="sub-medium">{title}</Text> : title}
             </div>
-            {showClose && (
-              <Button variant="ghost" size="large" onClick={onClose} css={dialogCss.closeButton}>
-                ✕
-              </Button>
-            )}
           </div>
         )}
         <div css={dialogCss.body}>{children}</div>

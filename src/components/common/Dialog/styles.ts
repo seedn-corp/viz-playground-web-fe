@@ -1,5 +1,5 @@
 import { theme } from '@basiln/design-system';
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 const widthBySize = {
   sm: 360,
@@ -28,15 +28,17 @@ export const dialogCss = {
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
+      padding: '16px 24px 20px',
+      gap: 16,
     }),
-  header: css({
-    padding: '16px 24px',
-    borderBottom: `1px solid ${theme.colors.gray_040}`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 12,
-  }),
+  header: (theme: Theme) =>
+    css({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderBottom: `1px solid ${theme.colors.gray_050}`,
+      paddingBottom: 14,
+    }),
   title: css({
     display: 'flex',
     alignItems: 'center',
@@ -55,14 +57,12 @@ export const dialogCss = {
     cursor: 'pointer',
   }),
   body: css({
-    padding: 24,
-    overflow: 'auto',
     flex: 1,
+    textAlign: 'center',
   }),
   footer: css({
-    padding: '12px 16px',
     display: 'flex',
-    justifyContent: 'flex-end',
-    gap: 8,
+    justifyContent: 'center',
+    gap: 10,
   }),
 };

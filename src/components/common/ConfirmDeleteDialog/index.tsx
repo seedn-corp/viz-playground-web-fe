@@ -20,7 +20,7 @@ export const ConfirmDeleteDialog = ({
     <Dialog
       isOpen={isOpen}
       onClose={onCancel}
-      title={titleText}
+      title={<Text size="title-regular">{titleText}</Text>}
       size="sm"
       showClose={!disableClose}
       closeOnOverlay={!disableClose}
@@ -28,9 +28,9 @@ export const ConfirmDeleteDialog = ({
       footer={
         <div css={confirmDeleteCss.actions}>
           <Button
-            variant="secondary"
+            variant="stroke"
             display="inline"
-            gutter="20px"
+            gutter="50px"
             radius="small"
             onClick={onCancel}
             disabled={isLoading}
@@ -39,7 +39,7 @@ export const ConfirmDeleteDialog = ({
           </Button>
           <Button
             display="inline"
-            gutter="20px"
+            gutter="50px"
             radius="small"
             onClick={onConfirm}
             isLoading={isLoading}
@@ -50,7 +50,7 @@ export const ConfirmDeleteDialog = ({
       }
     >
       <div css={confirmDeleteCss.body}>
-        <Text size="body-medium">{descriptionText}</Text>
+        <Text size="sub-small">{descriptionText}</Text>
       </div>
     </Dialog>
   );

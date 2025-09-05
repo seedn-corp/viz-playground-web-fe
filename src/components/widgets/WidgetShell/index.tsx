@@ -5,7 +5,12 @@ import type { PropsWithChildren } from 'react';
 import { styles } from './styles';
 import type { WidgetShellProps } from './types';
 
-export const WidgetShell = ({ title, onRemove, onEdit, children }: PropsWithChildren<WidgetShellProps>) => {
+export const WidgetShell = ({
+  title,
+  onRemove,
+  onEdit,
+  children,
+}: PropsWithChildren<WidgetShellProps>) => {
   return (
     <div css={styles.card}>
       <div css={styles.header}>

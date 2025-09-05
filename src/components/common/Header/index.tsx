@@ -1,9 +1,11 @@
 import { Button, Text } from '@basiln/design-system';
 import { Flex } from '@basiln/utils';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import logoImage from '@/assets/icons/logo.png';
 import { ColorPicker } from '@/components/common/ColorPicker';
+import { ConfirmDeleteDialog } from '@/components/common/ConfirmDeleteDialog';
 import { headerCss } from '@/components/common/Header/styles';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useLogout } from '@/hooks/mutation/auth/useLogout';
@@ -15,17 +17,24 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
   const logoutMutation = useLogout();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const handleLogoutConfirm = () => {
     if (accessToken) {
       logoutMutation.mutate(
         { accessToken },
         {
           onSuccess: () => {
+            setLogoutOpen(false);
             navigate('/signin', { replace: true });
+          },
+          onError: () => {
+            setLogoutOpen(false);
           },
         },
       );
     } else {
+      setLogoutOpen(false);
       navigate('/signin', { replace: true });
     }
   };
@@ -55,11 +64,23 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
           size="regular-2"
           gutter="20px"
           radius="small"
-          onClick={handleLogout}
+          onClick={() => setLogoutOpen(true)}
+          disabled={logoutMutation.isPending}
         >
           로그아웃
         </Button>
       </Flex>
+
+      <ConfirmDeleteDialog
+        isOpen={logoutOpen}
+        onCancel={() => setLogoutOpen(false)}
+        onConfirm={handleLogoutConfirm}
+        isLoading={logoutMutation.isPending}
+        titleText="로그아웃하시겠어요?"
+        descriptionText="로그아웃 후에는 다시 로그인해야 합니다."
+        confirmLabel="로그아웃"
+        cancelLabel="취소"
+      />
     </Flex>
   );
 };

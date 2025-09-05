@@ -9,12 +9,15 @@ import {
   YAxis,
 } from 'recharts';
 
+import { useChartColors } from '@/hooks/useChartColors';
+
 import { aggregateChartData } from '../../../chart/WidgetChart/utils';
 import { CustomTooltip } from '../CustomTooltip';
 import type { ChartProps } from '../types';
-import { COLORS, LEGEND_STYLE } from '../utils';
+import { LEGEND_STYLE } from '../utils';
 
 const LineChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
+  const colors = useChartColors();
   const aggregatedData = aggregateChartData(chartData, xAxisKey, yAxisKeys);
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -25,7 +28,7 @@ const LineChart = ({ chartData, xAxisKey, yAxisKeys }: ChartProps) => {
         <Tooltip content={<CustomTooltip />} />
         <Legend {...LEGEND_STYLE} />
         {yAxisKeys.map((item, index) => (
-          <Line key={item} type="monotone" dataKey={item} stroke={COLORS[index % COLORS.length]} />
+          <Line key={item} type="monotone" dataKey={item} stroke={colors[index % colors.length]} />
         ))}
       </RechartsLineChart>
     </ResponsiveContainer>

@@ -1,5 +1,6 @@
 import { BasilnProvider } from '@basiln/design-system';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import toast from 'react-hot-toast';
@@ -9,6 +10,7 @@ import '@basiln/design-system/global.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
+import { keyColorAtom } from './atoms/dashboard/index.ts';
 import CustomToaster from './components/common/Toaster/index.tsx';
 import router from './Router.tsx';
 
@@ -30,13 +32,21 @@ const queryClient = new QueryClient({
   },
 });
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BasilnProvider>
+const App = () => {
+  const keyColor = useAtomValue(keyColorAtom);
+
+  return (
+    <BasilnProvider keyColor={keyColor}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <CustomToaster />
       </QueryClientProvider>
     </BasilnProvider>
+  );
+};
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
   </StrictMode>,
 );

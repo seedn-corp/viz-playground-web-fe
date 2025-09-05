@@ -49,7 +49,7 @@ export const DashboardLayout = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
         event.preventDefault();
-        setIsPinned(prev => !prev);
+        setIsPinned((prev) => !prev);
       }
     };
 
@@ -59,7 +59,7 @@ export const DashboardLayout = () => {
 
   return (
     <>
-      <Header onOpenDialog={openWidgetDialog} />
+      <Header />
 
       <div css={layoutCss.wrap}>
         <If condition={!isPinned}>

@@ -27,10 +27,10 @@ export const WidgetAddDialog = ({ isOpen, onClose, onAddWidget }: WidgetAddDialo
         <Flex justify="flex-end">
           <Button
             radius="small"
-            size="regular-2"
+            size="medium"
             variant="stroke"
             display="inline"
-            gutter="20px"
+            gutter="50px"
             onClick={onClose}
           >
             취소

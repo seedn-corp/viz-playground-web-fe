@@ -1,7 +1,9 @@
 import { Spinner, Text } from '@basiln/design-system';
 import { Flex, If, Spacing } from '@basiln/utils';
+import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
+import { Plus } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -13,6 +15,7 @@ import { dashboardQueries } from '@/queries/dashboard';
 export const DashboardDetail = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const theme = useTheme();
   const { openWidgetDialog } = useDashboardOutlet();
   const setLastId = useSetAtom(lastDashboardIdAtom);
 
@@ -52,13 +55,32 @@ export const DashboardDetail = () => {
 
   return (
     <div>
-      <Flex justify="flex-start" align="baseline" gap={15}>
-        <Text size="title-large">{dashboard?.name}</Text>
-        <If condition={!!dashboard.description}>
-          <Text size="sub-small" color="gray_080">
-            [{dashboard?.description}]
-          </Text>
-        </If>
+      <Flex justify="space-between">
+        <Flex justify="flex-start" align="baseline" gap={15}>
+          <Text size="title-large">{dashboard?.name}</Text>
+          <If condition={!!dashboard.description}>
+            <Text size="sub-small" color="gray_080">
+              [{dashboard?.description}]
+            </Text>
+          </If>
+        </Flex>
+        <button
+          style={{
+            backgroundColor: theme.colors.seedn_key,
+            color: 'white',
+            border: 'none',
+            borderRadius: 8,
+            padding: '8px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            ...theme.fonts['btn-regular'],
+          }}
+          onClick={openWidgetDialog}
+        >
+          <Plus color="white" size={18} strokeWidth={3} />
+          위젯 추가
+        </button>
       </Flex>
       <Spacing size={12} />
       <DashboardGrid widgets={dashboard?.widgets} onOpenDialog={openWidgetDialog} />

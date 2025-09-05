@@ -10,9 +10,7 @@ import { headerCss } from '@/components/common/Header/styles';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useLogout } from '@/hooks/mutation/auth/useLogout';
 
-import type { HeaderProps } from './types';
-
-export const Header = ({ onOpenDialog }: HeaderProps) => {
+export const Header = () => {
   const { user, accessToken } = useAuth();
   const logoutMutation = useLogout();
   const navigate = useNavigate();
@@ -50,15 +48,6 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
           </Text>
         )}
         <Button
-          display="inline"
-          size="regular-2"
-          gutter="20px"
-          radius="small"
-          onClick={onOpenDialog}
-        >
-          + 위젯 추가
-        </Button>
-        <Button
           variant="secondary"
           display="inline"
           size="regular-2"
@@ -76,8 +65,8 @@ export const Header = ({ onOpenDialog }: HeaderProps) => {
         onCancel={() => setLogoutOpen(false)}
         onConfirm={handleLogoutConfirm}
         isLoading={logoutMutation.isPending}
-        titleText="로그아웃하시겠어요?"
-        descriptionText="로그아웃 후에는 다시 로그인해야 합니다."
+        titleText="로그아웃하시겠습니까?"
+        descriptionText="로그인 후 이용할 수 있는 서비스 입니다."
         confirmLabel="로그아웃"
         cancelLabel="취소"
       />

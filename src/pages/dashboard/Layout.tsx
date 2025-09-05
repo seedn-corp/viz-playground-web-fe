@@ -59,7 +59,7 @@ export const DashboardLayout = () => {
 
   return (
     <>
-      <Header onOpenDialog={openWidgetDialog} />
+      <Header />
 
       <div css={layoutCss.wrap}>
         <If condition={!isPinned}>
@@ -87,6 +87,7 @@ export const DashboardLayout = () => {
 
       {editing && (
         <EditDashboardDialog
+          mode="edit"
           open={editOpen}
           id={editing.id}
           initialName={editing.name}

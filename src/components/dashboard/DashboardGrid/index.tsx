@@ -1,7 +1,7 @@
 import { Button, Text } from '@basiln/design-system';
 import { Flex, If, Spacing, Choose } from '@basiln/utils';
 import { useQueryClient } from '@tanstack/react-query';
-import { Edit3, Check, X } from 'lucide-react';
+import { Edit3, Check, X, Plus } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useLocation, useNavigate } from 'react-router';
@@ -194,6 +194,9 @@ export const DashboardGrid = ({
                   </If>
                 </button>
               </div>
+              <button css={styles.addBtn} onClick={onOpenDialog} title="위젯 추가">
+                <Plus strokeWidth={3} />
+              </button>
             </Choose.Otherwise>
           </Choose>
         </If>

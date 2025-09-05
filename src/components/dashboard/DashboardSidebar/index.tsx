@@ -3,13 +3,13 @@ import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom } from 'jotai';
-import { Pin, PinOff, Trash2, FilePenLine, Plus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Pin, PinOff, Trash2, Pencil, Plus } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom, sidebarPinnedAtom } from '@/atoms/dashboard';
 import { ConfirmDeleteDialog } from '@/components/common/ConfirmDeleteDialog';
-import { useCreateDashboard } from '@/hooks/mutation/dashboard/useCreateDashboard';
+import { EditDashboardDialog } from '@/components/dashboard/EditDashboardDialog';
 import { useDeleteDashboard } from '@/hooks/mutation/dashboard/useDeleteDashboard';
 import { dashboardQueries } from '@/queries/dashboard';
 
@@ -22,36 +22,26 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
   const { id: activeId } = useParams<{ id: string }>();
 
   const { data: dashboards, isLoading } = useQuery(dashboardQueries.list());
-  const createMutation = useCreateDashboard();
   const deleteMutation = useDeleteDashboard();
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTarget, setConfirmTarget] = useState<{ id: string; name: string } | null>(null);
 
   const setLastId = useSetAtom(lastDashboardIdAtom);
   const [isPinned, setIsPinned] = useAtom(sidebarPinnedAtom);
 
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [elevated, setElevated] = useState(false);
+
   const items = useMemo(() => dashboards ?? [], [dashboards]);
   const hasDashboards = items.length > 0;
 
   const showInitialLoading = !dashboards && isLoading;
-  const isMutating = createMutation.isPending || deleteMutation.isPending;
 
-  const onCreate = () => {
-    createMutation.mutate(
-      { name: '새로운 대시보드' },
-      {
-        onSuccess: (res) => {
-          const newId = ('dashboard' in res ? res.dashboard : undefined)?.id ?? res.dashboard?.id;
-          if (newId) {
-            setLastId(newId);
-            navigate(`/dashboards/${newId}`);
-          }
-        },
-      },
-    );
-  };
+  const isMutating = deleteMutation.isPending;
 
   const openDeleteConfirm = (e: React.MouseEvent, id: string, name: string) => {
     e.stopPropagation();
@@ -63,7 +53,6 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
     if (!confirmTarget) return;
 
     const { id } = confirmTarget;
-
     const idx = items.findIndex((d) => d.id === id);
     const nextIdCandidate = items[idx + 1]?.id ?? items[idx - 1]?.id ?? null;
 
@@ -96,9 +85,18 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
     onRequestEdit(d);
   };
 
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const onScroll = () => setElevated(el.scrollTop > 0);
+    onScroll();
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <aside css={sidebarCss.wrap}>
-      <div css={sidebarCss.header()}>
+    <aside ref={wrapRef} css={sidebarCss.wrap}>
+      <div css={sidebarCss.header(theme, elevated)}>
         <div css={sidebarCss.titleRow()}>
           <Text size="title-regular">대시보드 리스트</Text>
           <IconButton
@@ -110,7 +108,6 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
             disabled={isMutating}
           />
         </div>
-
         <Spacing size={5} />
       </div>
 
@@ -139,12 +136,11 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
               aria-label={`open-dashboard-${d.name}`}
             >
               <Text size="body-medium">{d.name}</Text>
-
               <Flex gap={2}>
                 <IconButton
                   variant="ghost"
                   size="small"
-                  icon={<FilePenLine color={theme.colors.gray_060} />}
+                  icon={<Pencil color={theme.colors.gray_060} />}
                   onClick={(e) =>
                     onEdit(e, { id: d.id, name: d.name, description: d.description ?? null })
                   }
@@ -162,7 +158,13 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
               </Flex>
             </div>
           ))}
-          <button type="button" onClick={onCreate} disabled={isMutating} css={sidebarCss.create}>
+
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            disabled={isMutating}
+            css={sidebarCss.create}
+          >
             <Plus size={18} />
             대시보드 추가
           </button>
@@ -174,6 +176,16 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
         onCancel={() => !deleteMutation.isPending && setConfirmOpen(false)}
         onConfirm={handleConfirmDelete}
         isLoading={deleteMutation.isPending}
+      />
+
+      <EditDashboardDialog
+        mode="create"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={({ id }) => {
+          setLastId(id);
+          navigate(`/dashboards/${id}`);
+        }}
       />
     </aside>
   );

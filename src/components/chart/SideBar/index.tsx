@@ -9,10 +9,12 @@ import Select from '../Select';
 import { sideBarCss } from './styles';
 import { selectCss } from '../Select/styles';
 import YAxisMultipleSelect from '../YAxisMultipleSelect';
-import ComposedYAxisSelect from '../ComposedYAxisSelect';
+import FilterMultiSelect from '../FilterMultiSelect';
 import type { SideBarProps } from './types';
 import Separator from '../Separator';
 import { useMemo } from 'react';
+import { sortDateStrings } from '@/utils/sortDateString';
+import ComposedYAxisSelect from '../ComposedYAxisSelect';
 
 const SideBar = (props: SideBarProps) => {
   const {
@@ -38,12 +40,17 @@ const SideBar = (props: SideBarProps) => {
   const filterableColumns = useMemo(() => {
     if (!chartData) return [];
 
-    return chartDataKeys.filter((key) => {
+    const stringValueKeys = chartDataKeys.filter((key) => isNaN(Number(chartData?.[0][key])));
+
+    const uniqueKeys = chartDataKeys.filter((key) => {
       if (!chartData[0][key]) return false;
 
       const uniqueValues = [...new Set(chartData.map((item) => item[key]))];
+
       return uniqueValues.length > 1 && uniqueValues.length <= 20;
     });
+
+    return [...new Set([...stringValueKeys, ...uniqueKeys])];
   }, [chartData, chartDataKeys]);
 
   const getFilterOptions = (column: string) => {
@@ -151,9 +158,9 @@ const SideBar = (props: SideBarProps) => {
                 disabledItem={xAxisKey}
               />
             </Flex>
-            
+
             <Spacing size={20} />
-            
+
             {yAxisKeys.length > 0 && composedConfig && setComposedConfig && (
               <ComposedYAxisSelect
                 yAxisKeys={yAxisKeys}
@@ -191,10 +198,10 @@ const SideBar = (props: SideBarProps) => {
                 <Text size="body-small" css={{ marginBottom: 6 }}>
                   {column}
                 </Text>
-                <YAxisMultipleSelect
+                <FilterMultiSelect
                   name={filters?.[column] || []}
                   onChange={(values) => handleFilterChange(column, values)}
-                  items={getFilterOptions(column).sort()}
+                  items={getFilterOptions(column).sort(sortDateStrings)}
                   placeholder={`${column} 선택`}
                 />
               </div>

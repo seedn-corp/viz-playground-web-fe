@@ -69,6 +69,19 @@ const SideBar = (props: SideBarProps) => {
   return (
     <>
       <Flex align="start" direction="column">
+        <Text>차트 제목</Text>
+        <Spacing size={8} />
+        <input
+          css={[sideBarCss.nameInput, { width: '100%' }]}
+          value={chartName}
+          onChange={(e) => setChartName(e.target.value)}
+          placeholder="차트 제목을 입력하세요."
+        />
+      </Flex>
+
+      <Spacing size={20} />
+
+      <Flex align="start" direction="column">
         <Text>데이터 업로드</Text>
         <Spacing size={8} />
 
@@ -86,18 +99,6 @@ const SideBar = (props: SideBarProps) => {
 
       <If condition={!!chartData}>
         <Separator orientation="horizontal" css={{ width: '100%' }} color="gray_050" />
-
-        <Spacing size={20} />
-
-        <Flex align="start" direction="column">
-          <Text>차트 제목</Text>
-          <input
-            css={[selectCss.trigger, { width: '100%' }]}
-            value={chartName}
-            onChange={(e) => setChartName(e.target.value)}
-            placeholder="차트 제목을 입력하세요."
-          />
-        </Flex>
 
         <Spacing size={20} />
 

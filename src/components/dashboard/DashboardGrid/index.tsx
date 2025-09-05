@@ -2,7 +2,7 @@ import { Button, Text } from '@basiln/design-system';
 import { Flex, If, Spacing, Choose } from '@basiln/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Edit3, Check, X, Plus } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useLocation, useNavigate } from 'react-router';
 import 'react-grid-layout/css/styles.css';
@@ -49,8 +49,7 @@ export const DashboardGrid = ({
   >({});
   const [gridKey, setGridKey] = useState(0);
 
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null); // ⬅️ 추가
-  const isInitialRender = useRef(true);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const convertedLayouts = React.useMemo(() => {
     if (!widgets || widgets.length === 0) {
@@ -201,65 +200,61 @@ export const DashboardGrid = ({
           </Choose>
         </If>
 
-        <ResponsiveGridLayout
-          key={gridKey}
-          className="layout"
-          layouts={convertedLayouts}
-          breakpoints={BREAKPOINTS}
-          cols={COLS}
-          rowHeight={8}
-          margin={[12, 12]}
-          containerPadding={[0, 0]}
-          compactType="vertical"
-          isBounded
-          isDraggable={isEditMode}
-          isResizable={isEditMode}
-          draggableHandle=".widget-drag-handle"
-          onLayoutChange={(currentLayout) => {
-            // 초기 렌더링에서는 처리 안
-            if (isInitialRender.current) {
-              isInitialRender.current = false;
-              return;
-            }
+        <If condition={widgets && widgets.length > 0}>
+          <ResponsiveGridLayout
+            key={gridKey}
+            className="layout"
+            layouts={convertedLayouts}
+            breakpoints={BREAKPOINTS}
+            cols={COLS}
+            rowHeight={8}
+            margin={[12, 12]}
+            containerPadding={[0, 0]}
+            compactType="vertical"
+            isBounded
+            isDraggable={isEditMode}
+            isResizable={isEditMode}
+            draggableHandle=".widget-drag-handle"
+            onLayoutChange={(currentLayout) => {
+              // 편집 모드일 때만 변경사항을 pendingUpdates에 저장
+              if (isEditMode) {
+                const newUpdates = { ...pendingUpdates };
 
-            // 편집 모드일 때만 변경사항을 pendingUpdates에 저장
-            if (isEditMode) {
-              const newUpdates = { ...pendingUpdates };
+                currentLayout.forEach((layout) => {
+                  const widget = widgets?.find((w) => w.id === layout.i);
+                  if (widget) {
+                    const hasChanged =
+                      widget.position.x !== layout.x ||
+                      widget.position.y !== layout.y ||
+                      widget.position.width !== layout.w ||
+                      widget.position.height !== layout.h;
 
-              currentLayout.forEach((layout) => {
-                const widget = widgets?.find((w) => w.id === layout.i);
-                if (widget) {
-                  const hasChanged =
-                    widget.position.x !== layout.x ||
-                    widget.position.y !== layout.y ||
-                    widget.position.width !== layout.w ||
-                    widget.position.height !== layout.h;
-
-                  if (hasChanged) {
-                    newUpdates[widget.id] = {
-                      x: layout.x,
-                      y: layout.y,
-                      width: layout.w,
-                      height: layout.h,
-                    };
+                    if (hasChanged) {
+                      newUpdates[widget.id] = {
+                        x: layout.x,
+                        y: layout.y,
+                        width: layout.w,
+                        height: layout.h,
+                      };
+                    }
                   }
-                }
-              });
+                });
 
-              setPendingUpdates(newUpdates);
-            }
-          }}
-        >
-          {widgets?.map((widget) => (
-            <div key={widget.id}>
-              <WidgetSlot
-                widget={convertDashboardWidgetToWidgetDetail(widget)}
-                onRemove={() => handleRemove(widget.id)}
-                onEdit={() => handleEdit(widget.id)}
-              />
-            </div>
-          ))}
-        </ResponsiveGridLayout>
+                setPendingUpdates(newUpdates);
+              }
+            }}
+          >
+            {widgets?.map((widget) => (
+              <div key={widget.id}>
+                <WidgetSlot
+                  widget={convertDashboardWidgetToWidgetDetail(widget)}
+                  onRemove={() => handleRemove(widget.id)}
+                  onEdit={() => handleEdit(widget.id)}
+                />
+              </div>
+            ))}
+          </ResponsiveGridLayout>
+        </If>
 
         <If condition={widgets?.length === 0}>
           <Spacing size={200} />

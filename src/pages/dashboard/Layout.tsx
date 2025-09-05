@@ -59,7 +59,7 @@ export const DashboardLayout = () => {
 
   return (
     <>
-      <Header />
+      <Header onOpenDialog={openWidgetDialog} />
 
       <div css={layoutCss.wrap}>
         <If condition={!isPinned}>

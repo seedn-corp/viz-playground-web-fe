@@ -8,7 +8,9 @@ import { headerCss } from '@/components/common/Header/styles';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useLogout } from '@/hooks/mutation/auth/useLogout';
 
-export const Header = () => {
+import type { HeaderProps } from './types';
+
+export const Header = ({ onOpenDialog }: HeaderProps) => {
   const { user, accessToken } = useAuth();
   const logoutMutation = useLogout();
   const navigate = useNavigate();
@@ -38,6 +40,15 @@ export const Header = () => {
             {user.email}
           </Text>
         )}
+        <Button
+          display="inline"
+          size="regular-2"
+          gutter="20px"
+          radius="small"
+          onClick={onOpenDialog}
+        >
+          + 위젯 추가
+        </Button>
         <Button
           variant="secondary"
           display="inline"

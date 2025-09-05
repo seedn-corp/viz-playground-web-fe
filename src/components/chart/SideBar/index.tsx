@@ -7,7 +7,7 @@ import type { ChartType } from '@/pages/chart/types';
 import FileUploader from '../FileUploader';
 import Select from '../Select';
 import { sideBarCss } from './styles';
-import { selectCss } from '../Select/styles';
+
 import YAxisMultipleSelect from '../YAxisMultipleSelect';
 import FilterMultiSelect from '../FilterMultiSelect';
 import type { SideBarProps } from './types';

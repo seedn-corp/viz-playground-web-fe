@@ -78,11 +78,14 @@ const Chart = () => {
   }, [widgetDetail]);
 
   useEffect(() => {
+    if (widgetDetail?.processed_data === JSON.stringify(chartData)) {
+      return;
+    }
     if (chartDataKeys.length > 0) {
       setXAxisKey(chartDataKeys[0]);
-      setYAxisKeys(numberValueKeys.slice(1, 3));
+      setYAxisKeys(numberValueKeys.slice(0, 2));
     }
-  }, [chartDataKeys]);
+  }, [chartData, widgetDetail]);
 
   useEffect(() => {
     if (chartType === 'pie') {

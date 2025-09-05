@@ -1,7 +1,7 @@
 import { Button, Text } from '@basiln/design-system';
 import { Grid, If, Spacing } from '@basiln/utils';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router';
@@ -211,7 +211,9 @@ export const TableWidgetPage = () => {
         visible={
           isLoadingAllWidget ||
           (routeIds?.widgetId && isLoadingWidgetDetail) ||
-          isLoadingDashboardDetail
+          isLoadingDashboardDetail ||
+          isCreating ||
+          isUpdating
         }
       />
       <header css={widgetTablePageHeaderCss.self}>
@@ -285,6 +287,18 @@ export const TableWidgetPage = () => {
               toast.success('파일이 제거되었습니다.');
             }}
           />
+
+          <Spacing size={8} />
+
+          <a
+            href="/excel/sample.xlsx"
+            download="sample.xlsx"
+            css={widgetTableCss.sampleDownloadButton}
+          >
+            <Download size={14} />
+            <Text>샘플 데이터 다운로드</Text>
+          </a>
+
           {fileUploadError && (
             <Text
               size="caption-regular"
@@ -352,38 +366,36 @@ export const TableWidgetPage = () => {
               <Spacing size={10} />
 
               {selectedColumns.length > 0 && (
-                <>
-                  <div css={widgetTableCss.previewTableContainer}>
-                    <div css={{ flex: 1, overflow: 'auto', paddingRight: '20px' }}>
-                      {viewMode === 'table' ? (
-                        <DataTable
-                          selectedColumns={selectedColumns}
-                          paginatedData={paginatedData as DataRow[]}
-                          sortConfig={sortConfig}
-                          onSort={handleSort}
-                        />
-                      ) : (
-                        <NestedTable
-                          data={nestedData as Group[]}
-                          selectedColumns={selectedColumns}
-                          expandedGroups={expandedGroups}
-                          onToggleGroup={toggleGroupExpansion}
-                          allColumns={headers}
-                        />
-                      )}
-                    </div>
-
-                    {viewMode === 'table' && totalPages > 1 && (
-                      <div css={{ marginTop: '12px', paddingRight: '20px' }}>
-                        <Pagination
-                          currentPage={currentPage}
-                          totalPages={totalPages}
-                          onPageChange={setCurrentPage}
-                        />
-                      </div>
+                <div css={widgetTableCss.previewTableContainer}>
+                  <div css={{ flex: 1, overflow: 'auto', paddingRight: '20px' }}>
+                    {viewMode === 'table' ? (
+                      <DataTable
+                        selectedColumns={selectedColumns}
+                        paginatedData={paginatedData as DataRow[]}
+                        sortConfig={sortConfig}
+                        onSort={handleSort}
+                      />
+                    ) : (
+                      <NestedTable
+                        data={nestedData as Group[]}
+                        selectedColumns={selectedColumns}
+                        expandedGroups={expandedGroups}
+                        onToggleGroup={toggleGroupExpansion}
+                        allColumns={headers}
+                      />
                     )}
                   </div>
-                </>
+
+                  {viewMode === 'table' && totalPages > 1 && (
+                    <div css={{ marginTop: '12px', paddingRight: '20px' }}>
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                      />
+                    </div>
+                  )}
+                </div>
               )}
             </If>
 

@@ -8,7 +8,13 @@ import { selectCss } from '@/components/chart/Select/styles';
 
 import type { YAxisMultipleSelectProps } from './types';
 
-const YAxisMultipleSelect = ({ name, onChange, items, disabledItem, placeholder }: YAxisMultipleSelectProps) => {
+const YAxisMultipleSelect = ({
+  name,
+  onChange,
+  items,
+  disabledItem,
+  placeholder,
+}: YAxisMultipleSelectProps) => {
   const theme = useTheme();
 
   const onToggleItem = (item: string) => {
@@ -47,6 +53,7 @@ const YAxisMultipleSelect = ({ name, onChange, items, disabledItem, placeholder 
               <CheckIcon
                 color={isChecked ? theme.colors.seedn_key : theme.colors.gray_060}
                 width={16}
+                css={{ minWidth: 16 }}
               />
             </Popover.Item>
           );

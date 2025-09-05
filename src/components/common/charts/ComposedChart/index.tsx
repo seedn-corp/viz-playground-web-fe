@@ -34,35 +34,30 @@ const ComposedChart = ({ chartData, xAxisKey, yAxisKeys, composedConfig }: Compo
     switch (chartType) {
       case 'line':
         return (
-          <Line 
+          <Line
             key={yAxisKey}
-            type="monotone" 
-            dataKey={yAxisKey} 
+            type="monotone"
+            dataKey={yAxisKey}
             stroke={color}
-            strokeWidth={2}
             dot={{ r: 3 }}
+            css={{ zIndex: 2 }}
           />
         );
       case 'bar':
         return (
-          <Bar 
-            key={yAxisKey}
-            dataKey={yAxisKey} 
-            fill={color}
-            barSize={50}
-            opacity={0.8}
-          />
+          <Bar key={yAxisKey} dataKey={yAxisKey} fill={color} barSize={50} css={{ zIndex: 3 }} />
         );
       case 'area':
         return (
-          <Area 
+          <Area
             key={yAxisKey}
-            type="monotone" 
-            dataKey={yAxisKey} 
+            type="monotone"
+            dataKey={yAxisKey}
             stroke={color}
             fill={color}
             fillOpacity={0.3}
-            strokeWidth={2}
+            strokeWidth={1}
+            css={{ zIndex: 1 }}
           />
         );
       default:

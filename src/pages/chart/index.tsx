@@ -1,26 +1,25 @@
 import { Button, Spinner, Text } from '@basiln/design-system';
 import { Flex, Spacing } from '@basiln/utils';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowLeftIcon, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate, useParams } from 'react-router';
 
-import WidgetChart from '@/components/chart/WidgetChart';
 import Separator from '@/components/chart/Separator';
 import SideBar from '@/components/chart/SideBar';
+import WidgetChart from '@/components/chart/WidgetChart';
+import { useUpdateWidget } from '@/hooks/mutation/widgets';
+import { useCreateWidget } from '@/hooks/mutation/widgets/useCreateWidget';
+import { widgetsQueries } from '@/queries/widgets';
+import type { WidgetType } from '@/types/widgets';
+import { computeNextPosition } from '@/utils/computeNextPosition';
+import { LocalStorage } from '@/utils/LocalStorage';
 
 import { chartPageCss } from './styles';
 import type { ChartType, ComposedChartConfig } from './types';
-
-import { useCreateWidget } from '@/hooks/mutation/widgets/useCreateWidget';
-import type { WidgetType } from '@/types/widgets';
-import { useQuery } from '@tanstack/react-query';
-import { widgetsQueries } from '@/queries/widgets';
-import { computeNextPosition } from '@/utils/computeNextPosition';
-import type { RouteIds } from '../table/types';
-import { LocalStorage } from '@/utils/LocalStorage';
-import { useUpdateWidget } from '@/hooks/mutation/widgets';
 import { getDifferentKeys } from './utils';
+import type { RouteIds } from '../table/types';
 
 const Chart = () => {
   const navigate = useNavigate();
@@ -105,7 +104,7 @@ const Chart = () => {
     if (widgetsError || !widgets) {
       return;
     }
-    const apiChartType = chartType === 'composed' ? 'composed_chart' : (chartType + '_chart');
+    const apiChartType = chartType === 'composed' ? 'composed_chart' : chartType + '_chart';
     createMutation.mutate(
       {
         dashboardId: routeIds?.dashboardId || '',
@@ -128,7 +127,7 @@ const Chart = () => {
   };
 
   const updateWidget = () => {
-    const apiChartType = chartType === 'composed' ? 'composed_chart' : (chartType + '_chart');
+    const apiChartType = chartType === 'composed' ? 'composed_chart' : chartType + '_chart';
     const mutationData = getDifferentKeys(
       {
         name: widgetDetail?.name,

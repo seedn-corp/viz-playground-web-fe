@@ -3,7 +3,7 @@ import { Flex, If, Spacing } from '@basiln/utils';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
-import { Plus } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -64,23 +64,41 @@ export const DashboardDetail = () => {
             </Text>
           </If>
         </Flex>
-        <button
-          style={{
-            backgroundColor: theme.colors.seedn_key,
-            color: 'white',
-            border: 'none',
-            borderRadius: 8,
-            padding: '8px 12px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            ...theme.fonts['btn-regular'],
-          }}
-          onClick={openWidgetDialog}
-        >
-          <Plus color="white" size={18} strokeWidth={3} />
-          위젯 추가
-        </button>
+        <Flex justify="flex-end" align="center" gap={10}>
+          <button
+            style={{
+              backgroundColor: theme.colors.seedn_key,
+              color: 'white',
+              border: 'none',
+              borderRadius: 8,
+              padding: '8px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              ...theme.fonts['btn-regular'],
+            }}
+            onClick={openWidgetDialog}
+          >
+            <Plus color="white" size={18} strokeWidth={3} />
+            위젯 추가
+          </button>
+          <button
+            style={{
+              border: `1px solid ${theme.colors.seedn_key}`,
+              color: theme.colors.seedn_key,
+              borderRadius: 8,
+              padding: '8px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              ...theme.fonts['btn-regular'],
+            }}
+            onClick={() => navigate(`/export-preview/${id}`)}
+          >
+            <FileText size={18} color={theme.colors.seedn_key} />
+            레포트 생성
+          </button>
+        </Flex>
       </Flex>
       <Spacing size={12} />
       <DashboardGrid widgets={dashboard?.widgets} onOpenDialog={openWidgetDialog} />

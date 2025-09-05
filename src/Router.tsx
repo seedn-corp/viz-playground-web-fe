@@ -11,6 +11,8 @@ import SignIn from '@/pages/signIn';
 import SignUp from '@/pages/signUp';
 import { TableWidgetPage } from '@/pages/table';
 
+import { ExportPreviewPage } from './pages/export-preview';
+
 const ErrorEl = <div>에러가 발생했습니다.</div>;
 
 const router = createBrowserRouter([
@@ -46,6 +48,11 @@ const router = createBrowserRouter([
         path: '/table',
         element: <TableWidgetPage />,
         children: [{ path: ':id', element: <TableWidgetPage /> }],
+      },
+      {
+        path: '/export-preview',
+        element: <ExportPreviewPage />,
+        children: [{ path: ':id', element: <ExportPreviewPage /> }],
       },
     ],
   },

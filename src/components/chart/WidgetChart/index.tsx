@@ -1,4 +1,5 @@
 import { Choose } from '@basiln/utils';
+import { useMemo } from 'react';
 
 import AreaChart from '@/components/common/charts/AreaChart';
 import BarChart from '@/components/common/charts/BarChart';
@@ -8,9 +9,15 @@ import PieChart from '@/components/common/charts/PieChart';
 import type { ChartProps } from '@/components/common/charts/types';
 
 import type { WidgetChartProps } from './types';
-import { useMemo } from 'react';
 
-const WidgetChart = ({ chartData, chartType, xAxisKey, yAxisKeys, filters, composedConfig }: WidgetChartProps) => {
+const WidgetChart = ({
+  chartData,
+  chartType,
+  xAxisKey,
+  yAxisKeys,
+  filters,
+  composedConfig,
+}: WidgetChartProps) => {
   const filteredData = useMemo(
     () =>
       chartData?.filter((item) => {
@@ -21,7 +28,13 @@ const WidgetChart = ({ chartData, chartType, xAxisKey, yAxisKeys, filters, compo
     [chartData, filters],
   );
 
-  const chartProps: ChartProps = { chartData: filteredData, xAxisKey, yAxisKeys, filters, composedConfig };
+  const chartProps: ChartProps = {
+    chartData: filteredData,
+    xAxisKey,
+    yAxisKeys,
+    filters,
+    composedConfig,
+  };
 
   return (
     <Choose>

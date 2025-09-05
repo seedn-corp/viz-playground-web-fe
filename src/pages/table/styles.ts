@@ -1,5 +1,5 @@
 import { theme } from '@basiln/design-system';
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 export const widgetTablePageHeaderCss = {
   self: css({
@@ -46,6 +46,27 @@ export const widgetTableCss = {
     padding: '6px 10px',
     borderRadius: '6px',
   }),
+
+  sampleDownloadButton: (theme: Theme) =>
+    css({
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 8,
+      border: `1px solid ${theme.colors.gray_050}`,
+      borderRadius: 5,
+      width: '100%',
+      height: 30,
+      transition: 'all 200ms',
+
+      ':hover': {
+        backgroundColor: theme.colors.gray_040,
+      },
+
+      ':active': {
+        backgroundColor: theme.colors.gray_040,
+      },
+    }),
 
   separator: css({
     height: '1px',

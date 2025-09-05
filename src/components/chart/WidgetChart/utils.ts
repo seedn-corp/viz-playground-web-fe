@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { sortDateStrings } from '@/utils/sortDateString';
+
 /**
  * 차트 데이터를 그룹핑하고 yAxisKeys의 숫자 필드를 평균으로 계산한 결과를 반환합니다.
  * 최종 결과는 xAxisKey 기준으로 문자열 오름차순 정렬됩니다.
@@ -46,5 +48,5 @@ export const aggregateChartData = (
   });
 
   // xAxisKey 기준 문자열 오름차순 정렬
-  return aggregated.sort((a, b) => String(a[xAxisKey]).localeCompare(String(b[xAxisKey])));
+  return aggregated.sort((a, b) => sortDateStrings(a[xAxisKey], b[xAxisKey]));
 };

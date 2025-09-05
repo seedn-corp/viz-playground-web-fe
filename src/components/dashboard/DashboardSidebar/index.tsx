@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import { lastDashboardIdAtom, sidebarPinnedAtom } from '@/atoms/dashboard';
 import { ConfirmDeleteDialog } from '@/components/common/ConfirmDeleteDialog';
-import { useCreateDashboard } from '@/hooks/mutation/dashboard/useCreateDashboard';
+import { EditDashboardDialog } from '@/components/dashboard/EditDashboardDialog';
 import { useDeleteDashboard } from '@/hooks/mutation/dashboard/useDeleteDashboard';
 import { dashboardQueries } from '@/queries/dashboard';
 
@@ -22,36 +22,23 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
   const { id: activeId } = useParams<{ id: string }>();
 
   const { data: dashboards, isLoading } = useQuery(dashboardQueries.list());
-  const createMutation = useCreateDashboard();
   const deleteMutation = useDeleteDashboard();
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTarget, setConfirmTarget] = useState<{ id: string; name: string } | null>(null);
 
   const setLastId = useSetAtom(lastDashboardIdAtom);
   const [isPinned, setIsPinned] = useAtom(sidebarPinnedAtom);
 
+  const [createOpen, setCreateOpen] = useState(false);
+
   const items = useMemo(() => dashboards ?? [], [dashboards]);
   const hasDashboards = items.length > 0;
 
   const showInitialLoading = !dashboards && isLoading;
-  const isMutating = createMutation.isPending || deleteMutation.isPending;
 
-  const onCreate = () => {
-    createMutation.mutate(
-      { name: '새로운 대시보드' },
-      {
-        onSuccess: (res) => {
-          const newId = ('dashboard' in res ? res.dashboard : undefined)?.id ?? res.dashboard?.id;
-          if (newId) {
-            setLastId(newId);
-            navigate(`/dashboards/${newId}`);
-          }
-        },
-      },
-    );
-  };
+  const isMutating = deleteMutation.isPending;
 
   const openDeleteConfirm = (e: React.MouseEvent, id: string, name: string) => {
     e.stopPropagation();
@@ -63,7 +50,6 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
     if (!confirmTarget) return;
 
     const { id } = confirmTarget;
-
     const idx = items.findIndex((d) => d.id === id);
     const nextIdCandidate = items[idx + 1]?.id ?? items[idx - 1]?.id ?? null;
 
@@ -110,7 +96,6 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
             disabled={isMutating}
           />
         </div>
-
         <Spacing size={5} />
       </div>
 
@@ -139,7 +124,6 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
               aria-label={`open-dashboard-${d.name}`}
             >
               <Text size="body-medium">{d.name}</Text>
-
               <Flex gap={2}>
                 <IconButton
                   variant="ghost"
@@ -162,7 +146,13 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
               </Flex>
             </div>
           ))}
-          <button type="button" onClick={onCreate} disabled={isMutating} css={sidebarCss.create}>
+
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            disabled={isMutating}
+            css={sidebarCss.create}
+          >
             <Plus size={18} />
             대시보드 추가
           </button>
@@ -174,6 +164,16 @@ export const DashboardSidebar = ({ onRequestEdit }: DashboardSidebarProps) => {
         onCancel={() => !deleteMutation.isPending && setConfirmOpen(false)}
         onConfirm={handleConfirmDelete}
         isLoading={deleteMutation.isPending}
+      />
+
+      <EditDashboardDialog
+        mode="create"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={({ id }) => {
+          setLastId(id);
+          navigate(`/dashboards/${id}`);
+        }}
       />
     </aside>
   );

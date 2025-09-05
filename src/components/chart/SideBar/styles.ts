@@ -1,3 +1,4 @@
+import { widgetTableCss } from '@/pages/table/styles';
 import { css, type Theme } from '@emotion/react';
 
 export const sideBarCss = {
@@ -21,4 +22,6 @@ export const sideBarCss = {
         backgroundColor: theme.colors.gray_040,
       },
     }),
+
+  nameInput: widgetTableCss.tableNameInput,
 };

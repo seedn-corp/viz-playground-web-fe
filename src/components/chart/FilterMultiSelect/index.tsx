@@ -59,7 +59,6 @@ const FilterMultiSelect = ({ name, onChange, items, placeholder }: FilterMultiSe
       <Popover.Content
         sideOffset={4}
         align="start"
-        avoidCollisions={false}
         css={[selectCss.content, filterMultiSelectCss.content]}
       >
         {/* 검색 입력 */}

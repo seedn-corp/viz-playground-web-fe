@@ -12,6 +12,20 @@ export const sidebarCss = {
       position: 'sticky',
       top: 60,
       overflowY: 'auto',
+
+      scrollbarWidth: 'thin',
+      scrollbarColor: `${theme.colors.gray_060} transparent`,
+      '::-webkit-scrollbar': { width: 6 },
+      '::-webkit-scrollbar-thumb': {
+        borderRadius: 8,
+        backgroundColor: theme.colors.gray_060,
+        border: '2px solid transparent',
+        backgroundClip: 'content-box',
+      },
+      '::-webkit-scrollbar-thumb:hover': {
+        backgroundColor: theme.colors.gray_050,
+      },
+      '::-webkit-scrollbar-track': { background: 'transparent' },
     }),
   header: () =>
     css({

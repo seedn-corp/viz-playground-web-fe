@@ -12,6 +12,7 @@ import YAxisMultipleSelect from '../YAxisMultipleSelect';
 import type { SideBarProps } from './types';
 import Separator from '../Separator';
 import { useMemo } from 'react';
+import { sortDateStrings } from '@/utils/sortDateString';
 
 const SideBar = (props: SideBarProps) => {
   const {
@@ -172,7 +173,7 @@ const SideBar = (props: SideBarProps) => {
                 <YAxisMultipleSelect
                   name={filters?.[column] || []}
                   onChange={(values) => handleFilterChange(column, values)}
-                  items={getFilterOptions(column).sort()}
+                  items={getFilterOptions(column).sort(sortDateStrings)}
                   placeholder={`${column} 선택`}
                 />
               </div>

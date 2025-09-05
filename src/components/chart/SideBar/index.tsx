@@ -150,34 +150,30 @@ const SideBar = (props: SideBarProps) => {
 
         <Spacing size={20} />
 
-        {filterableColumns.length > 0 && (
-          <>
-            <Flex align="start" direction="column" css={{ width: '100%' }}>
-              <Text>필터</Text>
-              <Spacing size={8} />
-
-              {filterableColumns.map((column) => (
-                <div key={column} css={{ width: '100%', marginBottom: 16 }}>
-                  <Text size="body-small" css={{ marginBottom: 6 }}>
-                    {column}
-                  </Text>
-                  <YAxisMultipleSelect
-                    name={filters?.[column] || []}
-                    onChange={(values) => handleFilterChange(column, values)}
-                    items={getFilterOptions(column)}
-                    placeholder={`${column} 선택`}
-                  />
-                </div>
-              ))}
-            </Flex>
-
-            <Spacing size={20} />
-          </>
-        )}
-
         <Separator orientation="horizontal" css={{ width: '100%' }} color="gray_050" />
 
         <Spacing size={20} />
+
+        {filterableColumns.length > 0 && (
+          <Flex align="start" direction="column" css={{ width: '100%' }}>
+            <Text>필터</Text>
+            <Spacing size={8} />
+
+            {filterableColumns.map((column) => (
+              <div key={column} css={{ width: '100%', marginBottom: 16 }}>
+                <Text size="body-small" css={{ marginBottom: 6 }}>
+                  {column}
+                </Text>
+                <YAxisMultipleSelect
+                  name={filters?.[column] || []}
+                  onChange={(values) => handleFilterChange(column, values)}
+                  items={getFilterOptions(column).sort()}
+                  placeholder={`${column} 선택`}
+                />
+              </div>
+            ))}
+          </Flex>
+        )}
       </If>
     </>
   );
